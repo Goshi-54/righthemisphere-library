@@ -36,6 +36,9 @@ p{margin:0 0 10px}
 .card h2{font-size:18px}
 .meta{font-size:13px;color:var(--muted)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.shelf-h{font-size:15px;color:var(--muted);margin:26px 0 0;letter-spacing:.04em}
+.card.shelf .body{gap:6px}
+.meta.warn{color:var(--warn)}
 .sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:16px}
 .sec h3{font-size:16px;margin-bottom:10px}
 .hero{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
@@ -110,7 +113,15 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
       const row = $("div", "row"); row.append(link("btn", "素材ライブラリを開く", c["ライブラリ"]), link("btn ghost", "キャラ情報", "#" + c.id)); b.append(row);
       card.append(st, b); cards.append(card);
     });
-    main.append(cards);
+    main.append($("h2", "shelf-h", "キャラクター"), cards);
+    (D["棚"] || []).forEach(sh => {
+      main.append($("h2", "shelf-h", sh["棚"]));
+      const box = $("div", "cards"), card = $("article", "card shelf"), b = $("div", "body");
+      b.append($("h2", "", sh["名前"]), $("p", "meta", sh["説明"]));
+      sh["注意"].forEach(t => b.append($("div", "meta warn", t)));
+      const row = $("div", "row"); row.append(link("btn", "名前帳を開く", sh["リンク"], true)); b.append(row);
+      card.append(b); box.append(card); main.append(box);
+    });
   }
 
   function detail(c) {

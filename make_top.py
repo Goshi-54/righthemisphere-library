@@ -26,6 +26,16 @@ CHARS = [{
     ],
 }]
 
+# ---------- 棚（キャラに紐づかないもの）----------
+# 11/14 本人「リンクだけ置く」（意思決定DB 417c12971e2781c0a5dccd5637c5533a）：名前帳は中身を公開ページに載せず、非公開のアーティファクトへのリンクだけ置く
+SHELVES = [{
+    "棚": "編集",
+    "名前": "編集の名前帳",
+    "説明": "テロップ・動き・切り替え・エフェクト・色の名前に番号（E01-01 など）を付けた一覧。9タブ・153項目。",
+    "注意": ["非公開のページです。開けるのは共有された人だけです。", "見本の見た目は確認前の試作です。"],
+    "リンク": "https://claude.ai/artifact/Gq1dGzo4nk8wjXxXChk5jM",
+}]
+
 out_chars = []
 for c in CHARS:
     D = json.load(open(f"{c['lib']}/data/library.json", encoding="utf-8"))
@@ -61,5 +71,5 @@ for c in CHARS:
         "見本": frames, "件数": counts, "リファレンス": refs, "履歴": hist})
 
 os.makedirs(f"{HERE}/data", exist_ok=True)
-json.dump({"キャラ": out_chars}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+json.dump({"キャラ": out_chars, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("キャラ", len(out_chars), [c["名前"] for c in out_chars])
