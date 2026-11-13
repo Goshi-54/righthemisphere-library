@@ -1,0 +1,65 @@
+# 素材ライブラリの上の階層（キャラの一覧とキャラ情報）を組む
+# 11/14 本人「素材ライブラリはもう一つ上の階層を作る／そこに各キャラクター配置していく／キャラクター用のメタ情報もここで管理（リファレンスシートとかも）」
+#   （意思決定DB 417c12971e27818d9048f2a8815d97a0）。URL は新しい公開リポジトリ、公開ページに載せるのは使用許可を確かめたキャラだけ、最初はでぷれさんだけ
+#   （意思決定DB 417c12971e2781749e17ecf71f1a1b9f）
+# 11/13 本人「等身大とマイクラはリファレンスシートはライブラリに載せなくていい」→ リファレンスシートは素材のタブではなく、ここ（キャラ情報）に置く
+# 使い方：python3 make_top.py   （各キャラのライブラリで build_public.py を流したあとに流す）
+import os, json, shutil, subprocess
+HERE = os.path.dirname(os.path.abspath(__file__))
+HOME = os.path.expanduser("~")
+
+# ---------- キャラの一覧（公開してよいキャラだけ）----------
+CHARS = [{
+    "id": "depure",
+    "lib": f"{HOME}/Code/work/sns/instagram/でぷれさん素材ライブラリ",   # ライブラリの元
+    "名前": "でぷれさん",
+    "出どころ": "Instagram協業の出演者（協業先のキャラ）",
+    "公開": "公開中（2026-11-12〜。本人の「公開してよい」で承認）",
+    "声": {
+        "中身": "ElevenLabsで複製したでぷれさんの声（1回目の声）",
+        "設定": ["似せる強さ 0.90・安定性 0.40", "前置き文を付けて生成し、あとで切る（B方式）", "間：段落 0.48秒・行 0.22秒", "音量：-18 LUFS にそろえる"],
+        "作り方": "Claude Code の Skill「goshi-narration-voice」",
+    },
+    "直し待ち": [
+        {"何": "等身大の動作14種", "本人": "動作14種の画質、クオリティが悪いのが気になっています。"},
+        {"何": "掛け合い D21〜D26", "本人": "ChatGPTとの掛け合いなどの品質が落ちてない？"},
+    ],
+}]
+
+out_chars = []
+for c in CHARS:
+    D = json.load(open(f"{c['lib']}/data/library.json", encoding="utf-8"))
+    pub = f"{c['lib']}/公開用"
+    dst = f"{HERE}/{c['id']}"
+    # 素材ライブラリ（公開用の一式）を写す
+    if os.path.exists(dst): shutil.rmtree(dst)
+    shutil.copytree(pub, dst, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
+    # リファレンス：画風ごと。見本の画像はライブラリの media から写す
+    os.makedirs(f"{HERE}/media/{c['id']}", exist_ok=True)
+    def take(src):
+        name = src.replace("/", "_")
+        shutil.copyfile(f"{c['lib']}/{src}", f"{HERE}/media/{c['id']}/{name}")
+        return f"media/{c['id']}/{name}"
+    adopted = {"等身大_基準_正面顔.jpg": "採用（本人「こちらベースで」）"}
+    refs = [
+        {"画風": "ミニキャラ", "ドライブ": D["キャラ"]["ドライブ"], "説明": "ライブラリを公開したとき（11/12）から載せている参照シート",
+         "画像": [{"名前": x["label"], "src": take(x["src"]), "状態": ""} for x in D["キャラ"]["参照シート"]]},
+        {"画風": "等身大（仮置き）", "ドライブ": D["等身大のドライブ"], "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
+         "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": adopted.get(x["ファイル"], "採否未確認")} for x in D["等身大"]["静止画"]]},
+        {"画風": "マイクラ（仮置き）", "ドライブ": D["マイクラのドライブ"], "説明": "Codexで作ったもの。採否を確かめていない",
+         "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": "採否未確認"} for x in D["マイクラ"]["静止画"]]},
+    ]
+    counts = [["口パク", len(D["口パク"])], ["全身の動き", len(D["全身"])], ["掛け合い", len(D["掛け合い"])],
+              ["等身大（仮置き）", len(D["等身大"]["動作"])], ["マイクラ（仮置き）", len(D["マイクラ"]["動作"])],
+              ["背景", len(D["背景"])], ["アイコン", len(D["アイコン"])], ["台本", len(D["台本"])]]
+    # 履歴：公開用の git の記録
+    log = subprocess.run(["git", "-C", pub, "log", "--date=format:%Y-%m-%d %H:%M", "--format=%ad\t%s"], capture_output=True, text=True).stdout
+    hist = [dict(zip(("日時", "中身"), l.split("\t", 1))) for l in log.strip().splitlines()]
+    frames = [dict(f, src=f"{c['id']}/{f['src']}") for f in D["口パク"][0]["向き"]["正面"]]
+    out_chars.append({k: v for k, v in c.items() if k != "lib"} | {
+        "ライブラリ": f"{c['id']}/", "ドライブ": D["キャラ"]["ドライブ"], "画風": "ミニキャラ・等身大（仮置き）・マイクラ（仮置き）",
+        "見本": frames, "件数": counts, "リファレンス": refs, "履歴": hist})
+
+os.makedirs(f"{HERE}/data", exist_ok=True)
+json.dump({"キャラ": out_chars}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("キャラ", len(out_chars), [c["名前"] for c in out_chars])
