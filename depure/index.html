@@ -536,7 +536,8 @@ dialog::backdrop{background:#000a}
     const groups = D["保留"] || [];
     if (!groups.length) { panel.append($("p", "hold-empty", "今は保留の素材はありません。")); return; }
     if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
-    groups.forEach(g => {
+    // 11/14 新しく届いたものを上に出す
+    groups.slice().reverse().forEach(g => {
       panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
       const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : ""));
