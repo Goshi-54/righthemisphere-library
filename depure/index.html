@@ -526,7 +526,7 @@ dialog::backdrop{background:#000a}
     });
   }
 
-  // 11/14 本人（意思決定DB 417c12971e2781498223c4d6630ebdf5）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
+  // 11/14 本人（意思決定DBに登録済み）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
   function renderHold() {
     panel.append($("p", "home-lead", "届いたけれど、まだ正式な素材にしていないものです（採否を決める前の素材や、Chatworkの依頼で作った素材）。採用したものは、それぞれの種類のタブに移ります。"));
     const groups = D["保留"] || [];
