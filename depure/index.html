@@ -27,9 +27,6 @@ p{margin:0 0 10px}
 .menu-btn{min-height:38px;width:40px;padding:0;display:inline-grid;place-items:center;border-radius:9px}
 .menu-btn svg{width:20px;height:20px}
 .brand{display:flex;align-items:center;gap:12px}
-.up-link{font-size:14px;font-weight:600;color:var(--muted);text-decoration:none}
-.up-link:hover{color:var(--accent);text-decoration:underline}
-.up-sep{color:var(--muted);margin:0 -6px}
 .layout{display:flex;align-items:flex-start;min-height:calc(100vh - 71px)}
 .side{position:sticky;top:0;flex:0 0 220px;max-height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--line);padding:14px 10px 24px;align-self:stretch}
 .side h2{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:16px 10px 6px}
@@ -172,7 +169,6 @@ dialog::backdrop{background:#000a}
 <header class="topbar"><div class="topbar-in">
   <div class="brand">
     <button class="menu-btn" id="menu-btn" aria-label="メニューの表示・非表示" aria-controls="side" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <a class="up-link" href="../" title="キャラの一覧（素材ライブラリの入口）へ">素材ライブラリ</a><span class="up-sep" aria-hidden="true">／</span>
     <h1>でぷれさん素材ライブラリ</h1>
   </div>
   <a class="link-btn" id="drive-root" href="#" target="_blank" rel="noopener">ドライブのフォルダを開く</a>

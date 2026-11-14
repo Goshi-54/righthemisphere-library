@@ -1,15 +1,17 @@
 # 素材を足す共通の道具
 # 11/14 本人「保留の素材はChatwork経由での依頼のけんもこちらに含まれていますかね？その場合はもう一つの案の方がいいです。そのほかは推奨で問題ないです。」
 #   （意思決定DBに登録済み）
-# 流れ：受け取る（納品メモつき）→ 保留に置く（ドライブの 90_保留、ライブラリの「保留」タブ）→ 本人が採否 → 足す → 履歴に1行
+# 流れ：（Codexへ頼む）→ 受け取る（納品メモつき）→ 保留に置く（ドライブの 90_保留、ライブラリの「保留」タブ）→ 本人が採否 → 足す → 履歴に1行
 # 納品メモの書き方は tools/納品メモの書き方.md
 #
 # 使い方（ライブラリの元フォルダで build_public.py、ここで make_top.py を流して公開する）：
-#   python3 tools/assets.py receive <キャラ> <納品メモ.csv> --依頼 "依頼の短い名前" --出どころ "Chatwork【…】／Codex など" [--原文 "依頼の原文"]
+#   python3 tools/assets.py request <キャラ> --種類 口パク --依頼 "依頼の短い名前" --中身 "1点目;2点目;…" [--原文 "依頼の原文"] [--出どころ "Chatwork【…】など"] [--作業ID WK-…]
+#       Codexへの依頼文（転送文）を作って表示する。元フォルダの 依頼文/ に保存し、履歴に「依頼」の行。受け取るときは receive に --依頼のID を付ける
+#   python3 tools/assets.py receive <キャラ> <納品メモ.csv> --依頼 "依頼の短い名前" --出どころ "Chatwork【…】／Codex など" [--原文 "依頼の原文"] [--依頼のID r…]
 #       納品メモの素材を 90_保留/<日付>_<依頼>/ に写し、ライブラリの「保留」に足す。履歴に「受け取り」の行
-#   python3 tools/assets.py decide <キャラ> <依頼のID> <素材の名前|*> <採用|仮置き|直し|見送り> [--本人 "本人の言葉の原文"] [--決定 意思決定DBのページID]
+#   python3 tools/assets.py decide <キャラ> <保留のID> <素材の名前|*> <採用|仮置き|直し|見送り> [--本人 "本人の言葉の原文"] [--決定 意思決定DBのページID]
 #       採否を記録する。履歴に「採否」の行
-#   python3 tools/assets.py promote <キャラ> <依頼のID> <素材の名前|*> アイコン --組 <アイコンの組>
+#   python3 tools/assets.py promote <キャラ> <保留のID> <素材の名前|*> アイコン --組 <アイコンの組>
 #       採用・仮置きの素材を正式な場所に移す（今はアイコンだけ。ほかの種類は最初に実際に足すときに作る）。履歴に「追加」の行
 #   python3 tools/assets.py list <キャラ>
 # 試し運転：環境変数 DRV_OVERRIDE（ドライブの代わりのフォルダ）と LIB_OVERRIDE（ライブラリの元フォルダの代わり）
@@ -91,9 +93,73 @@ def receive(a):
         items.append(it)
     g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "素材": items}
     if a.原文: g["依頼の原文"] = a.原文
+    if a.依頼のID: g["依頼のID"] = a.依頼のID
     D["保留"].append(g)
-    save(lib, D, [row("受け取り", f"{a.依頼}（{len(items)}点）を保留に置いた［{gid}］", "保留", 出どころ=a.出どころ, ドライブ=folder)])
+    save(lib, D, [row("受け取り", f"{a.依頼}（{len(items)}点）を保留に置いた［{gid}{'・' + a.依頼のID if a.依頼のID else ''}］", "保留", 出どころ=a.出どころ, ドライブ=folder)])
     print("保留に置いた", gid, len(items), "点 →", dst)
+
+SITE = "https://goshi-54.github.io/righthemisphere-library"
+MEMO_URL = "https://github.com/Goshi-54/righthemisphere-library/blob/main/tools/納品メモの書き方.md"
+
+def examples(drv, folder, n=2):
+    """同じ種類の今ある素材から、名前と大きさの例を取る"""
+    out = []
+    d = f"{drv}/{folder}"
+    if not os.path.isdir(d): return out
+    for f in sorted(os.listdir(d)):
+        if os.path.splitext(f)[1].lower() not in (".gif", ".png", ".jpg", ".mp4"): continue
+        r = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", f"{d}/{f}"], capture_output=True, text=True).stdout
+        wh = re.findall(r"pixel(?:Width|Height): (\d+)", r)
+        out.append(f"{f}（{'×'.join(wh) if len(wh) == 2 else '大きさ不明'}・{os.path.splitext(f)[1][1:].upper()}）")
+        if len(out) >= n: break
+    return out
+
+def request(a):
+    """Codexへの依頼文（転送文）を作る。元フォルダの 依頼文/ に保存し、履歴に「依頼」の行を入れる"""
+    lib, drv, D = paths(a.char)
+    c = CHARS[a.char]; K = c.get("種類", {})
+    if a.種類 not in K: sys.exit(f"種類は {list(K)} のどれか（tools/chars.json に足す）")
+    k = K[a.種類]
+    items = [s.strip() for s in re.split(r"[;\n；]", a.中身) if s.strip()]
+    if not items: sys.exit("--中身 に作ってほしいものを書く（;で区切る）")
+    day = datetime.date.today().strftime("%Y%m%d")
+    os.makedirs(f"{lib}/依頼文", exist_ok=True)
+    rid = f"r{day}-{len([f for f in os.listdir(f'{lib}/依頼文') if f.startswith('r' + day)]) + 1:02d}"
+    name = D["キャラ"]["名前"]; place = D["キャラ"]["ドライブの場所"].rstrip("/").replace("マイドライブ/", "")
+    ex = examples(drv, k["フォルダ"])
+    L = ["宛先：Codex",
+         f"出所：本人の依頼を、Claude Code「素材のGoogleドライブ格納とWebツール化」が整理した。依頼のID {rid}" + (f"／作業ID {a.作業ID}" if a.作業ID else ""),
+         f"依頼：{name}の{a.種類}を{len(items)}点（{a.依頼}）", ""]
+    L += ["■ 作ってほしいもの"] + [f"{i}. {s}" for i, s in enumerate(items, 1)]
+    if a.原文: L += [f"依頼の原文：「{a.原文}」" + (f"（{a.出どころ}）" if a.出どころ else "")]
+    L += ["", "■ 見た目のもと（ここに合わせる）",
+          f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
+          "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。",
+          f"- 同じ種類の今ある素材：{SITE}/{c['ページ']}/#{k['タブ']}",
+          f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。大きさ・形式・線・色・動きの速さをこれにそろえる。"]
+    if ex: L += ["  例：" + "、".join(ex)]
+    if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。"]
+    L += ["", "■ 納品のしかた",
+          f"- 作業フォルダの中に「納品_{rid}」フォルダを作り、素材のファイルと「納品メモ.csv」を置く。",
+          f"- 納品メモの書き方：{MEMO_URL}（このMacでは ~/Code/righthemisphere-library/tools/納品メモの書き方.md）",
+          f"  列は 名前,ファイル,種類,コマのフォルダ,メモ（UTF-8・1行に1点）。種類の列は「{a.種類}」。名前は何をしているかが分かる短い日本語。"]
+    if k.get("コマ"): L += ["- GIF・動画には、もとのコマのPNGをフォルダごと付け、「コマのフォルダ」の列に書く。"]
+    L += ["- 終わったら返信の最初に、納品フォルダの絶対パス、点数、自分で確かめたこと（大きさ・コマ数・ループのつなぎ目・透過・見た目がリファレンスとずれていないか）を書く。作れなかったものと理由も書く。",
+          "", "■ 許可の範囲",
+          "- 許可：上のものを、この作業フォルダの中で作ること。",
+          "- 範囲外：Googleドライブ・素材ライブラリ・公開ページへの書き込み。受け取りは Claude Code が行い、採否は本人が決める。",
+          "", "■ してはいけないこと",
+          "- クレジットを使う生成サービス（Runway・Topview など）を使わない。生成サービスをブラウザや画面操作で動かさない。",
+          "- 採用済みのリファレンスから、顔・髪・眼鏡・服・色を変えない。",
+          "- ファイルを消さない。今ある素材を上書きしない。",
+          "- 外部へ送信・公開・投稿しない。",
+          "", "■ まだしていないこと",
+          "- この素材は、まだ素材ライブラリの「保留」にも置いていない。納品のあと Claude Code が受け取って保留に置き、本人の採否で正式に足す。"]
+    text = "\n".join(L)
+    fn = f"{lib}/依頼文/{rid}_{slug(a.依頼)}.md"
+    open(fn, "w", encoding="utf-8").write(f"# {rid} {a.依頼}\n\n- 作った日：{now()}\n- 種類：{a.種類}\n\n```text\n{text}\n```\n")
+    save(lib, D, [row("依頼", f"Codexへの依頼文を作った：{a.種類}{len(items)}点（{a.依頼}）［{rid}］", "依頼文", 出どころ=a.出どころ or "")])
+    print(text); print(f"\n（保存：{fn}）")
 
 def pick(D, gid, name):
     g = next((g for g in D.get("保留", []) if g["id"] == gid), None)
@@ -147,9 +213,10 @@ def lst(a):
     if not D.get("保留"): print("保留はない")
 
 ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
-p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文")
+p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID")
+p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID")
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
 p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", required=True)
 p = sp.add_parser("list"); p.add_argument("char")
 a = ap.parse_args()
-{"receive": receive, "decide": decide, "promote": promote, "list": lst}[a.cmd](a)
+{"request": request, "receive": receive, "decide": decide, "promote": promote, "list": lst}[a.cmd](a)
