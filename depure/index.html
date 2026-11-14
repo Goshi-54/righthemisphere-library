@@ -43,7 +43,7 @@ p{margin:0 0 10px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
 .tile{display:flex;flex-direction:column;padding:0;overflow:hidden;border-radius:14px;text-align:left;font-weight:400;min-height:0}
 .tile .thumb{aspect-ratio:4/3;background:var(--stage);display:grid;place-items:center;overflow:hidden;width:100%}
-.tile .thumb img{width:100%;height:100%;object-fit:contain;display:block}
+.tile .thumb img,.tile .thumb video{width:100%;height:100%;object-fit:contain;display:block}
 .tile .thumb.cover img{object-fit:cover}
 .tile .thumb .script-mark{font-size:13px;color:var(--muted);padding:16px;line-height:1.7}
 .tile .cap{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;font-weight:700;font-size:14px}
@@ -110,6 +110,14 @@ p{margin:0 0 10px}
 .hold-memo{font-size:11px;color:var(--muted)}
 .icon-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
 .icon-card img{width:72px;height:72px;object-fit:contain;display:block;margin:2px auto 8px}
+.hold-grid-wide{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.hold-movie video{width:100%;height:auto;max-height:420px;object-fit:contain;display:block;margin:2px auto 8px;border-radius:8px;background:#fff}
+.hold-movie .dl-fab{top:auto;bottom:8px}
+.hold-grid-wide:has(.hold-compare){grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.hold-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 8px}
+.hold-compare figure{margin:0;background:#fff;border-radius:8px;overflow:hidden}
+.hold-compare img,.hold-compare video{width:100%;height:clamp(200px,55vw,340px);object-fit:contain;display:block;margin:0;border-radius:0;max-height:none}
+.hold-compare figcaption{font-size:11px;color:var(--muted,#667);padding:4px 0 6px}
 .icon-card strong{display:block;font-size:12px;font-weight:600}
 .icon-card.dark img{background:#2b3038;border-radius:8px;padding:4px}
 .group-title{font-size:15px;margin:22px 0 10px}
@@ -269,7 +277,7 @@ dialog::backdrop{background:#000a}
       else if (t.thumb) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = t.thumb; th.append(img); }
       else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
         t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
-      else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = first.src; th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
+      else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
       else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
       const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));
       b.append(th, cap); b.addEventListener("click", () => go(t.id)); tiles.append(b);
@@ -531,10 +539,17 @@ dialog::backdrop{background:#000a}
     groups.forEach(g => {
       panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
-      const grid = $("div", "icon-grid");
+      const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : ""));
       g["素材"].forEach(x => {
-        const c = $("div", "icon-card hold-card"), im = $("img"); im.src = x.src; im.alt = x["名前"]; im.loading = "lazy";
-        c.append(im, $("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
+        // 11/14 動く素材の見本（mp4）は、動きと画質を見られるように大きめの動画で出す
+        const mv = /\.mp4$/.test(x.src), c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "")), im = mv ? $("video") : $("img");
+        if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"]); }
+        else { im.src = x.src; im.alt = x["名前"]; im.loading = "lazy"; }
+        // 11/14 同じ名前の素材が既にあるとき（差し替えの候補）は、今の版と同じ高さで並べて見比べる
+        if (x["比べる"]) { const cmp = $("div", "hold-compare"), o = $("figure"), n = $("figure"), oi = $("img"); oi.src = x["比べる"]; oi.alt = "今の版"; oi.loading = "lazy";
+          o.append(oi, $("figcaption", "", "今の版")); n.append(im, $("figcaption", "", "届いた版")); cmp.append(o, n); c.append(cmp); }
+        else c.append(im);
+        c.append($("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
         if (x["メモ"]) c.append($("span", "hold-memo", x["メモ"]));
         if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
         pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); grid.append(c);

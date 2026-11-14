@@ -44,13 +44,35 @@ def save(lib, D, rows=None):
 def row(種類, 中身, 状態="", 本人="", 決定="", 出どころ="", ドライブ=""):
     return dict(日時=now(), 種類=種類, 中身=中身, 状態=状態, 本人=本人, 決定=決定, 出どころ=出どころ, ドライブ=ドライブ, 公開="")
 
+FF = shutil.which("ffmpeg") or f"{HOME}/.local/bin/ffmpeg"
+
+def alpha_box(src, pad=16):
+    """全コマを通して透過でない範囲（x, y, 幅, 高さ）。測れないときは None"""
+    r = subprocess.run([FF, "-v", "info", "-i", src, "-vf", "alphaextract,bbox=min_val=8", "-f", "null", "-"], capture_output=True, text=True)
+    bs = [tuple(map(int, m)) for m in re.findall(r"x1:(\d+) x2:(\d+) y1:(\d+) y2:(\d+)", r.stderr)]
+    if not bs: return None
+    w0, h0 = map(int, re.search(r", (\d+)x(\d+)", r.stderr).groups())
+    x1 = max(0, min(b[0] for b in bs) - pad); x2 = min(w0, max(b[1] for b in bs) + pad)
+    y1 = max(0, min(b[2] for b in bs) - pad); y2 = min(h0, max(b[3] for b in bs) + pad)
+    w, h = (x2 - x1) // 2 * 2, (y2 - y1) // 2 * 2
+    return x1, y1, w, h
+
 def thumb(src, lib, key):
-    """見本の画像を media/hold/ に作る。静止画は avif（長い辺480）、GIF はそのまま（3MBまで）、動画は1コマ目"""
+    """見本の画像を media/hold/ に作る。静止画は avif（長い辺480）、GIF はそのまま（3MBまで）、動画は1コマ目
+    11/14 3MBを超える動くGIF（等身大の作り直しなど）は、動きと画質を見られるように mp4 にする（透過の余白を切り、長い辺720まで、白地、コマの速さはそのまま）"""
     ext = os.path.splitext(src)[1].lower()
     h = hashlib.sha1(key.encode()).hexdigest()[:14]
     os.makedirs(f"{lib}/media/hold", exist_ok=True)
     if ext == ".gif" and os.path.getsize(src) <= 3_000_000:
         out = f"media/hold/{h}.gif"; shutil.copyfile(src, f"{lib}/{out}")
+    elif ext == ".gif":
+        out = f"media/hold/{h}.mp4"
+        b = alpha_box(src)
+        crop = f"crop={b[2]}:{b[3]}:{b[0]}:{b[1]}," if b else ""
+        vf = f"{crop}scale='if(gt(iw,ih),min(720,iw),-2)':'if(gt(iw,ih),-2,min(720,ih))':flags=lanczos"
+        subprocess.run([FF, "-y", "-loglevel", "error", "-i", src,
+                        "-filter_complex", f"[0:v]{vf},format=rgba,split[a][b];[a]drawbox=c=white:t=fill[bg];[bg][b]overlay,format=yuv420p",
+                        "-c:v", "h264_videotoolbox", "-b:v", "3M", "-an", "-movflags", "+faststart", f"{lib}/{out}"], check=True)
     elif ext in (".mp4", ".mov", ".webm"):
         out = f"media/hold/{h}.jpg"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-frames:v", "1", "-vf", "scale='min(480,iw)':-2", f"{lib}/{out}"], check=True)
@@ -58,6 +80,13 @@ def thumb(src, lib, key):
         out = f"media/hold/{h}.avif"
         subprocess.run(["sips", "-Z", "480", "-s", "format", "avif", src, "--out", f"{lib}/{out}"], check=True, capture_output=True)
     return out
+
+def compare(it, char, drv, lib):
+    """11/14 同じ名前の素材が正式な場所に既にあるとき（差し替えの候補）、今の版の見本を「比べる」に付ける"""
+    k = CHARS[char].get("種類", {}).get(it["種類"])
+    old = f"{drv}/{k['フォルダ']}/{it['ファイル']}" if k else ""
+    if old and os.path.isfile(old):
+        it["比べる"] = thumb(old, lib, f"今の版/{k['フォルダ']}/{it['ファイル']}")
 
 def slug(s):
     return re.sub(r'[\\/:*?"<>|\s]+', "_", s).strip("_")[:40]
@@ -87,6 +116,7 @@ def receive(a):
         shutil.copyfile(src, f"{dst}/{name}")
         it = {"名前": r["名前"], "種類": r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, lib, f"{folder}/{name}"), "状態": "保留"}
         if r.get("メモ"): it["メモ"] = r["メモ"]
+        compare(it, a.char, drv, lib)
         if r.get("コマのフォルダ"):
             kd = os.path.join(base, r["コマのフォルダ"]); kname = f"{os.path.splitext(name)[0]}_コマ"
             shutil.copytree(kd, f"{dst}/{kname}"); it["コマのフォルダ"] = f"{folder}/{kname}"
