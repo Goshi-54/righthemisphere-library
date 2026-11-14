@@ -105,6 +105,12 @@ p{margin:0 0 10px}
 .bg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:14px}
 .bg-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;display:block}
 .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.hold-empty{color:var(--muted);padding:24px 0}
+.hold-meta{color:var(--muted);font-size:13px;margin:-4px 0 10px}
+.hold-kind{font-size:11px;color:var(--muted)}
+.hold-state{display:inline-block;font-size:11px;font-weight:700;padding:0 8px;border-radius:10px;background:var(--warnbg);color:var(--warn);margin-top:2px}
+.hold-state.s-採用,.hold-state.s-仮置き{background:var(--okbg);color:var(--ok)}
+.hold-memo{font-size:11px;color:var(--muted)}
 .icon-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
 .icon-card img{width:72px;height:72px;object-fit:contain;display:block;margin:2px auto 8px}
 .icon-card strong{display:block;font-size:12px;font-weight:600}
@@ -212,6 +218,7 @@ dialog::backdrop{background:#000a}
     { id: "mc", group: "キャラの動き", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
     { id: "bg", group: "素材", label: "背景", n: D["背景"].length, thumb: D["背景"][0].poster, cover: true, render: renderBg },
     { id: "icon", group: "素材", label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
+    { id: "hold", group: "素材", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
     { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
   ];
   const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
@@ -266,6 +273,7 @@ dialog::backdrop{background:#000a}
       else if (t.thumb) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = t.thumb; th.append(img); }
       else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
         t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
+      else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = first.src; th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
       else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
       const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));
       b.append(th, cap); b.addEventListener("click", () => go(t.id)); tiles.append(b);
@@ -282,7 +290,7 @@ dialog::backdrop{background:#000a}
   const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
   const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
   const TAB_ITEMS = { script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
-    icon: () => D["アイコン"], life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+    icon: () => D["アイコン"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
   const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
   const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
   function dlFab(f) {
@@ -515,6 +523,27 @@ dialog::backdrop{background:#000a}
         pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
       });
       panel.append(g);
+    });
+  }
+
+  // 11/14 本人（意思決定DB 417c12971e2781498223c4d6630ebdf5）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
+  function renderHold() {
+    panel.append($("p", "home-lead", "届いたけれど、まだ正式な素材にしていないものです（採否を決める前の素材や、Chatworkの依頼で作った素材）。採用したものは、それぞれの種類のタブに移ります。"));
+    const groups = D["保留"] || [];
+    if (!groups.length) { panel.append($("p", "hold-empty", "今は保留の素材はありません。")); return; }
+    if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
+    groups.forEach(g => {
+      panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
+      panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
+      const grid = $("div", "icon-grid");
+      g["素材"].forEach(x => {
+        const c = $("div", "icon-card hold-card"), im = $("img"); im.src = x.src; im.alt = x["名前"]; im.loading = "lazy";
+        c.append(im, $("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
+        if (x["メモ"]) c.append($("span", "hold-memo", x["メモ"]));
+        if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+        pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); grid.append(c);
+      });
+      panel.append(grid);
     });
   }
 

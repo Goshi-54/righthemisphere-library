@@ -61,10 +61,10 @@ for c in CHARS:
     ]
     counts = [["口パク", len(D["口パク"])], ["全身の動き", len(D["全身"])], ["掛け合い", len(D["掛け合い"])],
               ["等身大（仮置き）", len(D["等身大"]["動作"])], ["マイクラ（仮置き）", len(D["マイクラ"]["動作"])],
-              ["背景", len(D["背景"])], ["アイコン", len(D["アイコン"])], ["台本", len(D["台本"])]]
-    # 履歴：公開用の git の記録
-    log = subprocess.run(["git", "-C", pub, "log", "--date=format:%Y-%m-%d %H:%M", "--format=%ad\t%s"], capture_output=True, text=True).stdout
-    hist = [dict(zip(("日時", "中身"), l.split("\t", 1))) for l in log.strip().splitlines()]
+              ["背景", len(D["背景"])], ["アイコン", len(D["アイコン"])], ["保留", sum(len(g["素材"]) for g in D.get("保留", []))], ["台本", len(D["台本"])]]
+    # 履歴：キャラごとの履歴のファイル（正本。11/14 本人、意思決定DB 417c12971e2781498223c4d6630ebdf5）。決定（意思決定DBのページID）は公開しない。新しい順
+    H = json.load(open(f"{c['lib']}/data/history.json", encoding="utf-8"))
+    hist = [{k: h[k] for k in ("日時", "種類", "中身", "状態", "本人") if h.get(k)} for h in reversed(H)]
     frames = [dict(f, src=f"{c['id']}/{f['src']}") for f in D["口パク"][0]["向き"]["正面"]]
     out_chars.append({k: v for k, v in c.items() if k != "lib"} | {
         "ライブラリ": f"{c['id']}/", "ドライブ": D["キャラ"]["ドライブ"], "画風": "ミニキャラ・等身大（仮置き）・マイクラ（仮置き）",

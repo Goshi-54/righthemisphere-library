@@ -70,6 +70,7 @@ details summary{cursor:pointer;font-weight:700;font-size:14px}
 table.hist{border-collapse:collapse;font-size:13px;margin-top:8px;width:100%}
 table.hist td{border-top:1px solid var(--line);padding:5px 8px;vertical-align:top}
 table.hist td:first-child{white-space:nowrap;color:var(--muted)}
+table.hist .kind{font-size:12px;font-weight:700;white-space:nowrap}
 dialog{border:0;border-radius:14px;padding:0;max-width:min(92vw,1000px);background:var(--surface);color:var(--ink)}
 dialog::backdrop{background:rgba(0,0,0,.6)}
 dialog .dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -135,7 +136,7 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
     hero.append(st, info); main.append(hero);
 
     const cnt = $("section", "sec"); cnt.append($("h3", "", "素材の件数"));
-    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "等身大（仮置き）": "life", "マイクラ（仮置き）": "mc", "背景": "bg", "アイコン": "icon", "台本": "script" };
+    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "等身大（仮置き）": "life", "マイクラ（仮置き）": "mc", "背景": "bg", "アイコン": "icon", "保留": "hold", "台本": "script" };
     const chips = $("div", "chips");
     c["件数"].forEach(([k, n]) => { const a = link("chip", "", c["ライブラリ"] + "#" + (ids[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
     cnt.append(chips); main.append(cnt);
@@ -166,7 +167,12 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
     }
 
     const hs = $("section", "sec"), det = $("details"); det.append($("summary", "", `ライブラリの履歴（${c["履歴"].length}件）`));
-    const t = $("table", "hist"); c["履歴"].forEach(x => { const tr = $("tr"); tr.append($("td", "", x["日時"]), $("td", "", x["中身"])); t.append(tr); });
+    const t = $("table", "hist"); c["履歴"].forEach(x => {
+      const tr = $("tr"), body = $("td", "", x["中身"]);
+      if (x["本人"]) body.append($("br"), $("span", "quote", "本人「" + x["本人"] + "」"));
+      const st = $("td"); st.append($("span", "kind", x["種類"] || "")); if (x["状態"]) st.append($("br"), $("span", "badge " + (/採用/.test(x["状態"]) ? "ok" : "wait"), x["状態"]));
+      tr.append($("td", "", x["日時"]), st, body); t.append(tr);
+    });
     det.append(t); hs.append(det); main.append(hs);
   }
 
