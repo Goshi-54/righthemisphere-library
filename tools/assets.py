@@ -5,7 +5,7 @@
 # 納品メモの書き方は tools/納品メモの書き方.md
 #
 # 使い方（ライブラリの元フォルダで build_public.py、ここで make_top.py を流して公開する）：
-#   python3 tools/assets.py request <キャラ> --種類 口パク --依頼 "依頼の短い名前" --中身 "1点目;2点目;…" [--原文 "依頼の原文"] [--出どころ "Chatwork【…】など"] [--作業ID WK-…]
+#   python3 tools/assets.py request <キャラ> --種類 口パク --依頼 "依頼の短い名前" --中身 "1点目;2点目;…" [--原文 "依頼の原文"] [--条件 "品質の条件;…"] [--出どころ "Chatwork【…】など"] [--作業ID WK-…]
 #       Codexへの依頼文（転送文）を作って表示する。元フォルダの 依頼文/ に保存し、履歴に「依頼」の行。受け取るときは receive に --依頼のID を付ける
 #   python3 tools/assets.py receive <キャラ> <納品メモ.csv> --依頼 "依頼の短い名前" --出どころ "Chatwork【…】／Codex など" [--原文 "依頼の原文"] [--依頼のID r…]
 #       納品メモの素材を 90_保留/<日付>_<依頼>/ に写し、ライブラリの「保留」に足す。履歴に「受け取り」の行
@@ -106,8 +106,9 @@ def examples(drv, folder, n=2):
     out = []
     d = f"{drv}/{folder}"
     if not os.path.isdir(d): return out
-    for f in sorted(os.listdir(d)):
-        if os.path.splitext(f)[1].lower() not in (".gif", ".png", ".jpg", ".mp4"): continue
+    order = {".gif": 0, ".mp4": 1, ".png": 2, ".jpg": 3}   # 動くものを先に
+    for f in sorted(os.listdir(d), key=lambda f: (order.get(os.path.splitext(f)[1].lower(), 9), f)):
+        if os.path.splitext(f)[1].lower() not in order: continue
         r = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", f"{d}/{f}"], capture_output=True, text=True).stdout
         wh = re.findall(r"pixel(?:Width|Height): (\d+)", r)
         out.append(f"{f}（{'×'.join(wh) if len(wh) == 2 else '大きさ不明'}・{os.path.splitext(f)[1][1:].upper()}）")
@@ -132,11 +133,13 @@ def request(a):
          f"依頼：{name}の{a.種類}を{len(items)}点（{a.依頼}）", ""]
     L += ["■ 作ってほしいもの"] + [f"{i}. {s}" for i, s in enumerate(items, 1)]
     if a.原文: L += [f"依頼の原文：「{a.原文}」" + (f"（{a.出どころ}）" if a.出どころ else "")]
+    conds = [s.strip() for s in re.split(r"[;\n；]", a.条件 or "") if s.strip()]
+    if conds: L += ["", "■ 求める品質・条件"] + [f"- {s}" for s in conds]
     L += ["", "■ 見た目のもと（ここに合わせる）",
           f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
           "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。",
           f"- 同じ種類の今ある素材：{SITE}/{c['ページ']}/#{k['タブ']}",
-          f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。大きさ・形式・線・色・動きの速さをこれにそろえる。"]
+          f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。大きさ・形式・線・色・動きの速さをこれにそろえる。" + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
     if ex: L += ["  例：" + "、".join(ex)]
     if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。"]
     L += ["", "■ 納品のしかた",
@@ -214,7 +217,7 @@ def lst(a):
 
 ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
 p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID")
-p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID")
+p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件")
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
 p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", required=True)
 p = sp.add_parser("list"); p.add_argument("char")
