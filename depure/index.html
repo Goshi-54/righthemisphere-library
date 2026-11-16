@@ -111,6 +111,9 @@ p{margin:0 0 10px}
 .icon-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
 .icon-card img{width:72px;height:72px;object-fit:contain;display:block;margin:2px auto 8px}
 .hold-grid-wide{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.hold-native-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.hold-native-gif>img{width:min(100%,362px);height:auto;border-radius:8px}
+.hold-native-gif .hold-open{display:inline-flex;margin-top:8px}
 .hold-movie video{width:100%;height:auto;max-height:420px;object-fit:contain;display:block;margin:2px auto 8px;border-radius:8px;background:#fff}
 .hold-movie .dl-fab{top:auto;bottom:8px}
 .hold-grid-wide:has(.hold-compare){grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
@@ -540,10 +543,13 @@ dialog::backdrop{background:#000a}
     groups.slice().reverse().forEach(g => {
       panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
-      const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : ""));
+      const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && x["種類"] === "等身大" && /\.gif$/.test(x.src);
+      const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : "") +
+        (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
       g["素材"].forEach(x => {
         // 11/14 動く素材の見本（mp4）は、動きと画質を見られるように大きめの動画で出す
-        const mv = /\.mp4$/.test(x.src), c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "")), im = mv ? $("video") : $("img");
+        const mv = /\.mp4$/.test(x.src), nativeGif = isNativeGif(x);
+        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "")), im = mv ? $("video") : $("img");
         if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"]); }
         else { im.src = x.src; im.alt = x["名前"]; im.loading = "lazy"; }
         // 11/14 同じ名前の素材が既にあるとき（差し替えの候補）は、今の版と同じ高さで並べて見比べる
@@ -552,6 +558,12 @@ dialog::backdrop{background:#000a}
         else c.append(im);
         c.append($("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
         if (x["メモ"]) c.append($("span", "hold-memo", x["メモ"]));
+        if (nativeGif && !sel.on) {
+          const original = $("a", "link-btn small-btn hold-open", "原寸GIFを開く");
+          original.href = x.src; original.target = "_blank"; original.rel = "noopener";
+          original.setAttribute("aria-label", x["名前"] + "の原寸GIFを開く");
+          original.addEventListener("click", e => e.stopPropagation()); c.append(original);
+        }
         if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
         pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); grid.append(c);
       });
