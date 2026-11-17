@@ -3,7 +3,9 @@
 #   （意思決定DBに登録済み）。URL は新しい公開リポジトリ、公開ページに載せるのは使用許可を確かめたキャラだけ、最初はでぷれさんだけ
 #   （意思決定DBに登録済み）
 # 11/13 本人「等身大とマイクラはリファレンスシートはライブラリに載せなくていい」→ リファレンスシートは素材のタブではなく、ここ（キャラ情報）に置く
-# 使い方：python3 make_top.py   （各キャラのライブラリで build_public.py を流したあとに流す）
+# 11/18 本人「素材は最終的にはどのキャラクターページにも表示するものになりそうなので、大元はもう一つ上の階層に保管。で、リンクだけでぷれさん素材ライブラリに表示するなどの形式を取りたいです。」
+#   「一覧のとおり進めて」（意思決定DB 41bc12971e27813e92cfd78db77296b0）→ 背景・アイコン・イメージ強化は共通素材（common/）に置き、キャラのページからはリンクだけ
+# 使い方：python3 make_top.py   （各キャラのライブラリと共通素材ライブラリで build_public.py を流したあとに流す）
 import os, json, shutil, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
 HOME = os.path.expanduser("~")
@@ -36,6 +38,9 @@ SHELVES = [{
     "リンク": "https://claude.ai/artifact/Gq1dGzo4nk8wjXxXChk5jM",
 }]
 
+# ---------- 共通素材（キャラをまたぐ素材）----------
+COMMON = {"id": "common", "lib": f"{HOME}/Code/work/sns/instagram/共通素材ライブラリ"}
+
 out_chars = []
 for c in CHARS:
     D = json.load(open(f"{c['lib']}/data/library.json", encoding="utf-8"))
@@ -54,22 +59,31 @@ for c in CHARS:
     refs = [
         {"画風": "ミニキャラ", "ドライブ": D["キャラ"]["ドライブ"], "説明": "ライブラリを公開したとき（11/12）から載せている参照シート",
          "画像": [{"名前": x["label"], "src": take(x["src"]), "状態": ""} for x in D["キャラ"]["参照シート"]]},
-        {"画風": "等身大（仮置き）", "ドライブ": D["等身大のドライブ"], "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
+        {"画風": "Vtuber・等身大（仮置き）", "ドライブ": D["等身大のドライブ"], "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
          "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": adopted.get(x["ファイル"], "採否未確認")} for x in D["等身大"]["静止画"]]},
-        {"画風": "マイクラ（仮置き）", "ドライブ": D["マイクラのドライブ"], "説明": "Codexで作ったもの。採否を確かめていない",
+        {"画風": "その他・マイクラ（仮置き）", "ドライブ": D["マイクラのドライブ"], "説明": "Codexで作ったもの。採否を確かめていない",
          "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": "採否未確認"} for x in D["マイクラ"]["静止画"]]},
     ]
     counts = [["口パク", len(D["口パク"])], ["全身の動き", len(D["全身"])], ["掛け合い", len(D["掛け合い"])],
               ["等身大（仮置き）", len(D["等身大"]["動作"])], ["マイクラ（仮置き）", len(D["マイクラ"]["動作"])],
-              ["背景", len(D["背景"])], ["アイコン", len(D["アイコン"])], ["保留", sum(len(g["素材"]) for g in D.get("保留", []))], ["台本", len(D["台本"])]]
+              ["保留", sum(len(g["素材"]) for g in D.get("保留", []))], ["台本", len(D["台本"])]]
     # 履歴：キャラごとの履歴のファイル（正本。11/14 本人、意思決定DBに登録済み）。決定（意思決定DBのページID）は公開しない。新しい順
     H = json.load(open(f"{c['lib']}/data/history.json", encoding="utf-8"))
     hist = [{k: h[k] for k in ("日時", "種類", "中身", "状態", "本人") if h.get(k)} for h in reversed(H)]
     frames = [dict(f, src=f"{c['id']}/{f['src']}") for f in D["口パク"][0]["向き"]["正面"]]
     out_chars.append({k: v for k, v in c.items() if k != "lib"} | {
-        "ライブラリ": f"{c['id']}/", "ドライブ": D["キャラ"]["ドライブ"], "画風": "ミニキャラ・等身大（仮置き）・マイクラ（仮置き）",
+        "ライブラリ": f"{c['id']}/", "ドライブ": D["キャラ"]["ドライブ"], "画風": "ミニキャラ・Vtuber（等身大・仮置き）・その他（マイクラ・仮置き）",
         "見本": frames, "件数": counts, "リファレンス": refs, "履歴": hist})
 
+# 共通素材：公開用の一式を common/ に写し、入口のカードの情報を作る
+CD = json.load(open(f"{COMMON['lib']}/data/library.json", encoding="utf-8"))
+dst = f"{HERE}/{COMMON['id']}"
+if os.path.exists(dst): shutil.rmtree(dst)
+shutil.copytree(f"{COMMON['lib']}/公開用", dst, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
+common = {"名前": CD["ページ名"], "説明": CD["説明"], "ページ": f"{COMMON['id']}/", "ドライブ": CD["ドライブ"],
+          "件数": [["背景", len(CD["背景"])], ["アイコン", len(CD["アイコン"])], ["イメージ強化", len(CD["イメージ強化"])]],
+          "見本": [f"{COMMON['id']}/{x['src']}" for x in CD["アイコン"][:6]]}
+
 os.makedirs(f"{HERE}/data", exist_ok=True)
-json.dump({"キャラ": out_chars, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+json.dump({"キャラ": out_chars, "共通素材": common, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("キャラ", len(out_chars), [c["名前"] for c in out_chars])

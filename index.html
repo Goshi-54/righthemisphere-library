@@ -32,6 +32,8 @@ p{margin:0 0 10px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .card .stage{background:var(--stage);aspect-ratio:4/3;display:grid;place-items:center}
 .card .stage img{max-width:80%;max-height:90%;object-fit:contain}
+.card .stage.icons{grid-template-columns:repeat(3,1fr);gap:10px;padding:18px}
+.card .stage.icons img{width:100%;max-height:none;aspect-ratio:1;object-fit:contain}
 .card .body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
 .card h2{font-size:18px}
 .meta{font-size:13px;color:var(--muted)}
@@ -115,6 +117,18 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
       card.append(st, b); cards.append(card);
     });
     main.append($("h2", "shelf-h", "キャラクター"), cards);
+    // 11/18 背景・アイコン・イメージ強化は、キャラをまたぐ共通素材として一つ上の階層に置く（キャラのページからはリンクだけ）
+    const cm = D["共通素材"];
+    if (cm) {
+      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
+      cm["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
+      const b = $("div", "body"); b.append($("h2", "", cm["名前"]), $("div", "meta", cm["説明"]));
+      const chips = $("div", "chips");
+      cm["件数"].forEach(([k, n]) => { const a = link("chip", "", cm["ページ"] + "#" + ({ "背景": "bg", "アイコン": "icon", "イメージ強化": "img" }[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
+      b.append(chips);
+      const row = $("div", "row"); row.append(link("btn", "共通素材を開く", cm["ページ"]), link("btn ghost", "ドライブ", cm["ドライブ"], true)); b.append(row);
+      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "素材（キャラ共通）"), box);
+    }
     (D["棚"] || []).forEach(sh => {
       main.append($("h2", "shelf-h", sh["棚"]));
       const box = $("div", "cards"), card = $("article", "card shelf"), b = $("div", "body");
@@ -136,10 +150,12 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
     hero.append(st, info); main.append(hero);
 
     const cnt = $("section", "sec"); cnt.append($("h3", "", "素材の件数"));
-    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "等身大（仮置き）": "life", "マイクラ（仮置き）": "mc", "背景": "bg", "アイコン": "icon", "保留": "hold", "台本": "script" };
+    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "等身大（仮置き）": "life", "マイクラ（仮置き）": "mc", "保留": "hold", "台本": "script" };
     const chips = $("div", "chips");
     c["件数"].forEach(([k, n]) => { const a = link("chip", "", c["ライブラリ"] + "#" + (ids[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
-    cnt.append(chips); main.append(cnt);
+    cnt.append(chips);
+    if (D["共通素材"]) { const cm = D["共通素材"]; cnt.append($("p", "meta", "背景・アイコン・イメージ強化は、キャラ共通の素材として置いています（このキャラのライブラリからはリンク）。")); const r = $("div", "row"); r.append(link("btn ghost", "共通素材を開く", cm["ページ"])); cnt.append(r); }
+    main.append(cnt);
 
     const v = c["声"], vs = $("section", "sec"); vs.append($("h3", "", "声"));
     vs.append($("p", "", v["中身"]));

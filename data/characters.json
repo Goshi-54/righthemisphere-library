@@ -27,7 +27,7 @@
    ],
    "ライブラリ": "depure/",
    "ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
-   "画風": "ミニキャラ・等身大（仮置き）・マイクラ（仮置き）",
+   "画風": "ミニキャラ・Vtuber（等身大・仮置き）・その他（マイクラ・仮置き）",
    "見本": [
     {
      "src": "depure/media/f/2a997d07d4c8.avif",
@@ -82,14 +82,6 @@
      28
     ],
     [
-     "背景",
-     1
-    ],
-    [
-     "アイコン",
-     93
-    ],
-    [
      "保留",
      24
     ],
@@ -132,7 +124,7 @@
      ]
     },
     {
-     "画風": "等身大（仮置き）",
+     "画風": "Vtuber・等身大（仮置き）",
      "ドライブ": "https://drive.google.com/drive/folders/1jsmSAjQt7PXb-2-XowQa-Q7hgw-KMvfp",
      "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
      "画像": [
@@ -219,7 +211,7 @@
      ]
     },
     {
-     "画風": "マイクラ（仮置き）",
+     "画風": "その他・マイクラ（仮置き）",
      "ドライブ": "https://drive.google.com/drive/folders/1rnx_BnipbmawTReawztqF4m52QtI9NtB",
      "説明": "Codexで作ったもの。採否を確かめていない",
      "画像": [
@@ -443,6 +435,34 @@
    ]
   }
  ],
+ "共通素材": {
+  "名前": "共通素材",
+  "説明": "キャラをまたいで使う素材（背景・アイコン・イメージ強化）の大元。各キャラのページには、ここへのリンクだけを出す（本人 11/18）",
+  "ページ": "common/",
+  "ドライブ": "https://drive.google.com/drive/folders/1XGb0ErAl6te_XqjaiOipMSc_VmfTSVIY",
+  "件数": [
+   [
+    "背景",
+    1
+   ],
+   [
+    "アイコン",
+    93
+   ],
+   [
+    "イメージ強化",
+    0
+   ]
+  ],
+  "見本": [
+   "common/media/icon/claude.png",
+   "common/media/icon/note.png",
+   "common/media/icon/chatgpt.png",
+   "common/media/icon/codex.png",
+   "common/media/icon/notion.png",
+   "common/media/icon/premiere.png"
+  ]
+ },
  "棚": [
   {
    "棚": "編集",

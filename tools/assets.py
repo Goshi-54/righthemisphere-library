@@ -11,10 +11,12 @@
 #       納品メモの素材を 90_保留/<日付>_<依頼>/ に写し、ライブラリの「保留」に足す。履歴に「受け取り」の行
 #   python3 tools/assets.py decide <キャラ> <保留のID> <素材の名前|*> <採用|仮置き|直し|見送り> [--本人 "本人の言葉の原文"] [--決定 意思決定DBのページID]
 #       採否を記録する。履歴に「採否」の行
-#   python3 tools/assets.py promote <キャラ> <保留のID> <素材の名前|*> アイコン --組 <アイコンの組>
-#       採用・仮置きの素材を正式な場所に移す（今はアイコンだけ。ほかの種類は最初に実際に足すときに作る）。履歴に「追加」の行
+#   python3 tools/assets.py promote <キャラ> <保留のID> <素材の名前|*> <アイコン|イメージ強化> [--組 <アイコンの組>]
+#       採用・仮置きの素材を正式な場所に移す（今はアイコンとイメージ強化。ほかの種類は最初に実際に足すときに作る）。履歴に「追加」の行
+#       11/18 アイコン・イメージ強化（と背景）は、キャラをまたぐ共通素材（chars.json の common）のドライブと台帳へ移す
+#       （本人「素材は最終的にはどのキャラクターページにも表示するものになりそうなので、大元はもう一つ上の階層に保管。…」「一覧のとおり進めて」）
 #   python3 tools/assets.py list <キャラ>
-# 試し運転：環境変数 DRV_OVERRIDE（ドライブの代わりのフォルダ）と LIB_OVERRIDE（ライブラリの元フォルダの代わり）
+# 試し運転：環境変数 DRV_OVERRIDE（ドライブの代わりのフォルダ）と LIB_OVERRIDE（ライブラリの元フォルダの代わり。共通素材は LIB_OVERRIDE_common）
 import os, sys, csv, json, shutil, hashlib, argparse, subprocess, datetime, re
 HERE = os.path.dirname(os.path.abspath(__file__))
 HOME = os.path.expanduser("~")
@@ -28,10 +30,20 @@ now = lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 def paths(char):
     c = CHARS[char]
-    lib = os.environ.get("LIB_OVERRIDE", os.path.expanduser(c["lib"]))
+    lib = os.environ.get(f"LIB_OVERRIDE_{char}") or (os.environ.get("LIB_OVERRIDE") if not c.get("共通素材") else None) or os.path.expanduser(c["lib"])
     D = json.load(open(f"{lib}/data/library.json", encoding="utf-8"))
-    drv = os.environ.get("DRV_OVERRIDE") or f"{DRIVE_ROOT}/{D['キャラ']['ドライブの場所'].rstrip('/')}"
+    place = D["キャラ"]["ドライブの場所"] if "キャラ" in D else D["ドライブの場所"]   # 共通素材の台帳は「キャラ」を持たない
+    drv = os.environ.get("DRV_OVERRIDE") or f"{DRIVE_ROOT}/{place.rstrip('/')}"
+    if os.environ.get("DRV_OVERRIDE") and "キャラ" not in D: drv = f"{drv}/_共通素材"   # 試し運転で、キャラと共通素材の置き場を分ける
     return lib, drv, D
+
+def kind_of(char, 種類):
+    """種類の置き場（chars.json の1項目）・ドライブ・その種類を持つキャラ（共通素材なら common）"""
+    k = CHARS[char].get("種類", {}).get(種類)
+    if not k: return None, None, None
+    owner = "common" if k.get("共通") else char
+    if owner != char: k = CHARS["common"]["種類"][種類]
+    return k, paths(owner)[1], owner
 
 def save(lib, D, rows=None):
     json.dump(D, open(f"{lib}/data/library.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -83,8 +95,8 @@ def thumb(src, lib, key):
 
 def compare(it, char, drv, lib):
     """11/14 同じ名前の素材が正式な場所に既にあるとき（差し替えの候補）、今の版の見本を「比べる」に付ける"""
-    k = CHARS[char].get("種類", {}).get(it["種類"])
-    old = f"{drv}/{k['フォルダ']}/{it['ファイル']}" if k else ""
+    k, kdrv, _ = kind_of(char, it["種類"])
+    old = f"{kdrv}/{k['フォルダ']}/{it['ファイル']}" if k else ""
     if old and os.path.isfile(old):
         it["比べる"] = thumb(old, lib, f"今の版/{k['フォルダ']}/{it['ファイル']}")
 
@@ -150,14 +162,16 @@ def request(a):
     lib, drv, D = paths(a.char)
     c = CHARS[a.char]; K = c.get("種類", {})
     if a.種類 not in K: sys.exit(f"種類は {list(K)} のどれか（tools/chars.json に足す）")
-    k = K[a.種類]
+    k, kdrv, owner = kind_of(a.char, a.種類)
     items = [s.strip() for s in re.split(r"[;\n；]", a.中身) if s.strip()]
     if not items: sys.exit("--中身 に作ってほしいものを書く（;で区切る）")
     day = datetime.date.today().strftime("%Y%m%d")
     os.makedirs(f"{lib}/依頼文", exist_ok=True)
     rid = f"r{day}-{len([f for f in os.listdir(f'{lib}/依頼文') if f.startswith('r' + day)]) + 1:02d}"
-    name = D["キャラ"]["名前"]; place = D["キャラ"]["ドライブの場所"].rstrip("/").replace("マイドライブ/", "")
-    ex = examples(drv, k["フォルダ"])
+    name = D["キャラ"]["名前"] if "キャラ" in D else c["名前"]
+    kD = D if owner == a.char else paths(owner)[2]
+    place = (kD["キャラ"]["ドライブの場所"] if "キャラ" in kD else kD["ドライブの場所"]).rstrip("/").replace("マイドライブ/", "")
+    ex = examples(kdrv, k["フォルダ"])
     L = ["宛先：Codex",
          f"出所：本人の依頼を、Claude Code「素材のGoogleドライブ格納とWebツール化」が整理した。依頼のID {rid}" + (f"／作業ID {a.作業ID}" if a.作業ID else ""),
          f"依頼：{name}の{a.種類}を{len(items)}点（{a.依頼}）", ""]
@@ -168,7 +182,7 @@ def request(a):
     L += ["", "■ 見た目のもと（ここに合わせる）",
           f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
           "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。",
-          f"- 同じ種類の今ある素材：{SITE}/{c['ページ']}/#{k['タブ']}",
+          f"- 同じ種類の今ある素材：{SITE}/{CHARS[owner]['ページ']}/#{k['タブ']}",
           f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。大きさ・形式・線・色・動きの速さをこれにそろえる。" + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
     if ex: L += ["  例：" + "、".join(ex)]
     if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。"]
@@ -212,31 +226,51 @@ def decide(a):
     save(lib, D, [row("採否", f"{g['依頼']}：{names}［{g['id']}］", a.state, a.本人 or "", a.決定 or "", g["出どころ"], g["フォルダ"])])
     print(a.state, len(its), "点")
 
+def media_for(src, lib, sub, nid, kind):
+    """正式な素材の見本を media/<sub>/ に作る。アイコンは長い辺256のPNG。イメージ強化は、GIF（3MBまで）はそのまま、ほかは長い辺480のPNG"""
+    os.makedirs(f"{lib}/media/{sub}", exist_ok=True)
+    if kind == "イメージ強化" and src.lower().endswith(".gif") and os.path.getsize(src) <= 3_000_000:
+        out = f"media/{sub}/{nid}.gif"; shutil.copyfile(src, f"{lib}/{out}"); return out
+    out = f"media/{sub}/{nid}.png"
+    subprocess.run(["sips", "-Z", "256" if kind == "アイコン" else "480", "-s", "format", "png", src, "--out", f"{lib}/{out}"], check=True, capture_output=True)
+    return out
+
 def promote(a):
     lib, drv, D = paths(a.char)
     g, its = pick(D, a.gid, a.name)
     its = [x for x in its if x["状態"] in ("採用", "仮置き")]
     if not its: sys.exit("採用・仮置きの素材がない（先に decide で採否を記録する）")
-    if a.kind != "アイコン": sys.exit("今はアイコンだけ。ほかの種類は、最初に実際に足すときに作る")
-    folder = "06_共通アイコン"
-    n = max(int(x["id"][1:]) for x in D["アイコン"] if re.fullmatch(r"n\d+", x.get("id", "")))
-    os.makedirs(f"{lib}/media/icon", exist_ok=True)
+    if a.kind not in ("アイコン", "イメージ強化"): sys.exit("今はアイコンとイメージ強化だけ。ほかの種類は、最初に実際に足すときに作る")
+    if a.kind == "アイコン" and not a.組: sys.exit("アイコンは --組 が要る（アプリ・文字バッジ・ドット絵 など）")
+    k, kdrv, owner = kind_of(a.char, a.kind)
+    if not k: sys.exit(f"tools/chars.json の {a.char} に「{a.kind}」がない")
+    klib, _, KD = (lib, drv, D) if owner == a.char else paths(owner)
+    folder, sub, pre = k["フォルダ"], ("icon" if a.kind == "アイコン" else "img"), ("n" if a.kind == "アイコン" else "m")
+    n = max([int(x["id"][1:]) for x in KD[a.kind] if re.fullmatch(pre + r"\d+", x.get("id", ""))] or [0])
     for x in its:
-        dst = f"{drv}/{folder}/{x['ファイル']}"
+        dst = f"{kdrv}/{folder}/{x['ファイル']}"
         if os.path.exists(dst): sys.exit(f"既にある：{dst}")
     for x in its:
-        n += 1; nid = f"n{n:03d}"
-        shutil.move(f"{drv}/{x['場所']}", f"{drv}/{folder}/{x['ファイル']}")
-        src = f"media/icon/{nid}.png"
-        subprocess.run(["sips", "-Z", "256", "-s", "format", "png", f"{drv}/{folder}/{x['ファイル']}", "--out", f"{lib}/{src}"], check=True, capture_output=True)
-        it = {"id": nid, "名前": os.path.splitext(x["ファイル"])[0], "組": a.組, "src": src, "場所": f"{folder}/{x['ファイル']}", "ファイル": x["ファイル"], "暗い背景": False}
+        n += 1; nid = f"{pre}{n:03d}"
+        dst = f"{kdrv}/{folder}/{x['ファイル']}"
+        shutil.move(f"{drv}/{x['場所']}", dst)
+        it = {"id": nid, "名前": os.path.splitext(x["ファイル"])[0], "src": media_for(dst, klib, sub, nid, a.kind), "場所": f"{folder}/{x['ファイル']}", "ファイル": x["ファイル"]}
+        if a.組: it["組"] = a.組
+        if a.kind == "アイコン": it["暗い背景"] = False
         if x["状態"] == "仮置き": it["仮置き"] = True
-        D["アイコン"].append(it)
+        if owner != a.char: it["出どころのキャラ"] = a.char
+        KD[a.kind].append(it)
         g["素材"].remove(x)
     if not g["素材"]: D["保留"].remove(g)
     names = "・".join(x["名前"] for x in its)
-    save(lib, D, [row("追加", f"アイコン（{a.組}）：{names}［{g['id']}から］", "・".join(sorted({x['状態'] for x in its})), "・".join(x.get("本人", "") for x in its if x.get("本人")), "", g["出どころ"], folder)])
-    print("アイコンに足した", len(its), "点。add_download_ids.py → build_public.py → make_top.py の順に流す")
+    st = "・".join(sorted({x['状態'] for x in its})); hon = "・".join(x.get("本人", "") for x in its if x.get("本人"))
+    where = f"{a.kind}" + (f"（{a.組}）" if a.組 else "")
+    if owner != a.char:
+        save(klib, KD, [row("追加", f"{where}：{names}［{CHARS[a.char]['名前']}の{g['id']}から］", st, hon, "", g["出どころ"], folder)])
+        save(lib, D, [row("追加", f"{where}を共通素材へ移した：{names}［{g['id']}から］", st, hon, "", g["出どころ"], f"共通素材/{folder}")])
+    else:
+        save(lib, D, [row("追加", f"{where}：{names}［{g['id']}から］", st, hon, "", g["出どころ"], folder)])
+    print(f"{a.kind}に足した", len(its), "点。add_download_ids.py → build_public.py を、" + ("キャラと共通素材の両方の元フォルダで" if owner != a.char else "元フォルダで") + "流し、make_top.py を流す")
 
 def lst(a):
     lib, drv, D = paths(a.char)
@@ -249,7 +283,7 @@ ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True
 p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID")
 p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件")
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
-p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", required=True)
+p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", default="")
 p = sp.add_parser("list"); p.add_argument("char")
 a = ap.parse_args()
 {"request": request, "receive": receive, "decide": decide, "promote": promote, "list": lst}[a.cmd](a)

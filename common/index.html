@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>でぷれさん素材ライブラリ</title>
+<style>
+:root{color-scheme:light;--bg:#f5f6f8;--surface:#fff;--ink:#1c2230;--muted:#5d6676;--line:#e2e5ea;--accent:#2563c9;--accent-soft:#e8f0fc;--stage:#eef0f3;--ok:#1d7a4a;--okbg:#e3f4ea;--warn:#9a5b00;--warnbg:#fdf1dc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.6;overflow-wrap:anywhere}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);border-radius:9px;min-height:38px;padding:7px 13px;font-weight:600;background:var(--surface);color:var(--ink)}
+button:hover{border-color:var(--accent)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+h1,h2,h3{margin:0;line-height:1.35}
+p{margin:0 0 10px}
+.topbar{background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar-in{padding:16px clamp(16px,3vw,32px);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar h1{font-size:20px;letter-spacing:-.01em}
+.link-btn{display:inline-flex;align-items:center;min-height:0;padding:3px 10px;border-radius:8px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;text-decoration:none;line-height:1.6}
+:root[data-theme="dark"] .link-btn{color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .link-btn{color:#14171c}}
+.menu-btn{min-height:38px;width:40px;padding:0;display:inline-grid;place-items:center;border-radius:9px}
+.menu-btn svg{width:20px;height:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.layout{display:flex;align-items:flex-start;min-height:calc(100vh - 71px)}
+.side{position:sticky;top:0;flex:0 0 220px;max-height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--line);padding:14px 10px 24px;align-self:stretch}
+.side h2{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:16px 10px 6px}
+.side button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;background:transparent;border:0;border-radius:8px;min-height:38px;padding:7px 10px;font-size:14px;font-weight:600;color:var(--ink);text-align:left}
+.side button:hover{background:var(--accent-soft)}
+.side button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.side button span{font-size:11px;background:var(--line);color:var(--ink);padding:1px 8px;border-radius:20px;font-weight:600}
+.side-closed .side{display:none}
+.shell{flex:1;min-width:0;width:auto;margin:0;padding:20px clamp(16px,3vw,32px) 40px}
+.page-title{font-size:22px;margin:0 0 14px}
+.scrim{display:none}
+.home-lead{color:var(--muted);margin:-6px 0 18px}
+.home-group{font-size:13px;color:var(--muted);font-weight:700;margin:22px 0 10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.tile{display:flex;flex-direction:column;padding:0;overflow:hidden;border-radius:14px;text-align:left;font-weight:400;min-height:0}
+.tile .thumb{aspect-ratio:4/3;background:var(--stage);display:grid;place-items:center;overflow:hidden;width:100%}
+.tile .thumb img,.tile .thumb video{width:100%;height:100%;object-fit:contain;display:block}
+.tile .thumb.cover img{object-fit:cover}
+.tile .thumb .script-mark{font-size:13px;color:var(--muted);padding:16px;line-height:1.7}
+.tile .cap{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;font-weight:700;font-size:14px}
+.tile .cap span{font-size:11px;background:var(--line);padding:1px 8px;border-radius:20px;font-weight:600}
+.howto{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-top:26px;font-size:14px}
+.howto h2{font-size:15px;margin-bottom:8px}
+.howto ul{margin:0;padding-left:1.2em}
+.howto li{margin:3px 0}
+@media (max-width:820px){
+  .side{position:fixed;top:0;left:0;bottom:0;z-index:20;width:250px;max-height:none;box-shadow:4px 0 24px #0003;transform:translateX(-100%);transition:transform .2s;display:block}
+  .side-open .side{transform:none}
+  .side-closed .side{display:block}
+  .side-open .scrim{display:block;position:fixed;inset:0;z-index:15;background:#0005}
+}
+.filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-height:38px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#14171c}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;text-align:left;padding:0;font-weight:400}
+.stage{background:var(--stage);aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;grid-template:100% / 100%}
+.dl-fab{position:absolute;right:8px;bottom:8px;z-index:2;width:30px;height:30px;border-radius:50%;background:rgba(28,34,48,.5);color:#fff;display:grid;place-items:center;text-decoration:none;opacity:.8;transition:opacity .15s,background .15s}
+.dl-fab svg{width:16px;height:16px}
+.dl-fab:hover,.dl-fab:focus-visible{opacity:1;background:var(--accent)}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.icon-card .dl-fab{width:26px;height:26px;right:8px;top:62px;bottom:auto}
+.icon-card .dl-fab svg{width:14px;height:14px}
+.stage img{width:100%;height:100%;object-fit:contain;display:block}
+.fname{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px}
+.fname strong{font-size:13px;font-weight:600;line-height:1.45}
+.fname small{font-size:11px;color:var(--muted)}
+.kicker{font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--muted);margin:0 0 4px}
+.badges{display:flex;gap:5px;flex-wrap:wrap}
+.badge{font-size:10px;border-radius:20px;padding:2px 8px;background:var(--accent-soft);color:var(--accent);font-weight:700}
+.badge.warn{background:var(--warnbg);color:var(--warn)}
+.badge.ok{background:var(--okbg);color:var(--ok)}
+.badge.plain{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:400}
+.scripts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.script{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.script header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}
+.script h3{font-size:18px}
+.script audio{width:100%;margin:6px 0 12px}
+.script .text{font-size:15px;line-height:1.9;border-top:1px solid var(--line);padding-top:12px}
+.script .text p{margin:0 0 14px}
+.snd{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+.snd summary{font-size:13px;font-weight:700;cursor:pointer;color:var(--accent);padding:4px 0}
+.snd-row{padding:10px 0;border-bottom:1px solid var(--line)}
+.snd-row strong{font-size:13px}
+.snd-row audio{width:100%;height:36px;margin:6px 0 2px}
+.snd-note{font-size:11px;color:var(--muted);margin:0}
+.loc{font-size:11px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.small-btn{min-height:30px;padding:3px 10px;font-size:12px}
+.bg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:14px}
+.bg-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;display:block}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.hold-empty{color:var(--muted);padding:24px 0}
+.hold-meta{color:var(--muted);font-size:13px;margin:-4px 0 10px}
+.hold-kind{font-size:11px;color:var(--muted)}
+.hold-state{display:inline-block;font-size:11px;font-weight:700;padding:0 8px;border-radius:10px;background:var(--warnbg);color:var(--warn);margin-top:2px}
+.hold-state.s-採用,.hold-state.s-仮置き{background:var(--okbg);color:var(--ok)}
+.hold-memo{font-size:11px;color:var(--muted)}
+.icon-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
+.icon-card img{width:72px;height:72px;object-fit:contain;display:block;margin:2px auto 8px}
+.hold-grid-wide{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.hold-native-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.hold-native-gif>img{width:min(100%,362px);height:auto;border-radius:8px}
+.hold-native-gif .hold-open{display:inline-flex;margin-top:8px}
+.hold-movie video{width:100%;height:auto;max-height:420px;object-fit:contain;display:block;margin:2px auto 8px;border-radius:8px;background:#fff}
+.hold-movie .dl-fab{top:auto;bottom:8px}
+.hold-grid-wide:has(.hold-compare){grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.hold-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 8px}
+.hold-compare figure{margin:0;background:#fff;border-radius:8px;overflow:hidden}
+.hold-compare img,.hold-compare video{width:100%;height:clamp(200px,55vw,340px);object-fit:contain;display:block;margin:0;border-radius:0;max-height:none}
+.hold-compare figcaption{font-size:11px;color:var(--muted,#667);padding:4px 0 6px}
+.icon-card strong{display:block;font-size:12px;font-weight:600}
+.icon-card.dark img{background:#2b3038;border-radius:8px;padding:4px}
+.group-title{font-size:15px;margin:22px 0 10px}
+.group-title:first-child{margin-top:4px}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.grid.wide .stage{aspect-ratio:16/9}
+.players.wide-stage{grid-template-columns:1fr}
+.players.wide-stage .stage{aspect-ratio:16/9}
+.more{margin-top:14px}
+dialog{border:0;border-radius:16px;padding:0;width:min(880px,calc(100% - 24px));max-height:calc(100% - 32px);background:var(--bg);color:var(--ink)}
+dialog::backdrop{background:#000a}
+.dlg-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1}
+.dlg-head h2{font-size:17px}
+.dlg-body{padding:16px 18px 20px}
+.players{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.players figure{margin:0}
+.players .stage{border-radius:12px;border:1px solid var(--line)}
+.players figcaption{font-size:12px;color:var(--ink);margin-top:6px;justify-content:space-between}
+.files{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
+.files li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.koma{margin-top:14px}
+.koma summary{font-size:13px;font-weight:700;cursor:pointer;color:var(--accent);padding:4px 0}
+.koma-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 10px}
+.koma-head h3{margin:0}
+.koma-head button{font-size:12px;padding:3px 10px;min-height:0;line-height:1.6}
+.koma-head a{font-size:12px}
+.koma-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.koma-tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.koma-tile .stage{aspect-ratio:1/1}
+.koma-tile .stage .dl-fab{width:26px;height:26px;right:6px;bottom:6px}
+.koma-tile .nm{font-size:11px;line-height:1.4;padding:6px 8px;color:var(--ink);display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+.koma-tile .nm button{font-size:10px;padding:1px 6px;min-height:0;flex:none}
+.hidden{display:none!important}
+.card{position:relative}
+.card .tag{position:absolute;top:8px;left:8px;z-index:1}
+.dl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-4px 0 14px}
+.dl-tools button{font-size:12px;padding:3px 10px;min-height:0;line-height:1.6}
+.dl-tools label{font-size:13px;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+.dl-tools button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="dark"] .dl-tools button[aria-pressed="true"]{color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dl-tools button[aria-pressed="true"]{color:#14171c}}
+.pick{position:absolute;top:8px;right:8px;z-index:2;width:24px;height:24px;border-radius:7px;border:2px solid var(--accent);background:var(--surface);display:grid;place-items:center;font-size:15px;font-weight:800;color:#fff;pointer-events:none}
+.on>.pick{background:var(--accent)}
+.card.on,.icon-card.on{outline:3px solid var(--accent);outline-offset:-1px}
+.icon-card{position:relative}
+.selecting .icon-card,.selecting .card{cursor:pointer}
+.dl-link{font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:3px 10px;min-height:30px;display:inline-flex;align-items:center;color:var(--accent);background:var(--surface);font-weight:600}
+.dl-link:hover{border-color:var(--accent)}
+.dlbar{position:sticky;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -4px 16px #0001;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.dlbar strong{font-size:14px}
+.dlbar .msg{font-size:12px;color:var(--muted);flex-basis:100%;text-align:center;margin:0}
+.big{width:100%;max-height:70vh;object-fit:contain;background:var(--stage);border-radius:12px;border:1px solid var(--line);display:block}
+@media (max-width:640px){.bg-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fname strong{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-in">
+  <div class="brand">
+    <button class="menu-btn" id="menu-btn" aria-label="メニューの表示・非表示" aria-controls="side" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <h1 id="page-name">でぷれさん素材ライブラリ</h1>
+  </div>
+  <a class="link-btn" id="drive-root" href="#" target="_blank" rel="noopener">ドライブのフォルダを開く</a>
+</div></header>
+<div class="layout">
+  <nav class="side" id="side" aria-label="素材の種類"></nav>
+  <div class="scrim" id="scrim"></div>
+  <main class="shell">
+    <h2 class="page-title" id="page-title"></h2>
+    <section id="panel"></section>
+  </main>
+</div>
+<div class="dlbar hidden" id="dlbar" role="region" aria-label="ダウンロード"></div>
+<dialog id="dlg" aria-labelledby="dlg-title"></dialog>
+<script>
+(async () => {
+  const $ = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
+  const base = f => f.replace(/\.(gif|png|mp4|jpg)$/i, "");
+  let D;
+  try { D = await (await fetch("data/library.json")).json(); }
+  catch (e) { document.getElementById("panel").textContent = "データを読み込めませんでした。"; return; }
+  // 11/18 このページの作りは、でぷれさんと共通素材（一つ上の階層）で共通。台帳にある種類だけタブを出す
+  const isChar = !!D["キャラ"];
+  if (D["ページ名"]) { document.getElementById("page-name").textContent = D["ページ名"]; document.title = D["ページ名"]; }
+  document.getElementById("drive-root").href = isChar ? D["キャラ"]["ドライブ"] : D["ドライブ"];
+  const CM = D["共通素材"];   // キャラのページ：共通素材へのリンクの情報
+
+  // 画面に見えているカードだけコマ送りで動かす
+  const players = new Set();
+  function player(img, frames) {
+    const p = { img, frames, i: 0, t: null, on: false };
+    p.show = i => { p.i = i; img.src = frames[i].src; };
+    p.step = () => { p.show((p.i + 1) % frames.length); p.t = setTimeout(p.step, frames[p.i].ms); };
+    p.play = () => { if (p.on) return; p.on = true; p.t = setTimeout(p.step, frames[p.i].ms); };
+    p.stop = () => { p.on = false; clearTimeout(p.t); };
+    p.show(0); players.add(p); return p;
+  }
+  const io = new IntersectionObserver(es => es.forEach(e => { const p = e.target._p; if (!p) return; e.isIntersecting ? p.play() : p.stop(); }), { rootMargin: "80px" });
+
+  const first = fr => fr && fr[0] && fr[0].src;
+  // 11/18 本人（意思決定DBに登録済み）：ミニキャラ（口パク・全身の動き・掛け合い）／Vtuber（等身大。一旦、生成時期別）／その他（マイクラ）。
+  //   素材（背景・アイコン・イメージ強化）の大元は一つ上の階層（共通素材）に置き、キャラのページにはリンクだけを出す
+  const has = k => Array.isArray(D[k]) ? true : !!D[k];
+  const SG = isChar ? "素材（共通・リンク）" : "素材";
+  const TABS = [
+    { id: "home", label: "TOP", render: renderHome },
+    has("口パク") && { id: "lip", group: "ミニキャラ", label: "口パク", n: D["口パク"].length, thumb: first(D["口パク"][0]["向き"]["正面"]), frames: D["口パク"][0]["向き"]["正面"], render: () => renderMotions("lip") },
+    has("全身") && { id: "body", group: "ミニキャラ", label: "全身の動き", n: D["全身"].length, frames: D["全身"][0]["コマ"], render: () => renderMotions("body") },
+    has("掛け合い") && { id: "duet", group: "ミニキャラ", label: "掛け合い", n: D["掛け合い"].length, frames: D["掛け合い"][0]["コマ"], render: () => renderMotions("duet") },
+    has("等身大") && { id: "life", group: "Vtuber", label: "等身大（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: renderLife },
+    has("マイクラ") && { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
+    has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
+    has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
+    has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
+    CM && { id: "bg", group: SG, label: "背景", n: CM["数"]["背景"], thumb: CM["見本"]["背景"], cover: true, link: true, render: () => renderLink("bg", "背景") },
+    CM && { id: "icon", group: SG, label: "アイコン", n: CM["数"]["アイコン"], icons: CM["見本"]["アイコン"], link: true, render: () => renderLink("icon", "アイコン") },
+    CM && { id: "img", group: SG, label: "イメージ強化", n: CM["数"]["イメージ強化"], link: true, render: () => renderLink("img", "イメージ強化") },
+    has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
+    has("保留") && { id: "hold", group: "確かめの場", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
+  ].filter(Boolean);
+  const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
+  const narrow = matchMedia("(max-width:820px)");
+  const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : "home"; };
+  let current = fromHash();
+  const state = { angle: "正面" };
+  let group = null;
+  TABS.forEach(t => {
+    if (t.group && t.group !== group) { group = t.group; side.append($("h2", "", group)); }
+    const b = $("button", "", t.label); if (t.n != null) b.append($("span", "", t.n));
+    b.addEventListener("click", () => go(t.id));
+    t.btn = b; side.append(b);
+  });
+  function go(id) {
+    if (narrow.matches) setMenu(false);
+    if (id === current) { window.scrollTo(0, 0); return; }
+    if (id === "home") { history.pushState(null, "", location.pathname + location.search); current = "home"; draw(); }
+    else location.hash = id;  // hashchange で描き直す
+  }
+  const onNav = () => { const h = fromHash(); if (h !== current) { current = h; draw(); } };
+  addEventListener("hashchange", onNav); addEventListener("popstate", onNav);
+  // メニューの表示・非表示（広い画面では閉じた状態を覚える。狭い画面では横から出す）
+  let wideOpen = true;
+  try { wideOpen = localStorage.getItem("depure-menu") !== "closed"; } catch (e) {}
+  function setMenu(open) {
+    if (narrow.matches) { root.classList.toggle("side-open", open); root.classList.remove("side-closed"); }
+    else { wideOpen = open; root.classList.toggle("side-closed", !open); root.classList.remove("side-open"); try { localStorage.setItem("depure-menu", open ? "open" : "closed"); } catch (e) {} }
+    document.getElementById("menu-btn").setAttribute("aria-expanded", String(open));
+  }
+  const menuOpen = () => narrow.matches ? root.classList.contains("side-open") : !root.classList.contains("side-closed");
+  document.getElementById("menu-btn").addEventListener("click", () => setMenu(!menuOpen()));
+  document.getElementById("scrim").addEventListener("click", () => setMenu(false));
+  narrow.addEventListener("change", () => setMenu(narrow.matches ? false : wideOpen));
+  setMenu(narrow.matches ? false : wideOpen);
+  function draw() {
+    players.forEach(p => { p.stop(); io.unobserve(p.img.parentElement); }); players.clear();
+    TABS.forEach(t => t.id === current ? t.btn.setAttribute("aria-current", "page") : t.btn.removeAttribute("aria-current"));
+    const t = TABS.find(t => t.id === current);
+    document.getElementById("page-title").textContent = t.id === "home" ? "素材の一覧" : t.label;
+    panel.replaceChildren(); panel.classList.toggle("selecting", sel.on);
+    if (t.id !== "home" && !t.link) dlTools(); t.render(); dlBar();
+    window.scrollTo(0, 0);
+  }
+  function renderHome() {
+    panel.append($("p", "home-lead", "見たい素材を選んでください。左のメニューからも移れます。"));
+    let g = null, tiles;
+    TABS.filter(t => t.group).forEach(t => {
+      if (t.group !== g) { g = t.group; panel.append($("h3", "home-group", g)); tiles = $("div", "tiles"); panel.append(tiles); }
+      const b = $("button", "tile"), th = $("div", "thumb" + (t.cover ? " cover" : ""));
+      if (t.frames) { const img = $("img"); img.alt = ""; img.loading = "lazy"; th.append(img); th._p = player(img, t.frames); io.observe(th); }
+      else if (t.thumb) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = t.thumb; th.append(img); }
+      else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
+        t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
+      else if (t.link || t.id === "img") { const m = $("div", "script-mark", t.link ? "共通素材のページへ" : "今はなし"); th.append(m); }
+      else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
+      else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
+      const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));
+      b.append(th, cap); b.addEventListener("click", () => go(t.id)); tiles.append(b);
+    });
+    const h = $("div", "howto"); h.append($("h2", "", "ダウンロードのしかた"));
+    const ul = $("ul");
+    ["各素材の右下の↓ボタンで、その素材を1つ保存できます", "「選んでダウンロード」で、素材を選んでまとめて保存できます", "「まとめてダウンロード」で、そのページの素材をすべて保存できます",
+     "保存には、素材フォルダを共有されたGoogleアカウントでのログインが必要です"].forEach(x => ul.append($("li", "", x)));
+    h.append(ul); panel.append(h);
+  }
+
+  // ---------- ダウンロード ----------
+  // ファイルはドライブから直接受け取る（ドライブの共有の設定に従う）
+  const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
+  const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
+  const TAB_ITEMS = { script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
+    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+  const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
+  const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
+  function dlFab(f) {
+    const a = $("a", "dl-fab"); a.href = DL(f[1]); a.rel = "noopener"; a.title = "ダウンロード：" + f[0]; a.setAttribute("aria-label", "ダウンロード：" + base(f[0]));
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>';
+    a.addEventListener("click", e => e.stopPropagation()); return a;
+  }
+  function dlLink(f, label = "ダウンロード") { const a = $("a", "dl-link", label); a.href = DL(f[1]); a.rel = "noopener"; a.title = f[0]; a.addEventListener("click", e => e.stopPropagation()); return a; }
+  function dlTools() {
+    const w = $("div", "dl-tools");
+    const pick = $("button", "", sel.on ? "選ぶのをやめる" : "選んでダウンロード"); pick.setAttribute("aria-pressed", String(sel.on));
+    pick.addEventListener("click", () => { sel.on = !sel.on; if (!sel.on) sel.items.clear(); draw(); });
+    const items = TAB_ITEMS[current](), n = items.reduce((a, x) => a + filesOf(x).length, 0);
+    const all = $("button", "", `まとめてダウンロード（${n}）`); all.title = `このタブの${n}ファイルをまとめてダウンロード`;
+    all.addEventListener("click", () => bulkDownload(items.map(x => [x, current]), TABS.find(t => t.id === current).label));
+    if (current !== "script") w.append(pick); w.append(all);
+    if (hasKoma(current)) {
+      const lb = $("label"), cb = $("input"); cb.type = "checkbox"; cb.checked = sel.koma;
+      cb.addEventListener("change", () => { sel.koma = cb.checked; draw(); });
+      lb.append(cb, "コマのPNGも入れる"); w.append(lb);
+    }
+    panel.append(w);
+  }
+  // 選ぶモードのときは、カードを押すと選ぶ／外す。true を返したら詳細は開かない
+  function pickable(card, item) {
+    if (!sel.on) return;
+    card.append($("span", "pick", "✓")); card.classList.toggle("on", sel.items.has(item));
+    card.setAttribute("aria-pressed", String(sel.items.has(item)));
+  }
+  function togglePick(card, item) {
+    if (!sel.on) return false;
+    sel.items.has(item) ? sel.items.delete(item) : sel.items.set(item, current);
+    card.classList.toggle("on", sel.items.has(item)); card.setAttribute("aria-pressed", String(sel.items.has(item)));
+    dlBar(); return true;
+  }
+  function dlBar() {
+    const bar = document.getElementById("dlbar");
+    if (!sel.on && !sel.busy && !sel.msg) { bar.classList.add("hidden"); return; }
+    bar.classList.remove("hidden"); bar.replaceChildren();
+    if (sel.on) {
+      const n = [...sel.items.keys()].reduce((a, x) => a + filesOf(x).length, 0);
+      bar.append($("strong", "", `${sel.items.size}件を選択中（${n}ファイル）`));
+      const go = $("button", "", "選んだものをダウンロード"); go.disabled = !sel.items.size || sel.busy;
+      go.addEventListener("click", () => bulkDownload([...sel.items.entries()], "選んだ素材"));
+      const clr = $("button", "", "選択を外す"); clr.addEventListener("click", () => { sel.items.clear(); draw(); });
+      bar.append(go, clr);
+    }
+    if (sel.msg) bar.append($("p", "msg", sel.msg));
+  }
+  // まとめて落とすときは、1ファイルずつ続けて保存する（ドライブはページの中からの取り出しを断るため、ZIPにはできない）
+  function bulkDownload(pairs, label) {
+    const jobs = [];
+    pairs.forEach(([it]) => filesOf(it).forEach(f => jobs.push(f)));
+    return runJobs(jobs, label);
+  }
+  async function runJobs(jobs, label) {
+    if (sel.busy || !jobs.length) return;
+    if (jobs.length === 1) { location.href = DL(jobs[0][1]); return; }
+    if (!confirm(`${label}の${jobs.length}ファイルを、1つずつ続けて保存します。\nブラウザに「複数のファイルのダウンロード」を聞かれたら、許可してください。`)) return;
+    sel.busy = true;
+    for (let k = 0; k < jobs.length; k++) {
+      sel.msg = `保存しています（${k + 1} / ${jobs.length}）`; dlBar();
+      const fr = document.createElement("iframe"); fr.hidden = true; fr.src = DL(jobs[k][1]); document.body.append(fr);
+      setTimeout(() => fr.remove(), 120000);
+      await new Promise(r => setTimeout(r, 900));
+    }
+    sel.busy = false; sel.msg = `${jobs.length}ファイルの保存を始めました。ブラウザのダウンロード一覧で確かめてください`; dlBar();
+    setTimeout(() => { sel.msg = ""; dlBar(); }, 8000);
+  }
+  function copyBtn(text, label = "名前を写す") {
+    const b = $("button", "small-btn", label);
+    b.addEventListener("click", async ev => { ev.stopPropagation(); try { await navigator.clipboard.writeText(text); b.textContent = "写しました"; } catch (e) { b.textContent = "写せませんでした"; } setTimeout(() => b.textContent = label, 1500); });
+    return b;
+  }
+  function driveLink(url, label = "ドライブで開く") { const a = $("a", "", label); a.href = url; a.target = "_blank"; a.rel = "noopener"; a.style.fontSize = "12px"; return a; }
+  function placeRow(pl) {
+    const r = $("div", "row");
+    r.append($("span", "loc", "ドライブ：" + pl["場所"]));
+    if (pl.url) r.append(driveLink(pl.url));
+    r.append(copyBtn(pl["場所"], "パスを写す"));
+    return r;
+  }
+
+  function renderScripts() {
+    const g = $("div", "scripts");
+    D["台本"].forEach(s => {
+      const c = $("article", "script"), h = $("header");
+      const l = $("div"); l.append($("p", "kicker", s.id.toUpperCase() + "・" + s["秒"] + "秒"), $("h3", "", s["名前"]));
+      const bd = $("div", "badges"); bd.append($("span", "badge ok", "決定版"), $("span", "badge plain", s["根拠"]));
+      h.append(l, bd);
+      const au = $("audio"); au.controls = true; au.preload = "none"; au.src = s["音声"];
+      const tx = $("div", "text"); s["本文"].forEach(p => { const e = $("p"); p.forEach((line, i) => { if (i) e.append($("br")); e.append(line); }); tx.append(e); });
+      const r = $("div", "row"); r.append(copyBtn(s["本文"].map(p => p.join("\n")).join("\n\n"), "本文を写す"));
+      (s.dl || []).filter(f => f[2] === "本体").forEach(f => r.append(dlLink(f, /\.txt$/.test(f[0]) ? "台本のテキスト" : "ナレーション音声")));
+      const pl = $("div"); pl.append(placeRow({ 場所: s["場所"], url: D["音声のドライブ"] }));
+      c.append(h, au, r, tx, pl);
+      const snd = s["BGM・SE"] || [];
+      if (snd.length) {
+        const sw = $("details", "snd"); sw.open = true;
+        sw.append($("summary", "", `BGM・効果音（${snd.length}件）`));
+        snd.forEach(x => {
+          const row = $("div", "snd-row"), top = $("div", "row");
+          top.append($("strong", "", x["名前"]), $("span", "badge " + (x["状態"] === "決定" ? "ok" : "warn"), x["状態"] === "決定" ? "本人が決定" : "仮"));
+          const a = $("audio"); a.controls = true; a.preload = "none"; a.src = x["音"];
+          const f = (s.dl || []).find(d => d[2] === "音" && x["場所"].endsWith("/" + d[0]));
+          row.append(top, a, $("p", "snd-note", x["注"]), $("div", "loc", x["場所"])); if (f) { const rr = $("div", "row"); rr.style.marginTop = "4px"; rr.append(dlLink(f)); row.append(rr); }
+          sw.append(row);
+        });
+        c.append(sw);
+      }
+      g.append(c);
+    });
+    panel.append(g);
+  }
+
+  function renderMotions(kind) {
+    const list = kind === "lip" ? D["口パク"] : kind === "duet" ? D["掛け合い"] : D["全身"];
+    motionGrid(list, kind);
+  }
+  function motionGrid(list, kind) {
+    if (kind === "lip") {
+      const f = $("div", "filters"), sg = $("div", "seg");
+      ["正面", "斜め角度"].forEach(a => { const b = $("button", "", a); b.setAttribute("aria-pressed", String(state.angle === a)); b.addEventListener("click", () => { state.angle = a; draw(); }); sg.append(b); });
+      f.append(sg); panel.append(f);
+    }
+    const g = $("div", kind === "duet" ? "grid wide" : "grid");
+    list.forEach(item => {
+      const fr = kind === "lip" ? item["向き"][state.angle] : item["コマ"];
+      const files = kind === "lip" ? item["ファイル"][state.angle] : item["ファイル"];
+      const c = $("div", "card"); c.tabIndex = 0; c.setAttribute("role", "button");
+      c.addEventListener("keydown", e => { if (e.target === c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); c.click(); } });
+      const st = $("div", "stage"), im = $("img"); im.decoding = "async"; im.alt = files[0]; st.append(im);
+      const main = (item.dl || []).find(f => f[0] === files[0]);
+      if (main && !sel.on) st.append(dlFab(main));
+      st._p = player(im, fr); io.observe(st);
+      const n = $("div", "fname"); n.append($("strong", "", base(files[0])));
+      if (item["仮置き"]) c.append($("span", "badge warn tag", "仮置き"));
+      c.append(st, n); pickable(c, item);
+      c.addEventListener("click", () => { if (!togglePick(c, item)) openMotion(item, kind); });
+      g.append(c);
+    });
+    panel.append(g);
+  }
+
+  const dlg = document.getElementById("dlg");
+  dlg.addEventListener("close", () => { dlg._stop && dlg._stop(); dlg.replaceChildren(); });
+  function fileList(names, item) {
+    const ul = $("ul", "files"), ids = new Map((item && item.dl || []).map(f => [f[0], f]));
+    names.forEach(f => { const li = $("li"), r = $("div", "row"); r.append(copyBtn(base(f))); if (ids.has(f)) r.append(dlLink(ids.get(f))); li.append($("span", "", base(f)), r); ul.append(li); });
+    return ul;
+  }
+  function openMotion(item, kind) {
+    const main = base(kind === "lip" ? item["ファイル"]["正面"][0] : item["ファイル"][0]);
+    const head = $("div", "dlg-head"), t = $("h2", "", main); t.id = "dlg-title";
+    const x = $("button", "", "閉じる"); x.addEventListener("click", () => dlg.close()); head.append(t, x);
+    const body = $("div", "dlg-body"), ps = $("div", kind === "duet" ? "players wide-stage" : "players");
+    const sets = kind === "lip" ? ["正面", "斜め角度"].map(a => [base(item["ファイル"][a][0]), item["向き"][a]]) : [[null, item["コマ"]]];
+    const ctl = sets.map(([name, fr]) => {
+      const fg = $("figure"), st = $("div", "stage"), im = $("img"); st.append(im); fg.append(st);
+      if (name) { const cap = $("figcaption", "row"); cap.append($("span", "", name), copyBtn(name)); fg.append(cap); }
+      ps.append(fg); return player(im, fr);
+    });
+    const bar = $("div", "row"); bar.style.marginTop = "12px";
+    const play = $("button", "", "止める"); let on = true;
+    play.addEventListener("click", () => { on = !on; play.textContent = on ? "止める" : "再生"; ctl.forEach(p => on ? p.play() : p.stop()); });
+    bar.append(play);
+    if (kind !== "lip") bar.append(copyBtn(main));
+    bar.append(driveLink(item["置き場"].url, "ドライブのフォルダを開く"));
+    ctl.forEach(p => p.play());
+    dlg._stop = () => ctl.forEach(p => { p.stop(); players.delete(p); });
+    body.append(ps, bar);
+    const mains = (item.dl || []).filter(f => f[2] === "本体").map(f => f[0]);
+    if (mains.length) { body.append($("h3", "group-title", "ファイル"), fileList(mains, item)); }
+    const komas = item["コマのファイル"] || [];
+    if (komas.length) {
+      // コマも素材として見えるように、画像で並べる（本人 11/14）
+      const folder = item["コマのフォルダ"] || (kind === "duet" ? "08_掛け合いのコマ" : "03_全身のコマ");
+      const ids = new Map((item.dl || []).filter(f => f[2] === "コマ").map(f => [f[0], f]));
+      const hd = $("div", "koma-head"); hd.append($("h3", "group-title", `コマ（${komas.length}枚）`));
+      const all = $("button", "", "コマをまとめてダウンロード"); all.addEventListener("click", () => runJobs([...ids.values()], main + "のコマ"));
+      if (ids.size) hd.append(all);
+      hd.append(driveLink(item["コマのドライブ"] || D[kind === "duet" ? "掛け合いのコマのドライブ" : "全身のコマのドライブ"], folder + "を開く"));
+      const g = $("div", "koma-grid"), thumbs = item["コマの見本"] || [], prefix = main + "_";
+      komas.forEach((f, k) => {
+        const tile = $("div", "koma-tile"), st = $("div", "stage");
+        if (thumbs[k]) { const im = $("img"); im.src = thumbs[k]; im.alt = base(f); im.loading = "lazy"; st.append(im); }
+        if (ids.has(f)) st.append(dlFab(ids.get(f)));
+        const nm = $("div", "nm"), short = base(f).startsWith(prefix) ? base(f).slice(prefix.length) : base(f);
+        nm.append($("span", "", short), copyBtn(base(f))); nm.title = base(f);
+        tile.append(st, nm); g.append(tile);
+      });
+      body.append(hd, g);
+    }
+    dlg.replaceChildren(head, body); dlg.showModal();
+  }
+
+  function renderProv(key) {
+    const G = D[key];
+    const groups = [...new Set(G["動作"].map(x => x["系統"] || ""))];
+    groups.forEach(grp => {
+      const items = G["動作"].filter(x => (x["系統"] || "") === grp);
+      panel.append($("h2", "group-title", `動き${grp ? "｜" + grp : ""}（${items.length}）`));
+      motionGrid(items, key);
+    });
+  }
+
+  // 11/18 等身大は、一旦、生成時期別に並べる（新しい時期を上に）
+  function renderLife() {
+    const P = D["等身大"]["時期"];
+    if (!P) { renderProv("等身大"); return; }
+    if (D["Vtuberのドライブ"]) { const a = driveLink(D["Vtuberのドライブ"], "Vtuberのフォルダを開く"); a.className = "link-btn"; panel.append(a); }
+    P.forEach(p => {
+      const hold = p["保留のID"] && (D["保留"] || []).find(g => g.id === p["保留のID"]);
+      const n = p["今の版"] ? D["等身大"]["動作"].length : hold ? hold["素材"].length : (p["ファイル"] || []).length;
+      panel.append($("h2", "group-title", `${p["名前"]}（${n}）`));
+      const meta = $("p", "hold-meta", `${p["状態"]}｜${p["説明"]}`); panel.append(meta);
+      if (p["ドライブ"]) { const r = $("div", "row"); r.style.margin = "0 0 10px"; r.append(driveLink(p["ドライブ"], "この時期のフォルダを開く")); panel.append(r); }
+      if (p["今の版"]) motionGrid(D["等身大"]["動作"], "等身大");
+      else if (hold) holdGrid(hold);
+      else if (p["ファイル"]) { const ul = $("ul", "files"); p["ファイル"].forEach(f => ul.append($("li", "", base(f)))); panel.append(ul); }
+    });
+  }
+  // 11/18 キャラのページでは、共通素材はリンクだけを出す（大元は一つ上の階層）
+  function renderLink(tab, label) {
+    panel.append($("p", "home-lead", `${label}は、どのキャラのページでも使う素材なので、大元を一つ上の階層の「共通素材」のページに置いています。`));
+    const a = $("a", "link-btn", `共通素材のページで${label}を開く（${CM["数"][label]}件）`); a.href = CM["ページ"] + "#" + tab; panel.append(a);
+  }
+  function renderImage() {
+    const items = D["イメージ強化"];
+    panel.append($("p", "home-lead", "リール型の素材です。ほかにも分け方が出てくるので、一旦このカテゴリに入れています。"));
+    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); return; }
+    const g = $("div", "icon-grid");
+    items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
+      c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c); });
+    panel.append(g);
+  }
+
+  function renderBg() {
+    const g = $("div", "bg-grid");
+    D["背景"].forEach(b => {
+      const c = $("article", "card"), v = $("video"); v.src = b.src; v.poster = b.poster; v.controls = true; v.muted = true; v.playsInline = true; v.preload = "none";
+      const n = $("div", "fname"), row = $("div", "row"); row.style.marginTop = "6px";
+      row.append(copyBtn(base(b["ファイル"])), driveLink(b.url)); if (b.dl && b.dl[0]) row.append(dlLink(b.dl[0]));
+      pickable(c, b); c.addEventListener("click", () => togglePick(c, b));
+      n.append($("strong", "", base(b["ファイル"])), row);
+      c.append(v, n); g.append(c);
+    });
+    panel.append(g);
+  }
+  function renderIcons() {
+    const groups = ["アプリ", "文字バッジ", "ドット絵", "Codex", "ChatGPTペット", "note・Claudeのキャラ"];
+    const label = { "アプリ": "アプリアイコン", "ドット絵": "ドット絵キャラ", "Codex": "Codexキャラ" };
+    groups.forEach(grp => {
+      const items = D["アイコン"].filter(x => x["組"] === grp);
+      if (!items.length) return;
+      panel.append($("h2", "group-title", `${label[grp] || grp}（${items.length}）`));
+      const g = $("div", "icon-grid");
+      items.forEach(x => {
+        const c = $("div", "icon-card" + (x["暗い背景"] ? " dark" : "")), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
+        c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+        pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
+      });
+      panel.append(g);
+    });
+  }
+
+  // 11/14 本人（意思決定DBに登録済み）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
+  function renderHold() {
+    panel.append($("p", "home-lead", "届いたけれど、まだ正式な素材にしていないものです（採否を決める前の素材や、Chatworkの依頼で作った素材）。採用したものは、それぞれの種類のタブに移ります。"));
+    const groups = D["保留"] || [];
+    if (!groups.length) { panel.append($("p", "hold-empty", "今は保留の素材はありません。")); return; }
+    if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
+    // 11/14 新しく届いたものを上に出す
+    groups.slice().reverse().forEach(g => {
+      panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
+      panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
+      holdGrid(g);
+    });
+  }
+  function holdGrid(g) {
+    {
+      const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && x["種類"] === "等身大" && /\.gif$/.test(x.src);
+      const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : "") +
+        (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
+      g["素材"].forEach(x => {
+        // 11/14 動く素材の見本（mp4）は、動きと画質を見られるように大きめの動画で出す
+        const mv = /\.mp4$/.test(x.src), nativeGif = isNativeGif(x);
+        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "")), im = mv ? $("video") : $("img");
+        if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"]); }
+        else { im.src = x.src; im.alt = x["名前"]; im.loading = "lazy"; }
+        // 11/14 同じ名前の素材が既にあるとき（差し替えの候補）は、今の版と同じ高さで並べて見比べる
+        if (x["比べる"]) { const cmp = $("div", "hold-compare"), o = $("figure"), n = $("figure"), oi = $("img"); oi.src = x["比べる"]; oi.alt = "今の版"; oi.loading = "lazy";
+          o.append(oi, $("figcaption", "", "今の版")); n.append(im, $("figcaption", "", "届いた版")); cmp.append(o, n); c.append(cmp); }
+        else c.append(im);
+        c.append($("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
+        if (x["メモ"]) c.append($("span", "hold-memo", x["メモ"]));
+        if (nativeGif && !sel.on) {
+          const original = $("a", "link-btn small-btn hold-open", "原寸GIFを開く");
+          original.href = x.src; original.target = "_blank"; original.rel = "noopener";
+          original.setAttribute("aria-label", x["名前"] + "の原寸GIFを開く");
+          original.addEventListener("click", e => e.stopPropagation()); c.append(original);
+        }
+        if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+        pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); grid.append(c);
+      });
+      panel.append(grid);
+    }
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>

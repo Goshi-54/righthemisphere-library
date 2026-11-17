@@ -180,7 +180,7 @@ dialog::backdrop{background:#000a}
 <header class="topbar"><div class="topbar-in">
   <div class="brand">
     <button class="menu-btn" id="menu-btn" aria-label="メニューの表示・非表示" aria-controls="side" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <h1>でぷれさん素材ライブラリ</h1>
+    <h1 id="page-name">でぷれさん素材ライブラリ</h1>
   </div>
   <a class="link-btn" id="drive-root" href="#" target="_blank" rel="noopener">ドライブのフォルダを開く</a>
 </div></header>
@@ -201,7 +201,11 @@ dialog::backdrop{background:#000a}
   let D;
   try { D = await (await fetch("data/library.json")).json(); }
   catch (e) { document.getElementById("panel").textContent = "データを読み込めませんでした。"; return; }
-  document.getElementById("drive-root").href = D["キャラ"]["ドライブ"];
+  // 11/18 このページの作りは、でぷれさんと共通素材（一つ上の階層）で共通。台帳にある種類だけタブを出す
+  const isChar = !!D["キャラ"];
+  if (D["ページ名"]) { document.getElementById("page-name").textContent = D["ページ名"]; document.title = D["ページ名"]; }
+  document.getElementById("drive-root").href = isChar ? D["キャラ"]["ドライブ"] : D["ドライブ"];
+  const CM = D["共通素材"];   // キャラのページ：共通素材へのリンクの情報
 
   // 画面に見えているカードだけコマ送りで動かす
   const players = new Set();
@@ -216,18 +220,26 @@ dialog::backdrop{background:#000a}
   const io = new IntersectionObserver(es => es.forEach(e => { const p = e.target._p; if (!p) return; e.isIntersecting ? p.play() : p.stop(); }), { rootMargin: "80px" });
 
   const first = fr => fr && fr[0] && fr[0].src;
+  // 11/18 本人（意思決定DBに登録済み）：ミニキャラ（口パク・全身の動き・掛け合い）／Vtuber（等身大。一旦、生成時期別）／その他（マイクラ）。
+  //   素材（背景・アイコン・イメージ強化）の大元は一つ上の階層（共通素材）に置き、キャラのページにはリンクだけを出す
+  const has = k => Array.isArray(D[k]) ? true : !!D[k];
+  const SG = isChar ? "素材（共通・リンク）" : "素材";
   const TABS = [
     { id: "home", label: "TOP", render: renderHome },
-    { id: "lip", group: "キャラの動き", label: "口パク", n: D["口パク"].length, thumb: first(D["口パク"][0]["向き"]["正面"]), frames: D["口パク"][0]["向き"]["正面"], render: () => renderMotions("lip") },
-    { id: "body", group: "キャラの動き", label: "全身の動き", n: D["全身"].length, frames: D["全身"][0]["コマ"], render: () => renderMotions("body") },
-    { id: "duet", group: "キャラの動き", label: "掛け合い", n: D["掛け合い"].length, frames: D["掛け合い"][0]["コマ"], render: () => renderMotions("duet") },
-    { id: "life", group: "キャラの動き", label: "等身大（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: () => renderProv("等身大") },
-    { id: "mc", group: "キャラの動き", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
-    { id: "bg", group: "素材", label: "背景", n: D["背景"].length, thumb: D["背景"][0].poster, cover: true, render: renderBg },
-    { id: "icon", group: "素材", label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
-    { id: "hold", group: "素材", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
-    { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
-  ];
+    has("口パク") && { id: "lip", group: "ミニキャラ", label: "口パク", n: D["口パク"].length, thumb: first(D["口パク"][0]["向き"]["正面"]), frames: D["口パク"][0]["向き"]["正面"], render: () => renderMotions("lip") },
+    has("全身") && { id: "body", group: "ミニキャラ", label: "全身の動き", n: D["全身"].length, frames: D["全身"][0]["コマ"], render: () => renderMotions("body") },
+    has("掛け合い") && { id: "duet", group: "ミニキャラ", label: "掛け合い", n: D["掛け合い"].length, frames: D["掛け合い"][0]["コマ"], render: () => renderMotions("duet") },
+    has("等身大") && { id: "life", group: "Vtuber", label: "等身大（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: renderLife },
+    has("マイクラ") && { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
+    has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
+    has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
+    has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
+    CM && { id: "bg", group: SG, label: "背景", n: CM["数"]["背景"], thumb: CM["見本"]["背景"], cover: true, link: true, render: () => renderLink("bg", "背景") },
+    CM && { id: "icon", group: SG, label: "アイコン", n: CM["数"]["アイコン"], icons: CM["見本"]["アイコン"], link: true, render: () => renderLink("icon", "アイコン") },
+    CM && { id: "img", group: SG, label: "イメージ強化", n: CM["数"]["イメージ強化"], link: true, render: () => renderLink("img", "イメージ強化") },
+    has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
+    has("保留") && { id: "hold", group: "確かめの場", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
+  ].filter(Boolean);
   const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
   const narrow = matchMedia("(max-width:820px)");
   const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : "home"; };
@@ -267,7 +279,7 @@ dialog::backdrop{background:#000a}
     const t = TABS.find(t => t.id === current);
     document.getElementById("page-title").textContent = t.id === "home" ? "素材の一覧" : t.label;
     panel.replaceChildren(); panel.classList.toggle("selecting", sel.on);
-    if (t.id !== "home") dlTools(); t.render(); dlBar();
+    if (t.id !== "home" && !t.link) dlTools(); t.render(); dlBar();
     window.scrollTo(0, 0);
   }
   function renderHome() {
@@ -280,6 +292,7 @@ dialog::backdrop{background:#000a}
       else if (t.thumb) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = t.thumb; th.append(img); }
       else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
         t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
+      else if (t.link || t.id === "img") { const m = $("div", "script-mark", t.link ? "共通素材のページへ" : "今はなし"); th.append(m); }
       else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
       else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
       const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));
@@ -297,7 +310,7 @@ dialog::backdrop{background:#000a}
   const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
   const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
   const TAB_ITEMS = { script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
-    icon: () => D["アイコン"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
   const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
   const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
   function dlFab(f) {
@@ -504,6 +517,38 @@ dialog::backdrop{background:#000a}
     });
   }
 
+  // 11/18 等身大は、一旦、生成時期別に並べる（新しい時期を上に）
+  function renderLife() {
+    const P = D["等身大"]["時期"];
+    if (!P) { renderProv("等身大"); return; }
+    if (D["Vtuberのドライブ"]) { const a = driveLink(D["Vtuberのドライブ"], "Vtuberのフォルダを開く"); a.className = "link-btn"; panel.append(a); }
+    P.forEach(p => {
+      const hold = p["保留のID"] && (D["保留"] || []).find(g => g.id === p["保留のID"]);
+      const n = p["今の版"] ? D["等身大"]["動作"].length : hold ? hold["素材"].length : (p["ファイル"] || []).length;
+      panel.append($("h2", "group-title", `${p["名前"]}（${n}）`));
+      const meta = $("p", "hold-meta", `${p["状態"]}｜${p["説明"]}`); panel.append(meta);
+      if (p["ドライブ"]) { const r = $("div", "row"); r.style.margin = "0 0 10px"; r.append(driveLink(p["ドライブ"], "この時期のフォルダを開く")); panel.append(r); }
+      if (p["今の版"]) motionGrid(D["等身大"]["動作"], "等身大");
+      else if (hold) holdGrid(hold);
+      else if (p["ファイル"]) { const ul = $("ul", "files"); p["ファイル"].forEach(f => ul.append($("li", "", base(f)))); panel.append(ul); }
+    });
+  }
+  // 11/18 キャラのページでは、共通素材はリンクだけを出す（大元は一つ上の階層）
+  function renderLink(tab, label) {
+    panel.append($("p", "home-lead", `${label}は、どのキャラのページでも使う素材なので、大元を一つ上の階層の「共通素材」のページに置いています。`));
+    const a = $("a", "link-btn", `共通素材のページで${label}を開く（${CM["数"][label]}件）`); a.href = CM["ページ"] + "#" + tab; panel.append(a);
+  }
+  function renderImage() {
+    const items = D["イメージ強化"];
+    panel.append($("p", "home-lead", "リール型の素材です。ほかにも分け方が出てくるので、一旦このカテゴリに入れています。"));
+    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); return; }
+    const g = $("div", "icon-grid");
+    items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
+      c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c); });
+    panel.append(g);
+  }
+
   function renderBg() {
     const g = $("div", "bg-grid");
     D["背景"].forEach(b => {
@@ -543,6 +588,11 @@ dialog::backdrop{background:#000a}
     groups.slice().reverse().forEach(g => {
       panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
+      holdGrid(g);
+    });
+  }
+  function holdGrid(g) {
+    {
       const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && x["種類"] === "等身大" && /\.gif$/.test(x.src);
       const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src)) ? " hold-grid-wide" : "") +
         (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
@@ -568,7 +618,7 @@ dialog::backdrop{background:#000a}
         pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); grid.append(c);
       });
       panel.append(grid);
-    });
+    }
   }
 
   draw();
