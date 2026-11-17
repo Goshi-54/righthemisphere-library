@@ -242,7 +242,7 @@ dialog::backdrop{background:#000a}
   const periodId = p => p["今の版"] ? "life" : "life" + p.id.slice(1);
   const periodTabs = PERIODS.map(p => {
     const items = periodItems(p), firstImg = items.map(x => x.src).find(x => x && !/\.mp4$/.test(x));
-    return { id: periodId(p), group: "Vtuber", label: "等身大 " + (p["タブ名"] || p["名前"]), n: items.length, period: p,
+    return { id: periodId(p), group: "Vtuber", label: p["タブ名"] || p["名前"], n: items.length, period: p,
       frames: p["今の版"] ? D["等身大"]["動作"][0]["コマ"] : null, thumb: p["今の版"] ? null : firstImg, render: () => renderPeriod(p) };
   });
   const TABS = [
@@ -250,7 +250,7 @@ dialog::backdrop{background:#000a}
     has("口パク") && { id: "lip", group: "ミニキャラ", label: "口パク", n: D["口パク"].length, thumb: first(D["口パク"][0]["向き"]["正面"]), frames: D["口パク"][0]["向き"]["正面"], render: () => renderMotions("lip") },
     has("全身") && { id: "body", group: "ミニキャラ", label: "全身の動き", n: D["全身"].length, frames: D["全身"][0]["コマ"], render: () => renderMotions("body") },
     has("掛け合い") && { id: "duet", group: "ミニキャラ", label: "掛け合い", n: D["掛け合い"].length, frames: D["掛け合い"][0]["コマ"], render: () => renderMotions("duet") },
-    ...(PERIODS.length ? periodTabs : [has("等身大") && { id: "life", group: "Vtuber", label: "等身大（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: () => renderProv("等身大") }]),
+    ...(PERIODS.length ? periodTabs : [has("等身大") && { id: "life", group: "Vtuber", label: "Vtuber（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: () => renderProv("等身大") }]),
     has("マイクラ") && { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
     has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
     has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
@@ -538,7 +538,6 @@ dialog::backdrop{background:#000a}
 
   // 11/18 等身大は、一旦、生成時期別に並べる（新しい時期を上に）
   function renderPeriod(p) {
-    panel.append($("p", "hold-meta", `${p["状態"]}｜${p["説明"]}`));
     const r = $("div", "row"); r.style.margin = "0 0 12px";
     if (p["ドライブ"]) r.append(driveLink(p["ドライブ"], "この時期のフォルダを開く"));
     else if (D["保留のドライブ"] && (p["保留のID"] || []).length) r.append(driveLink(D["保留のドライブ"], "保留のフォルダを開く"));
@@ -547,7 +546,7 @@ dialog::backdrop{background:#000a}
     if (p["今の版"]) { motionGrid(D["等身大"]["動作"], "等身大"); return; }
     if ((p["保留のID"] || []).length) {
       p["保留のID"].map(holdOf).filter(Boolean).forEach(g => {
-        panel.append($("h2", "group-title", `${g["依頼"].replace(/^等身大_/, "")}（${g["素材"].length}）`));
+        panel.append($("h2", "group-title", `${groupName(g)}（${g["素材"].length}）`));
         panel.append($("p", "hold-meta", `${g["届いた日"]} 取り込み・${g["出どころ"]}`));
         holdGrid(g);
       });
@@ -562,19 +561,11 @@ dialog::backdrop{background:#000a}
     });
     panel.append(grid);
   }
-  // キャラのページで共通素材を見せるときの一行（大元は一つ上の階層）
-  function commonNote() {
-    if (!CM) return;
-    const p = $("p", "hold-meta", "キャラ共通の素材です。大元は "); const a = $("a", "", "共通素材のページ"); a.href = CM["ページ"]; p.append(a, "（一つ上の階層）にあります。"); panel.append(p);
-  }
-  // 11/18 キャラのページでは、共通素材はリンクだけを出す（大元は一つ上の階層）
-  function renderLink(tab, label) {
-    panel.append($("p", "home-lead", `${label}は、どのキャラのページでも使う素材なので、大元を一つ上の階層の「共通素材」のページに置いています。`));
-    const a = $("a", "link-btn", `共通素材のページで${label}を開く（${CM["数"][label]}件）`); a.href = CM["ページ"] + "#" + tab; panel.append(a);
-  }
+  // 11/18 本人「等身大って言葉自体使わない」：組の名前の頭の「等身大」は出さない（ドライブのフォルダ名・依頼の名前はそのまま）
+  const groupName = g => g["依頼"].replace(/^等身大_?/, "");
+
   function renderImage() {
-    const items = D["イメージ強化"]; commonNote();
-    panel.append($("p", "home-lead", "リール型の素材です。ほかにも分け方が出てくるので、一旦このカテゴリに入れています。"));
+    const items = D["イメージ強化"];
     if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); return; }
     const g = $("div", "icon-grid");
     items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
@@ -584,7 +575,7 @@ dialog::backdrop{background:#000a}
   }
 
   function renderBg() {
-    commonNote(); const g = $("div", "bg-grid");
+    const g = $("div", "bg-grid");
     D["背景"].forEach(b => {
       const c = $("article", "card"), v = $("video"); v.src = b.src; v.poster = b.poster; v.controls = true; v.muted = true; v.playsInline = true; v.preload = "none";
       const n = $("div", "fname"), row = $("div", "row"); row.style.marginTop = "6px";
@@ -596,7 +587,7 @@ dialog::backdrop{background:#000a}
     panel.append(g);
   }
   function renderIcons() {
-    commonNote(); const groups = ["アプリ", "文字バッジ", "ドット絵", "Codex", "ChatGPTペット", "note・Claudeのキャラ"];
+    const groups = ["アプリ", "文字バッジ", "ドット絵", "Codex", "ChatGPTペット", "note・Claudeのキャラ"];
     const label = { "アプリ": "アプリアイコン", "ドット絵": "ドット絵キャラ", "Codex": "Codexキャラ" };
     groups.forEach(grp => {
       const items = D["アイコン"].filter(x => x["組"] === grp);
@@ -620,14 +611,14 @@ dialog::backdrop{background:#000a}
     if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
     // 11/14 新しく届いたものを上に出す
     groups.slice().reverse().forEach(g => {
-      panel.append($("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`));
+      panel.append($("h2", "group-title", `${groupName(g)}（${g["素材"].length}）`));
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
       holdGrid(g);
     });
   }
   function holdGrid(g) {
     {
-      const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && x["種類"] === "等身大" && /\.gif$/.test(x.src);
+      const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && (x["種類"] === "Vtuber" || x["種類"] === "等身大") && /\.gif$/.test(x.src);
       const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src) || x["比べる"]) ? " hold-grid-wide" : "") +
         (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
       g["素材"].forEach(x => {

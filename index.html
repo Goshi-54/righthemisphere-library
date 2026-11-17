@@ -122,7 +122,7 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
     if (cm) {
       const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
       cm["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
-      const b = $("div", "body"); b.append($("h2", "", cm["名前"]), $("div", "meta", cm["説明"]));
+      const b = $("div", "body"); b.append($("h2", "", cm["名前"]));
       const chips = $("div", "chips");
       cm["件数"].forEach(([k, n]) => { const a = link("chip", "", cm["ページ"] + "#" + ({ "背景": "bg", "アイコン": "icon", "イメージ強化": "img" }[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
       b.append(chips);
@@ -150,11 +150,10 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
     hero.append(st, info); main.append(hero);
 
     const cnt = $("section", "sec"); cnt.append($("h3", "", "素材の件数"));
-    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "等身大（仮置き）": "life", "マイクラ（仮置き）": "mc", "保留": "hold", "台本": "script" };
+    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "Vtuber（仮置き）": "life", "マイクラ（仮置き）": "mc", "保留": "hold", "台本": "script" };
     const chips = $("div", "chips");
     c["件数"].forEach(([k, n]) => { const a = link("chip", "", c["ライブラリ"] + "#" + (ids[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
     cnt.append(chips);
-    if (D["共通素材"]) { const cm = D["共通素材"]; cnt.append($("p", "meta", "背景・アイコン・イメージ強化は、キャラ共通の素材として置いています（このキャラのライブラリからはリンク）。")); const r = $("div", "row"); r.append(link("btn ghost", "共通素材を開く", cm["ページ"])); cnt.append(r); }
     main.append(cnt);
 
     const v = c["声"], vs = $("section", "sec"); vs.append($("h3", "", "声"));
