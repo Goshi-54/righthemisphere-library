@@ -55,7 +55,7 @@ for c in CHARS:
         name = src.replace("/", "_")
         shutil.copyfile(f"{c['lib']}/{src}", f"{HERE}/media/{c['id']}/{name}")
         return f"media/{c['id']}/{name}"
-    adopted = {"等身大_基準_正面顔.jpg": "採用（本人「こちらベースで」）"}
+    adopted = {"基準_正面顔.jpg": "採用（本人「こちらベースで」）"}
     refs = [
         {"画風": "ミニキャラ", "ドライブ": D["キャラ"]["ドライブ"], "説明": "ライブラリを公開したとき（11/12）から載せている参照シート",
          "画像": [{"名前": x["label"], "src": take(x["src"]), "状態": ""} for x in D["キャラ"]["参照シート"]]},

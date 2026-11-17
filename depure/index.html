@@ -562,7 +562,7 @@ dialog::backdrop{background:#000a}
     panel.append(grid);
   }
   // 11/18 本人「等身大って言葉自体使わない」：組の名前の頭の「等身大」は出さない（ドライブのフォルダ名・依頼の名前はそのまま）
-  const groupName = g => g["依頼"].replace(/^等身大_?/, "");
+  const groupName = g => g["依頼"].replace(/^(Vtuber|等身大)_?/, "");
 
   function renderImage() {
     const items = D["イメージ強化"];
@@ -618,7 +618,7 @@ dialog::backdrop{background:#000a}
   }
   function holdGrid(g) {
     {
-      const isNativeGif = x => g["依頼"] === "等身大_新規動作20種" && (x["種類"] === "Vtuber" || x["種類"] === "等身大") && /\.gif$/.test(x.src);
+      const isNativeGif = x => /新規動作20種$/.test(g["依頼"]) && (x["種類"] === "Vtuber" || x["種類"] === "等身大") && /\.gif$/.test(x.src);
       const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src) || x["比べる"]) ? " hold-grid-wide" : "") +
         (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
       g["素材"].forEach(x => {
