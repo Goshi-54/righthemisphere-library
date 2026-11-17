@@ -103,8 +103,17 @@ def compare(it, char, drv, lib):
 def slug(s):
     return re.sub(r'[\\/:*?"<>|\s]+', "_", s).strip("_")[:40]
 
+# 11/18 本人「だから等身大って言葉自体使わないって等身大をVtuberの呼び方に変える。…」「外して」「自動で外して」（意思決定DB 41bc12971e2781619d3aefb8106d3c2c・41bc12971e2781569640d0661b4362c8・41bc12971e27814bbc3ff8e946ee76ff）
+#   受け取るとき、Codexが付けた名前の「等身大」を外す。ファイル名・コマのフォルダ名・名前は「等身大_」を外す。組の名前（依頼）は「等身大」をVtuberにする
+def no_tojin(s):
+    s = re.sub(r"^等身大_?|(?<=_)等身大_", "", s)
+    return s.replace("等身大", "Vtuber")
+def no_tojin_group(s):
+    return re.sub(r"等身大_?", "Vtuber_", s)
+
 def receive(a):
     lib, drv, D = paths(a.char)
+    a.依頼 = no_tojin_group(a.依頼)
     base = os.path.dirname(os.path.abspath(a.memo))
     rows = list(csv.DictReader(open(a.memo, encoding="utf-8-sig")))
     if not rows: sys.exit("納品メモに行がない")
@@ -123,15 +132,17 @@ def receive(a):
     os.makedirs(dst)
     for r in rows:
         src = os.path.join(base, r["ファイル"])
-        name = os.path.basename(r["ファイル"])
+        name = no_tojin(os.path.basename(r["ファイル"]))
         if os.path.exists(f"{dst}/{name}"): sys.exit(f"同じ名前のファイルが2つある：{name}")
         shutil.copyfile(src, f"{dst}/{name}")
-        it = {"名前": r["名前"], "種類": r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, lib, f"{folder}/{name}"), "状態": "保留"}
+        it = {"名前": no_tojin(r["名前"]), "種類": "Vtuber" if r["種類"] == "等身大" else r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, lib, f"{folder}/{name}"), "状態": "保留"}
         if r.get("メモ"): it["メモ"] = r["メモ"]
         compare(it, a.char, drv, lib)
         if r.get("コマのフォルダ"):
             kd = os.path.join(base, r["コマのフォルダ"]); kname = f"{os.path.splitext(name)[0]}_コマ"
             shutil.copytree(kd, f"{dst}/{kname}"); it["コマのフォルダ"] = f"{folder}/{kname}"
+            for f in os.listdir(f"{dst}/{kname}"):
+                if no_tojin(f) != f: os.rename(f"{dst}/{kname}/{f}", f"{dst}/{kname}/{no_tojin(f)}")
         items.append(it)
     g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "素材": items}
     if a.原文: g["依頼の原文"] = a.原文
