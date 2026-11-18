@@ -103,6 +103,7 @@ p{margin:0 0 10px}
 .bg-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;display:block}
 .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .hold-empty{color:var(--muted);padding:24px 0}
+.group-title.group-target{scroll-margin-top:72px;outline:2px solid var(--accent,#7aa7ff);outline-offset:6px;border-radius:6px}
 .hold-meta{color:var(--muted);font-size:13px;margin:-4px 0 10px}
 .hold-kind{font-size:11px;color:var(--muted)}
 .hold-state{display:inline-block;font-size:11px;font-weight:700;padding:0 8px;border-radius:10px;background:var(--warnbg);color:var(--warn);margin-top:2px}
@@ -236,7 +237,8 @@ dialog::backdrop{background:#000a}
   const SG = isChar ? "素材（キャラ共通）" : "素材";
   // 11/18 本人「Vtuber（等身大）も一括に並べるのではなく口パクや全身の動きのようにページを分けてください。」（意思決定DB 41bc12971e27812ab625ceaa50a1fb0a）
   //   → 生成時期ごとにタブを分ける（今の版のタブは前と同じ #life）
-  const PERIODS = (D["等身大"] && D["等身大"]["時期"]) || [];
+  // 11/18 本人「上の階層だけ」（意思決定DB 41cc12971e27816a96c1c9f93186d1b1）：保留を上の階層へ移した時期は、採用して下ろすまで隠す（"非表示"）
+  const PERIODS = ((D["等身大"] && D["等身大"]["時期"]) || []).filter(p => !p["非表示"]);
   const holdOf = id => (D["保留"] || []).find(g => g.id === id);
   const periodItems = p => p["今の版"] ? D["等身大"]["動作"] : (p["保留のID"] || []).length ? p["保留のID"].map(holdOf).filter(Boolean).flatMap(g => g["素材"]) : (p["素材"] || []);
   const periodId = p => p["今の版"] ? "life" : "life" + p.id.slice(1);
@@ -256,11 +258,16 @@ dialog::backdrop{background:#000a}
     has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
     has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
     has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
+    // 11/18 本人「別口で「要望素材」みたいなカテゴリを素材ライブラリに用意してそこに格納したい。…各キャラクターページそれぞれに「要望素材」があるイメージ。」（意思決定DB 41cc12971e278179b8c0c7d8a228e510）
+    has("要望素材") && { id: "req", group: "確かめの場", label: "要望素材", n: (D["要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderReq },
     has("保留") && { id: "hold", group: "確かめの場", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
   ].filter(Boolean);
   const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
   const narrow = matchMedia("(max-width:820px)");
-  const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : "home"; };
+  // 11/18 返信のURL（#組のID）から、その組の素材へ直接行けるようにする
+  const groupTab = h => (D["要望素材"] || []).some(g => g.id === h) ? "req" : (D["保留"] || []).some(g => g.id === h) ? "hold" : null;
+  const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : (groupTab(h) && TABS.some(t => t.id === groupTab(h))) ? groupTab(h) : "home"; };
+  const toGroup = () => { const h = decodeURIComponent(location.hash.slice(1)); const el = h && groupTab(h) && document.getElementById(h); if (el) { el.classList.add("group-target"); setTimeout(() => el.scrollIntoView({ block: "start" }), 50); } };
   let current = fromHash();
   const state = { angle: "正面" };
   let group = null;
@@ -276,7 +283,7 @@ dialog::backdrop{background:#000a}
     if (id === "home") { history.pushState(null, "", location.pathname + location.search); current = "home"; draw(); }
     else location.hash = id;  // hashchange で描き直す
   }
-  const onNav = () => { const h = fromHash(); if (h !== current) { current = h; draw(); } };
+  const onNav = () => { const h = fromHash(); if (h !== current) { current = h; draw(); } toGroup(); };
   addEventListener("hashchange", onNav); addEventListener("popstate", onNav);
   // メニューの表示・非表示（広い画面では閉じた状態を覚える。狭い画面では横から出す）
   let wideOpen = true;
@@ -311,7 +318,7 @@ dialog::backdrop{background:#000a}
       else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
         t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
       else if (t.link || t.id === "img") { const m = $("div", "script-mark", t.link ? "共通素材のページへ" : "今はなし"); th.append(m); }
-      else if (t.id === "hold") { const first = (D["保留"] || []).flatMap(g => g["素材"])[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
+      else if (t.id === "hold" || t.id === "req") { const first = (D[t.id === "hold" ? "保留" : "要望素材"] || []).flatMap(g => g["素材"]).slice(-1)[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
       else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
       const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));
       b.append(th, cap); b.addEventListener("click", () => go(t.id)); tiles.append(b);
@@ -328,7 +335,7 @@ dialog::backdrop{background:#000a}
   const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
   const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
   const TAB_ITEMS = { script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
-    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), req: () => (D["要望素材"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
   PERIODS.forEach(p => { TAB_ITEMS[periodId(p)] = () => periodItems(p); });
   const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
   const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
@@ -611,7 +618,19 @@ dialog::backdrop{background:#000a}
     if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
     // 11/14 新しく届いたものを上に出す
     groups.slice().reverse().forEach(g => {
-      panel.append($("h2", "group-title", `${groupName(g)}（${g["素材"].length}）`));
+      const h = $("h2", "group-title", `${groupName(g)}（${g["素材"].length}）`); h.id = g.id; panel.append(h);
+      panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}` + (g["キャラ名"] ? `・${g["キャラ名"]}` : "")));
+      holdGrid(g);
+    });
+  }
+  // 11/18 要望素材：Chatworkの要望で作った素材（本人が作った保留とは別に置く）
+  function renderReq() {
+    panel.append($("p", "home-lead", "Chatworkの要望で作った素材です。新しく届いたものを上に出します。"));
+    const groups = D["要望素材"] || [];
+    if (!groups.length) { panel.append($("p", "hold-empty", "今は要望素材はありません。")); return; }
+    if (D["要望素材のドライブ"]) { const a = $("a", "link-btn", "要望素材のフォルダを開く"); a.href = D["要望素材のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
+    groups.slice().reverse().forEach(g => {
+      const h = $("h2", "group-title", `${g["依頼"]}（${g["素材"].length}）`); h.id = g.id; panel.append(h);
       panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
       holdGrid(g);
     });
@@ -646,7 +665,7 @@ dialog::backdrop{background:#000a}
     }
   }
 
-  draw();
+  draw(); toGroup();
 })();
 </script>
 </body>

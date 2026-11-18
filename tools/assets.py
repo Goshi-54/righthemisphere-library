@@ -16,6 +16,11 @@
 #       11/18 アイコン・イメージ強化（と背景）は、キャラをまたぐ共通素材（chars.json の common）のドライブと台帳へ移す
 #       （本人「素材は最終的にはどのキャラクターページにも表示するものになりそうなので、大元はもう一つ上の階層に保管。…」「一覧のとおり進めて」）
 #   python3 tools/assets.py list <キャラ>
+# 11/18 本人「…「保留」は僕生成の保留が多くなりそうなので、別口で「要望素材」みたいなカテゴリを素材ライブラリに用意してそこに格納したい。…各キャラクターページそれぞれに「要望素材」があるイメージ。後、…僕の保留に関してはもう一つ上の階層のところにデータも含めておいて、採用となったら各ページに下ろしたい。」
+#   （意思決定DB 41cc12971e278179b8c0c7d8a228e510）
+#   → 本人の保留：台帳は一つ上の階層（共通素材 common の library.json の「保留」）、ドライブは 2.素材ライブラリ/90_保留/。組に「キャラ」を持つ
+#   → 要望素材（Chatworkの要望で作った物）：receive に --先 要望素材。台帳は各キャラの library.json の「要望素材」、ドライブは <キャラ>/91_要望素材/。組のIDは q…
+#   → promote は、保留・要望素材のどちらからでも、正式な場所（キャラのページ、共通素材）へ下ろす。今はアイコン・イメージ強化・Vtuber（--時期）
 # 試し運転：環境変数 DRV_OVERRIDE（ドライブの代わりのフォルダ）と LIB_OVERRIDE（ライブラリの元フォルダの代わり。共通素材は LIB_OVERRIDE_common）
 import os, sys, csv, json, shutil, hashlib, argparse, subprocess, datetime, re
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -25,6 +30,12 @@ import glob
 _roots = glob.glob(f"{HOME}/Library/CloudStorage/GoogleDrive-*/マイドライブ")
 DRIVE_ROOT = os.path.dirname(_roots[0]) if _roots else ""   # このMacのGoogleドライブ（アカウント名をコードに書かない）
 HOLD = "90_保留"
+REQ = "91_要望素材"
+LIBROOT_PLACE = "マイドライブ/1. クリエイティブ/2.素材ライブラリ"   # 本人の保留はこの直下の 90_保留
+
+def hold_root():
+    o = os.environ.get("DRV_OVERRIDE")
+    return f"{o}/_素材ライブラリ" if o else f"{DRIVE_ROOT}/{LIBROOT_PLACE}"
 STATES = ("保留", "採用", "仮置き", "直し", "見送り")
 now = lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -93,7 +104,7 @@ def thumb(src, lib, key):
         subprocess.run(["sips", "-Z", "480", "-s", "format", "avif", src, "--out", f"{lib}/{out}"], check=True, capture_output=True)
     return out
 
-def compare(it, char, drv, lib):
+def compare(it, char, lib):
     """11/14 同じ名前の素材が正式な場所に既にあるとき（差し替えの候補）、今の版の見本を「比べる」に付ける"""
     k, kdrv, _ = kind_of(char, it["種類"])
     old = f"{kdrv}/{k['フォルダ']}/{it['ファイル']}" if k else ""
@@ -114,17 +125,21 @@ def no_tojin_group(s):
 def receive(a):
     lib, drv, D = paths(a.char)
     a.依頼 = no_tojin_group(a.依頼)
+    req = a.先 == "要望素材"
+    # 本人の保留は一つ上の階層（common の台帳・2.素材ライブラリ/90_保留）、要望素材はキャラの台帳・<キャラ>/91_要望素材
+    if req: owner, olib, OD, root, key, pre, top = a.char, lib, D, drv, "要望素材", "q", REQ
+    else: owner, (olib, _, OD), root, key, pre, top = "common", paths("common"), hold_root(), "保留", "h", HOLD
     base = os.path.dirname(os.path.abspath(a.memo))
     rows = list(csv.DictReader(open(a.memo, encoding="utf-8-sig")))
     if not rows: sys.exit("納品メモに行がない")
     for need in ("名前", "ファイル", "種類"):
         if need not in rows[0]: sys.exit(f"納品メモに「{need}」の列がない")
     day = datetime.date.today().strftime("%Y%m%d")
-    folder = f"{HOLD}/{day}_{slug(a.依頼)}"
-    dst = f"{drv}/{folder}"
+    folder = f"{top}/{day}_{slug(a.依頼)}"
+    dst = f"{root}/{folder}"
     if os.path.exists(dst): sys.exit(f"既にある：{dst}")
-    D.setdefault("保留", [])
-    gid = f"h{day}-{len([g for g in D['保留'] if g['id'].startswith('h' + day)]) + 1:02d}"
+    OD.setdefault(key, [])
+    gid = f"{pre}{day}-{len([g for g in OD[key] if g['id'].startswith(pre + day)]) + 1:02d}"
     items = []
     for r in rows:
         src = os.path.join(base, r["ファイル"])
@@ -135,21 +150,25 @@ def receive(a):
         name = no_tojin(os.path.basename(r["ファイル"]))
         if os.path.exists(f"{dst}/{name}"): sys.exit(f"同じ名前のファイルが2つある：{name}")
         shutil.copyfile(src, f"{dst}/{name}")
-        it = {"名前": no_tojin(r["名前"]), "種類": "Vtuber" if r["種類"] == "等身大" else r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, lib, f"{folder}/{name}"), "状態": "保留"}
+        it = {"名前": no_tojin(r["名前"]), "種類": "Vtuber" if r["種類"] == "等身大" else r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, olib, f"{folder}/{name}"), "状態": "要望" if req else "保留"}
         if r.get("メモ"): it["メモ"] = r["メモ"]
-        compare(it, a.char, drv, lib)
+        compare(it, a.char, olib)
         if r.get("コマのフォルダ"):
             kd = os.path.join(base, r["コマのフォルダ"]); kname = f"{os.path.splitext(name)[0]}_コマ"
             shutil.copytree(kd, f"{dst}/{kname}"); it["コマのフォルダ"] = f"{folder}/{kname}"
             for f in os.listdir(f"{dst}/{kname}"):
                 if no_tojin(f) != f: os.rename(f"{dst}/{kname}/{f}", f"{dst}/{kname}/{no_tojin(f)}")
         items.append(it)
-    g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "素材": items}
+    g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "キャラ": a.char, "キャラ名": CHARS[a.char]["名前"], "素材": items}
     if a.原文: g["依頼の原文"] = a.原文
     if a.依頼のID: g["依頼のID"] = a.依頼のID
-    D["保留"].append(g)
-    save(lib, D, [row("受け取り", f"{a.依頼}（{len(items)}点）を保留に置いた［{gid}{'・' + a.依頼のID if a.依頼のID else ''}］", "保留", 出どころ=a.出どころ, ドライブ=folder)])
-    print("保留に置いた", gid, len(items), "点 →", dst)
+    if a.受付: g["受付番号"] = a.受付
+    OD[key].append(g)
+    r = row("受け取り", f"{a.依頼}（{len(items)}点）を{key}に置いた［{gid}{'・' + a.依頼のID if a.依頼のID else ''}］", key, 出どころ=a.出どころ, ドライブ=folder)
+    save(olib, OD, [r])
+    if owner != a.char: save(lib, D, [r])   # キャラの履歴にも残す（入口の更新の記録に出る）
+    print(f"{key}に置いた", gid, len(items), "点 →", dst)
+    print(f"ページ：{SITE}/{CHARS[owner]['ページ']}/#{gid}")
 
 SITE = "https://goshi-54.github.io/righthemisphere-library"
 MEMO_URL = "https://github.com/Goshi-54/righthemisphere-library/blob/main/tools/納品メモの書き方.md"
@@ -184,7 +203,7 @@ def request(a):
     place = (kD["キャラ"]["ドライブの場所"] if "キャラ" in kD else kD["ドライブの場所"]).rstrip("/").replace("マイドライブ/", "")
     ex = examples(kdrv, k["フォルダ"])
     L = ["宛先：Codex",
-         f"出所：本人の依頼を、Claude Code「素材のGoogleドライブ格納とWebツール化」が整理した。依頼のID {rid}" + (f"／作業ID {a.作業ID}" if a.作業ID else ""),
+         f"出所：{a.出どころ or '本人の依頼'}を、Claude Code（素材ライブラリ）が整理した。依頼のID {rid}" + (f"／作業ID {a.作業ID}" if a.作業ID else ""),
          f"依頼：{name}の{a.種類}を{len(items)}点（{a.依頼}）", ""]
     L += ["■ 作ってほしいもの"] + [f"{i}. {s}" for i, s in enumerate(items, 1)]
     if a.原文: L += [f"依頼の原文：「{a.原文}」" + (f"（{a.出どころ}）" if a.出どころ else "")]
@@ -219,17 +238,23 @@ def request(a):
     save(lib, D, [row("依頼", f"Codexへの依頼文を作った：{a.種類}{len(items)}点（{a.依頼}）［{rid}］", "依頼文", 出どころ=a.出どころ or "")])
     print(text); print(f"\n（保存：{fn}）")
 
-def pick(D, gid, name):
-    g = next((g for g in D.get("保留", []) if g["id"] == gid), None)
-    if not g: sys.exit(f"保留にない：{gid}")
+def find(char, gid):
+    """組を探す。本人の保留は一つ上の階層（common）、要望素材はキャラの台帳。返すのは（台帳の持ち主, 台帳の元, 台帳, 置き場の根, 組の一覧の名前, 組）"""
+    for owner, key in (("common", "保留"), (char, "要望素材"), (char, "保留")):
+        lib, drv, D = paths(owner)
+        g = next((g for g in D.get(key, []) if g["id"] == gid), None)
+        if g: return owner, lib, D, (hold_root() if (owner == "common" and key == "保留") else drv), key, g
+    sys.exit(f"保留にも要望素材にもない：{gid}")
+
+def pick(g, name):
     its = g["素材"] if name == "*" else [x for x in g["素材"] if x["名前"] == name]
     if not its: sys.exit(f"素材がない：{name}")
-    return g, its
+    return its
 
 def decide(a):
     if a.state not in STATES[1:]: sys.exit(f"状態は {STATES[1:]} のどれか")
-    lib, drv, D = paths(a.char)
-    g, its = pick(D, a.gid, a.name)
+    owner, lib, D, root, key, g = find(a.char, a.gid)
+    its = pick(g, a.name)
     for x in its:
         x["状態"] = a.state
         if a.本人: x["本人"] = a.本人
@@ -247,15 +272,19 @@ def media_for(src, lib, sub, nid, kind):
     return out
 
 def promote(a):
-    lib, drv, D = paths(a.char)
-    g, its = pick(D, a.gid, a.name)
-    its = [x for x in its if x["状態"] in ("採用", "仮置き")]
+    howner, hlib, HD, hroot, hkey, g = find(a.char, a.gid)
+    a.char = g.get("キャラ", a.char)   # 下ろす先は組のキャラ
+    its = [x for x in pick(g, a.name) if x["状態"] in ("採用", "仮置き")]
     if not its: sys.exit("採用・仮置きの素材がない（先に decide で採否を記録する）")
-    if a.kind not in ("アイコン", "イメージ強化"): sys.exit("今はアイコンとイメージ強化だけ。ほかの種類は、最初に実際に足すときに作る")
+    if a.kind == "Vtuber": return promote_vtuber(a, howner, hlib, HD, hroot, hkey, g, its)
+    if a.kind not in ("アイコン", "イメージ強化"): sys.exit("今はアイコン・イメージ強化・Vtuber。ほかの種類は、最初に実際に足すときに作る")
+    lib, drv, D = paths(a.char)
+    if howner == a.char: D = HD   # 同じ台帳を2回読まない（片方の保存で、もう片方の変更が消えるのを防ぐ）
     if a.kind == "アイコン" and not a.組: sys.exit("アイコンは --組 が要る（アプリ・文字バッジ・ドット絵 など）")
     k, kdrv, owner = kind_of(a.char, a.kind)
     if not k: sys.exit(f"tools/chars.json の {a.char} に「{a.kind}」がない")
     klib, _, KD = (lib, drv, D) if owner == a.char else paths(owner)
+    if howner == owner: KD = HD
     folder, sub, pre = k["フォルダ"], ("icon" if a.kind == "アイコン" else "img"), ("n" if a.kind == "アイコン" else "m")
     n = max([int(x["id"][1:]) for x in KD[a.kind] if re.fullmatch(pre + r"\d+", x.get("id", ""))] or [0])
     for x in its:
@@ -264,7 +293,7 @@ def promote(a):
     for x in its:
         n += 1; nid = f"{pre}{n:03d}"
         dst = f"{kdrv}/{folder}/{x['ファイル']}"
-        shutil.move(f"{drv}/{x['場所']}", dst)
+        shutil.move(f"{hroot}/{x['場所']}", dst)
         it = {"id": nid, "名前": os.path.splitext(x["ファイル"])[0], "src": media_for(dst, klib, sub, nid, a.kind), "場所": f"{folder}/{x['ファイル']}", "ファイル": x["ファイル"]}
         if a.組: it["組"] = a.組
         if a.kind == "アイコン": it["暗い背景"] = False
@@ -272,7 +301,8 @@ def promote(a):
         if owner != a.char: it["出どころのキャラ"] = a.char
         KD[a.kind].append(it)
         g["素材"].remove(x)
-    if not g["素材"]: D["保留"].remove(g)
+    if not g["素材"]: HD[hkey].remove(g)
+    if howner not in (owner, a.char): save(hlib, HD)
     names = "・".join(x["名前"] for x in its)
     st = "・".join(sorted({x['状態'] for x in its})); hon = "・".join(x.get("本人", "") for x in its if x.get("本人"))
     where = f"{a.kind}" + (f"（{a.組}）" if a.組 else "")
@@ -283,18 +313,52 @@ def promote(a):
         save(lib, D, [row("追加", f"{where}：{names}［{g['id']}から］", st, hon, "", g["出どころ"], folder)])
     print(f"{a.kind}に足した", len(its), "点。add_download_ids.py → build_public.py を、" + ("キャラと共通素材の両方の元フォルダで" if owner != a.char else "元フォルダで") + "流し、make_top.py を流す")
 
-def lst(a):
+def promote_vtuber(a, howner, hlib, HD, hroot, hkey, g, its):
+    """Vtuberの素材を、キャラのページの生成時期のタブ（--時期 t1117 など）へ下ろす。ドライブは 02_Vtuber/<時期>/ に移す"""
+    if not a.時期: sys.exit("Vtuberは --時期 が要る（例：t1117）")
     lib, drv, D = paths(a.char)
-    for g in D.get("保留", []):
-        print(g["id"], g["依頼"], g["出どころ"], g["届いた日"])
-        for x in g["素材"]: print("  ", x["状態"], x["種類"], x["名前"], x["ファイル"])
-    if not D.get("保留"): print("保留はない")
+    if howner == a.char: D = HD
+    p = next((p for p in D["等身大"]["時期"] if p["id"] == a.時期), None)
+    if not p: sys.exit(f"時期がない：{a.時期}")
+    if p.get("今の版"): sys.exit("今の版の時期へは下ろさない（別の作りのため）")
+    folder = p.get("場所") or f"02_Vtuber/{a.時期[1:]}"
+    for x in its:
+        if os.path.exists(f"{drv}/{folder}/{x['ファイル']}"): sys.exit(f"既にある：{drv}/{folder}/{x['ファイル']}")
+    os.makedirs(f"{drv}/{folder}", exist_ok=True)
+    for x in its:
+        shutil.move(f"{hroot}/{x['場所']}", f"{drv}/{folder}/{x['ファイル']}")
+        it = {k: x[k] for k in ("名前", "ファイル", "メモ", "dl") if k in x}
+        it["場所"] = f"{folder}/{x['ファイル']}"
+        if x.get("コマのフォルダ"):
+            kname = os.path.basename(x["コマのフォルダ"]); shutil.move(f"{hroot}/{x['コマのフォルダ']}", f"{drv}/{folder}/{kname}"); it["コマのフォルダ"] = f"{folder}/{kname}"
+        if howner != a.char and x["src"].startswith("media/"):   # 見本を、キャラのページの側へ写す
+            os.makedirs(os.path.dirname(f"{lib}/{x['src']}"), exist_ok=True); shutil.copyfile(f"{hlib}/{x['src']}", f"{lib}/{x['src']}")
+        it["src"] = x["src"]
+        if x["状態"] == "仮置き": it["仮置き"] = True
+        p.setdefault("素材", []).append(it)
+        g["素材"].remove(x)
+    p["場所"] = folder; p.pop("非表示", None); p.pop("保留のID", None)
+    if not g["素材"]: HD[hkey].remove(g)
+    names = "・".join(x["名前"] for x in its); st = "・".join(sorted({x['状態'] for x in its}))
+    r = row("追加", f"Vtuber（{p.get('タブ名', a.時期)}）：{names}［{g['id']}から］", st, "", "", g["出どころ"], folder)
+    save(lib, D, [r])
+    if howner != a.char: save(hlib, HD, [r])
+    print(f"Vtuber（{p.get('タブ名', a.時期)}）に下ろした", len(its), "点。add_download_ids.py → build_public.py を流し、make_top.py を流す")
+
+def lst(a):
+    for owner, key in (("common", "保留"), (a.char, "要望素材")):
+        lib, drv, D = paths(owner)
+        gs = [g for g in D.get(key, []) if owner != "common" or g.get("キャラ", a.char) == a.char]
+        print(f"■ {key}（{len(gs)}組）")
+        for g in gs:
+            print(g["id"], g["依頼"], g["出どころ"], g["届いた日"])
+            for x in g["素材"]: print("  ", x["状態"], x["種類"], x["名前"], x["ファイル"])
 
 ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
-p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID")
+p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID"); p.add_argument("--先", choices=["保留", "要望素材"], default="保留"); p.add_argument("--受付")
 p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件")
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
-p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", default="")
+p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", default=""); p.add_argument("--時期")
 p = sp.add_parser("list"); p.add_argument("char")
 a = ap.parse_args()
 {"request": request, "receive": receive, "decide": decide, "promote": promote, "list": lst}[a.cmd](a)
