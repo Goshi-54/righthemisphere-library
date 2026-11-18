@@ -39,6 +39,26 @@ p{margin:0 0 10px}
 .page-title{font-size:22px;margin:0 0 14px}
 .scrim{display:none}
 .home-lead{color:var(--muted);margin:-6px 0 18px}
+/* 11/18 要望素材：依頼の文を作る */
+.req-maker{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 22px;display:grid;gap:12px;max-width:760px}
+.req-maker .group-title{margin:0}
+.req-field{display:grid;gap:5px;font-size:13px;color:var(--muted)}
+.req-field>span{font-weight:700}
+.req-field textarea,.req-field input{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:100%;box-sizing:border-box}
+.req-field textarea:focus,.req-field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.req-kinds{display:flex;flex-wrap:wrap;gap:6px}
+.req-kinds button{font-size:13px;padding:4px 12px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;min-height:0}
+.req-kinds button[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+:root[data-theme="dark"] .req-kinds button[aria-checked="true"]{color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .req-kinds button[aria-checked="true"]{color:#14171c}}
+.req-label{font-size:13px;font-weight:700;color:var(--muted)}
+.req-out{margin:-6px 0 0;background:var(--stage);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.req-foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.req-foot button{font-size:13px;padding:5px 14px;border-radius:8px;background:var(--accent);color:#fff;border:0;font-weight:700;cursor:pointer}
+.req-foot button:disabled{opacity:.45;cursor:default}
+:root[data-theme="dark"] .req-foot button{color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .req-foot button{color:#14171c}}
+.req-note{font-size:13px;color:var(--muted);margin:0}
 .home-group{font-size:13px;color:var(--muted);font-weight:700;margin:22px 0 10px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
 .tile{display:flex;flex-direction:column;padding:0;overflow:hidden;border-radius:14px;text-align:left;font-weight:400;min-height:0}
@@ -624,8 +644,37 @@ dialog::backdrop{background:#000a}
     });
   }
   // 11/18 要望素材：Chatworkの要望で作った素材（本人が作った保留とは別に置く）
+  // 11/18 本人「Chatworkでの入力がしやすいようにカテゴリとかは選択式で選んで最後に希望を入力するようなツールを素材ライブラリに作りたいね。…
+  //   後、Chatworkの要望で作った素材です。新しく届いたものを上に出します。は削除で。要望素材は素材ライブラリ側からもダウンロードできるように。」（意思決定DB 41cc12971e2781b0adf2fce903e39c62）
+  // 作る文は ~/Code/systems/library/chatwork/intake.py が読む型（[info][title]素材の要望[/title] ■ キャラ／■ 種類／■ 中身）にそろえる
+  const REQ_KINDS = ["口パク", "全身の動き", "掛け合い", "Vtuber", "アイコン", "イメージ強化", "背景", "そのほか"];
+  function reqMaker() {
+    const box = $("section", "req-maker"), name = (D["キャラ"] || {})["名前"] || D["ページ名"] || "";
+    box.append($("h2", "group-title", "依頼の文を作る"));
+    const kindRow = $("div", "req-kinds"); kindRow.setAttribute("role", "radiogroup"); kindRow.setAttribute("aria-label", "種類");
+    let kind = REQ_KINDS[0];
+    const field = (label, el, opt) => { const l = $("label", "req-field"); l.append($("span", "", label + (opt ? "（あれば）" : "")), el); return l; };
+    const what = $("textarea"); what.id = "req-what"; what.rows = 2; what.placeholder = "例：驚いて「えっ」と言う";
+    const ref = $("input"); ref.id = "req-ref"; ref.type = "text"; ref.placeholder = "例：参考の動画のURL、似せたい素材の名前";
+    const due = $("input"); due.id = "req-due"; due.type = "text"; due.placeholder = "例：11/20 まで";
+    const out = $("pre", "req-out"), copy = $("button", "", "文をコピー"), note = $("p", "req-note", "");
+    const text = () => ["[info][title]素材の要望[/title]", `■ キャラ：${name}`, `■ 種類：${kind}`, `■ 中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
+      .concat(ref.value.trim() ? [`■ 参考：${ref.value.trim()}`] : [], due.value.trim() ? [`■ いつまでに：${due.value.trim()}`] : [], ["[/info]"]).join("\n");
+    const update = () => { out.textContent = text(); copy.disabled = !what.value.trim(); note.textContent = what.value.trim() ? "" : "中身を書くと、コピーできます"; };
+    REQ_KINDS.forEach((k, i) => { const b = $("button", "", k); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
+      b.addEventListener("click", () => { kind = k; kindRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x === b ? "true" : "false")); update(); }); kindRow.append(b); });
+    [what, ref, due].forEach(el => el.addEventListener("input", update));
+    copy.type = "button";
+    copy.addEventListener("click", async () => { try { await navigator.clipboard.writeText(text()); copy.textContent = "コピーしました"; note.textContent = "Chatworkの動画素材要望グループに貼って送ると、受け付けます"; }
+      catch (e) { const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); note.textContent = "コピーできなかったので、文を選びました。そのまま写してください"; }
+      setTimeout(() => copy.textContent = "文をコピー", 1800); });
+    box.append(field("種類", kindRow), field("中身（どんな素材がほしいか）", what), field("参考", ref, true), field("いつまでに", due, true));
+    const foot = $("div", "req-foot"); foot.append(copy, note); box.append($("span", "req-label", "Chatworkに貼る文"), out, foot);
+    const adj = $("p", "req-note"); adj.append("動画の明るさ・質感の調整は、"); const a = $("a", "", "調整ツール"); a.href = "../adjust/"; a.target = "_blank"; a.rel = "noopener"; adj.append(a, "の「設定をコピー」から頼めます"); box.append(adj);
+    update(); panel.append(box);
+  }
   function renderReq() {
-    panel.append($("p", "home-lead", "Chatworkの要望で作った素材です。新しく届いたものを上に出します。"));
+    reqMaker();
     const groups = D["要望素材"] || [];
     if (!groups.length) { panel.append($("p", "hold-empty", "今は要望素材はありません。")); return; }
     if (D["要望素材のドライブ"]) { const a = $("a", "link-btn", "要望素材のフォルダを開く"); a.href = D["要望素材のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
