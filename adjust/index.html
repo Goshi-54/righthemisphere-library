@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>生成素材の調整ツール</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 左に大きな画面、右に現像パネル。現像ソフトの作業台のような二段組み */
+:root{
+  --bg:#eef0f2; --surface:#ffffff; --panel:#f6f7f8; --line:#d5d9de; --fg:#1b1f24; --muted:#5d6670;
+  --accent:#2f6fb3; --accent-soft:#dce8f5; --track:#c7ccd2; --stage:#15181b; --warn:#9a5b00; --warn-soft:#fbefd9;
+  --ai:#5b4aa8; --ai-soft:#e9e5f7; --person:#1f7a4d; --person-soft:#dcf1e6;
+  --f-body:"IBM Plex Sans JP","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121417; --surface:#1b1e22; --panel:#1f2328; --line:#333940; --fg:#e7eaee; --muted:#9aa3ad;
+  --accent:#6ea8e6; --accent-soft:#22344a; --track:#3d444c; --stage:#0b0c0e; --warn:#e2a54a; --warn-soft:#3a2c14;
+  --ai:#a99af0; --ai-soft:#2c2645; --person:#5fcf95; --person-soft:#173527; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121417; --surface:#1b1e22; --panel:#1f2328; --line:#333940; --fg:#e7eaee; --muted:#9aa3ad;
+  --accent:#6ea8e6; --accent-soft:#22344a; --track:#3d444c; --stage:#0b0c0e; --warn:#e2a54a; --warn-soft:#3a2c14;
+  --ai:#a99af0; --ai-soft:#2c2645; --person:#5fcf95; --person-soft:#173527; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+h1{font-size:1.35rem;margin:0;text-wrap:balance}
+h2{font-size:.78rem;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:500}
+p{margin:0}
+.intro{display:flex;flex-direction:column;gap:8px}
+.intro .sub{color:var(--muted);max-width:70ch}
+.ask{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.ask ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.tag{display:inline-block;font-size:.7rem;padding:0 6px;border-radius:3px;margin-right:4px;vertical-align:1px}
+.t-person{background:var(--person-soft);color:var(--person)}
+.t-ai{background:var(--ai-soft);color:var(--ai)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:860px){.bench{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--stage);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;min-width:0}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
+.pair.landscape{grid-template-columns:minmax(0,1fr)}
+.pair figure{margin:0;display:flex;flex-direction:column;gap:6px;align-items:center;min-width:0}
+.pair figcaption{font-size:.78rem;color:#cfd5db;letter-spacing:.04em}
+.pair figcaption b{font-weight:600;color:#fff}
+.pair canvas{display:block;max-width:100%;max-height:72vh;width:auto;height:auto;border-radius:2px}
+.transport{display:flex;gap:8px;align-items:center;width:100%;max-width:520px;color:#cfd5db;font-family:var(--f-mono);font-size:.8rem}
+.transport input[type=range]{flex:1;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;min-width:0}
+.sec{padding:12px 14px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+button,.filebtn{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:5px;padding:5px 10px;cursor:pointer}
+button:hover,.filebtn:hover{border-color:var(--accent)}
+button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--fg)}
+button:focus-visible,input:focus-visible,.filebtn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.filebtn input{position:absolute;width:1px;height:1px;opacity:0}
+.filebtn{position:relative}
+.hist{width:100%;height:70px;background:var(--surface);border:1px solid var(--line);border-radius:4px;display:block}
+.readout{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.slider{display:grid;grid-template-columns:5.2em minmax(0,1fr) 3.4em;align-items:center;gap:8px}
+.slider label{font-size:.86rem}
+.slider output{font-family:var(--f-mono);font-size:.8rem;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.slider output.on{color:var(--accent)}
+input[type=range]{accent-color:var(--accent)}
+.grp{font-size:.72rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
+.check{display:flex;gap:8px;align-items:center;font-size:.86rem}
+pre{margin:0;font-family:var(--f-mono);font-size:.72rem;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px;white-space:pre-wrap;word-break:break-all;max-height:180px;overflow:auto}
+.hint{font-size:.76rem;color:var(--muted)}
+.status{font-size:.76rem;color:var(--muted);min-height:1.2em}
+.foot{display:flex;flex-direction:column;gap:6px;font-size:.8rem;color:var(--muted)}
+.foot ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+.back{font-size:.82rem;color:var(--accent);text-decoration:none}
+.back:hover{text-decoration:underline}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:46vh;width:100%;border:1.5px dashed #4a525b;border-radius:6px;color:#cfd5db;text-align:center;padding:24px}
+.empty .filebtn{font-size:.9rem;padding:8px 16px}
+.empty p{font-size:.82rem;color:#9aa3ad}
+.stage.drag{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="intro">
+    <a class="back" href="../">← 素材ライブラリ</a>
+    <h1>生成素材の調整ツール</h1>
+    <p class="sub">生成した動画や画像を開き、スライダーで明るさや質感を動かして、元（左）と調整後（右）を同じコマで並べて見る道具です。開いたファイルはこのブラウザの中だけで使い、どこにも送りません。決めた設定は、Claudeに渡すと動画全体にそのままかけられます（30fps化も選べます）。</p>
+  </header>
+
+  <div class="bench">
+    <section class="stage" aria-label="プレビュー">
+      <div class="empty" id="empty">
+        <label class="filebtn">動画か画像を開く<input type="file" id="file0" accept="video/*,image/*"></label>
+        <p>ここにファイルを落としても開けます。mp4（H.264）・jpg・png</p>
+      </div>
+      <div class="pair" id="pair" hidden>
+        <figure><figcaption><b>元</b></figcaption><canvas id="v-orig" width="720" height="1280" aria-label="元の素材"></canvas></figure>
+        <figure><figcaption><b>調整後</b></figcaption><canvas id="v-adj" width="720" height="1280" aria-label="調整後の素材"></canvas></figure>
+      </div>
+      <div class="transport" id="transport" hidden>
+        <button type="button" id="play">再生</button>
+        <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
+        <span id="time">0.0秒</span>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="調整">
+      <div class="sec">
+        <h2>素材</h2>
+        <div class="row">
+          <label class="filebtn">ファイルを開く<input type="file" id="file" accept="video/*,image/*"></label>
+        </div>
+        <p class="status" id="status">まだ何も開いていません。</p>
+      </div>
+
+      <div class="sec">
+        <h2>明るさの分布（調整後）</h2>
+        <canvas class="hist" id="hist" width="600" height="140" aria-label="明るさの分布"></canvas>
+        <div class="readout"><span id="lo">暗い側1%：-</span><span id="hi">明るい側1%：-</span></div>
+      </div>
+
+      <div class="sec" id="sliders">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <h2>調整</h2>
+          <div class="row">
+            <button type="button" id="preset-b" title="11/18に見比べたB（黒と白の端を広げた補正）に近い値">Bに近づける</button>
+            <button type="button" id="reset">元に戻す</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>書き出し</h2>
+        <label class="check"><input type="checkbox" id="fps30" checked> 30fpsにする（コマを作って足す）</label>
+        <pre id="json"></pre>
+        <div class="row"><button type="button" id="copy">設定をコピー</button></div>
+        <p class="hint">このページは見て決めるところまでです。動画ファイルにするときは、コピーした設定をClaude Codeに貼って「この設定で〇〇.mp4を書き出して」と頼みます。Claudeが手元の書き出し用スクリプト（apply.py）で、同じ調整を動画全体にかけます。</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="foot">
+    <p><b>作りと、気をつけること</b></p>
+    <ul>
+      <li>再生中は1コマずつ計算するので、明瞭度やテクスチャを動かすとカクつきます。止めた状態の絵が正しい結果です。</li>
+      <li>ページの計算と書き出しの計算は同じ式です。台北の1コマで比べると、色の差は平均0.1〜0.2段階（256段階のうち）でした。</li>
+      <li>明瞭度は大きくぼかした像との差、テクスチャは細かくぼかした像との差を足す作りです。Lightroomそのものの計算ではありません。</li>
+    </ul>
+  </footer>
+</div>
+
+<script src="core.js"></script>
+<script>
+(function(){
+  'use strict';
+  var C = window.AdjustCore;
+  var DEFS = [
+    {k:'exposure',  label:'露光量',     grp:'明るさ'},
+    {k:'contrast',  label:'コントラスト', grp:'明るさ'},
+    {k:'highlights',label:'ハイライト',  grp:'明るさ'},
+    {k:'shadows',   label:'シャドウ',    grp:'明るさ'},
+    {k:'texture',   label:'テクスチャ',  grp:'質感'},
+    {k:'clarity',   label:'明瞭度',     grp:'質感'}
+  ];
+  var P = Object.assign({}, C.DEFAULTS);
+
+  var vOrig = document.getElementById('v-orig'), octx = vOrig.getContext('2d');
+  var view = document.getElementById('v-adj'), vctx = view.getContext('2d', {willReadFrequently:true});
+  var work = document.createElement('canvas'), wctx = work.getContext('2d', {willReadFrequently:true});
+  var hist = document.getElementById('hist'), hctx = hist.getContext('2d');
+  var video = document.createElement('video');
+  video.muted = true; video.playsInline = true; video.loop = true; video.preload = 'auto';
+  var img = null, mode = 'video', orig = null, outData = null, dirty = true, busy = false;
+  var $ = function(id){return document.getElementById(id);};
+
+  // スライダーを組む
+  var box = $('sliders'), lastGrp = '';
+  DEFS.forEach(function(d){
+    if (d.grp !== lastGrp){ var g=document.createElement('div'); g.className='grp'; g.textContent=d.grp; box.appendChild(g); lastGrp=d.grp; }
+    var row=document.createElement('div'); row.className='slider';
+    row.innerHTML='<label for="r-'+d.k+'">'+d.label+'</label><input type="range" id="r-'+d.k+'" min="-100" max="100" step="1" value="0"><output id="o-'+d.k+'" for="r-'+d.k+'">0</output>';
+    box.appendChild(row);
+    var r=row.querySelector('input');
+    r.addEventListener('input', function(){ P[d.k]=parseInt(r.value,10); syncOut(d.k); schedule(); });
+    r.addEventListener('dblclick', function(){ P[d.k]=0; r.value=0; syncOut(d.k); schedule(); });
+  });
+  function syncOut(k){
+    var o=$('o-'+k), v=P[k];
+    o.textContent = k==='exposure' ? (v>0?'+':'')+(v/100).toFixed(2) : (v>0?'+':'')+v;
+    o.classList.toggle('on', v!==0);
+  }
+  function setAll(obj){ DEFS.forEach(function(d){ P[d.k]=obj[d.k]||0; $('r-'+d.k).value=P[d.k]; syncOut(d.k); }); schedule(); }
+  DEFS.forEach(function(d){ syncOut(d.k); });
+
+  $('reset').addEventListener('click', function(){ setAll(C.DEFAULTS); });
+  // B：入力の13%→黒、90%→白（傾き約1.3）。コントラスト+30がほぼ同じ傾きになる
+  $('preset-b').addEventListener('click', function(){ setAll({contrast:30}); });
+  $('fps30').addEventListener('change', updateJson);
+
+  function updateJson(){
+    var s = Object.assign({}, P, {fps30: $('fps30').checked});
+    $('json').textContent = JSON.stringify(s, null, 2);
+  }
+  $('copy').addEventListener('click', function(){
+    var t=$('json').textContent, btn=this;
+    var done=function(){ btn.textContent='コピーしました'; setTimeout(function(){btn.textContent='設定をコピー';},1500); };
+    try { navigator.clipboard.writeText(t).then(done, function(){ selectPre(); }); } catch(e){ selectPre(); }
+  });
+  function selectPre(){ var r=document.createRange(); r.selectNodeContents($('json')); var s=getSelection(); s.removeAllRanges(); s.addRange(r); $('copy').textContent='選んだ文字をコピーしてください'; }
+
+  // 素材の読み込み
+  function setSize(w,h){
+    [view, vOrig].forEach(function(c){ if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } });
+    work.width=w; work.height=h; outData=vctx.createImageData(w,h);
+    $('pair').classList.toggle('landscape', w>h);
+  }
+  function loadVideo(src, label){
+    mode='video'; img=null; $('transport').hidden=false; $('status').textContent='読み込み中…';
+    video.pause(); $('play').textContent='再生';
+    video.src = src; video.load();
+    video.onloadeddata = function(){
+      setSize(video.videoWidth, video.videoHeight);
+      $('status').textContent = label+'　'+video.videoWidth+'×'+video.videoHeight+'　'+video.duration.toFixed(1)+'秒';
+      grab();
+    };
+    video.onerror = function(){ $('status').textContent='この動画は開けませんでした。mp4（H.264）で試してください。'; };
+  }
+  function loadImage(src, label){
+    mode='image'; video.pause(); $('transport').hidden=true;
+    var im=new Image(); im.onload=function(){ img=im; setSize(im.naturalWidth, im.naturalHeight); $('status').textContent=label+'　'+im.naturalWidth+'×'+im.naturalHeight; grab(); };
+    im.onerror=function(){ $('status').textContent='この画像は開けませんでした。'; };
+    im.src=src;
+  }
+  var lastUrl = null;
+  function openFile(f){
+    if(!f) return;
+    if(!/^(video|image)\//.test(f.type)){ $('status').textContent='動画か画像のファイルを選んでください。'; return; }
+    if(lastUrl) URL.revokeObjectURL(lastUrl);
+    var url=lastUrl=URL.createObjectURL(f);
+    $('empty').hidden=true; $('pair').hidden=false;
+    if (f.type.indexOf('image/')===0) loadImage(url, f.name); else loadVideo(url, f.name);
+  }
+  ['file','file0'].forEach(function(id){ $(id).addEventListener('change', function(){ openFile(this.files&&this.files[0]); this.value=''; }); });
+  var stageEl=document.querySelector('.stage');
+  ['dragenter','dragover'].forEach(function(t){ document.addEventListener(t, function(e){ e.preventDefault(); stageEl.classList.add('drag'); }); });
+  ['dragleave','dragend'].forEach(function(t){ document.addEventListener(t, function(e){ if(!e.relatedTarget) stageEl.classList.remove('drag'); }); });
+  document.addEventListener('drop', function(e){ e.preventDefault(); stageEl.classList.remove('drag'); openFile(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]); });
+
+  // いまのコマを取り出して計算する
+  function grab(){
+    var w=work.width, h=work.height; if(!w) return;
+    wctx.drawImage(mode==='image'?img:video, 0, 0, w, h);
+    orig = wctx.getImageData(0,0,w,h);
+    dirty = true; render();
+  }
+  var pending=false;
+  function schedule(){ updateJson(); dirty=true; if(!pending){ pending=true; requestAnimationFrame(function(){ pending=false; render(); }); } }
+  function render(){
+    if(!orig || busy) return;
+    busy=true;
+    var w=orig.width, h=orig.height;
+    if (dirty){ C.processRGBA(orig.data, outData.data, w, h, P); drawHist(outData.data); dirty=false; }
+    // 左に元、右に調整後（同じコマ）
+    octx.putImageData(orig, 0, 0);
+    vctx.putImageData(outData, 0, 0);
+    busy=false;
+  }
+  function drawHist(d){
+    var bins=new Uint32Array(256), n=d.length/4, i, j;
+    for(i=0,j=0;i<n;i++,j+=4){ bins[(d[j]*0.2126+d[j+1]*0.7152+d[j+2]*0.0722+0.5)|0]++; }
+    var max=0; for(i=1;i<255;i++) if(bins[i]>max) max=bins[i];
+    var W=hist.width, H=hist.height, cs=getComputedStyle(document.documentElement);
+    hctx.clearRect(0,0,W,H);
+    hctx.fillStyle=cs.getPropertyValue('--track').trim();
+    for(i=0;i<256;i++){ var bh=Math.min(H, bins[i]/max*(H-6)); hctx.fillRect(i*W/256, H-bh, W/256+0.5, bh); }
+    // 下1%・上1%
+    var acc=0, lo=0, hi=255, t=n*0.01;
+    for(i=0;i<256;i++){ acc+=bins[i]; if(acc>=t){ lo=i; break; } }
+    acc=0; for(i=255;i>=0;i--){ acc+=bins[i]; if(acc>=t){ hi=i; break; } }
+    hctx.fillStyle=cs.getPropertyValue('--accent').trim();
+    hctx.fillRect(lo*W/256,0,2,H); hctx.fillRect(hi*W/256,0,2,H);
+    $('lo').textContent='暗い側1%：'+lo; $('hi').textContent='明るい側1%：'+hi;
+  }
+
+  // 再生まわり
+  var hasRVFC = 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
+  function onFrame(){ if(mode!=='video') return; grab(); updateTime(); if(!video.paused) loop(); }
+  function loop(){ if(hasRVFC) video.requestVideoFrameCallback(onFrame); else requestAnimationFrame(onFrame); }
+  $('play').addEventListener('click', function(){
+    if (video.paused){ video.play().then(function(){ $('play').textContent='止める'; loop(); }).catch(function(){}); }
+    else { video.pause(); $('play').textContent='再生'; }
+  });
+  video.addEventListener('pause', function(){ setTimeout(grab, 30); });
+  video.addEventListener('seeked', function(){ grab(); updateTime(); });
+  $('seek').addEventListener('input', function(){ if(video.duration){ video.currentTime = this.value/1000*video.duration; } });
+  function updateTime(){ if(!video.duration) return; $('time').textContent=video.currentTime.toFixed(1)+'秒'; $('seek').value=Math.round(video.currentTime/video.duration*1000); }
+
+  updateJson();
+})();
+</script>
+</body>
+</html>

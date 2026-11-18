@@ -134,7 +134,7 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
       const box = $("div", "cards"), card = $("article", "card shelf"), b = $("div", "body");
       b.append($("h2", "", sh["名前"]), $("p", "meta", sh["説明"]));
       sh["注意"].forEach(t => b.append($("div", "meta warn", t)));
-      const row = $("div", "row"); row.append(link("btn", "名前帳を開く", sh["リンク"], true)); b.append(row);
+      const row = $("div", "row"); row.append(link("btn", sh["ボタン"] || "名前帳を開く", sh["リンク"], sh["外部"] !== false)); b.append(row);
       card.append(b); box.append(card); main.append(box);
     });
   }
