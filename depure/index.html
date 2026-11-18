@@ -652,7 +652,7 @@ dialog::backdrop{background:#000a}
   // 11/18 要望素材：Chatworkの要望で作った素材（本人が作った保留とは別に置く）
   // 11/18 本人「Chatworkでの入力がしやすいようにカテゴリとかは選択式で選んで最後に希望を入力するようなツールを素材ライブラリに作りたいね。…
   //   後、Chatworkの要望で作った素材です。新しく届いたものを上に出します。は削除で。要望素材は素材ライブラリ側からもダウンロードできるように。」（意思決定DB 41cc12971e2781b0adf2fce903e39c62）
-  // 作る文は ~/Code/systems/library/chatwork/intake.py が読む型（[info][title]素材の要望[/title] ■ キャラ／■ 種類／■ 中身）にそろえる
+  // 作る文は ~/Code/systems/library/chatwork/intake.py が読む型（[info][title]素材の生成[/title] キャラ／種類／中身）にそろえる
   const REQ_KINDS = ["口パク", "全身の動き", "掛け合い", "Vtuber", "アイコン", "イメージ強化", "背景", "そのほか"];
   // 11/18 本人「いつまでにの項目はいらないかな。／動画の明るさ・質感の調整は、調整ツールの「設定をコピー」から頼めますの文もいらない」（同じ行）→ 外した
   function reqMaker() {
@@ -664,8 +664,9 @@ dialog::backdrop{background:#000a}
     const what = $("textarea"); what.id = "req-what"; what.rows = 2; what.placeholder = "例：驚いて「えっ」と言う";
     const ref = $("input"); ref.id = "req-ref"; ref.type = "text"; ref.placeholder = "例：参考の動画のURL、似せたい素材の名前";
     const out = $("pre", "req-out"), copy = $("button", "", "文をコピー"), note = $("p", "req-note", "");
-    const text = () => ["[info][title]素材の要望[/title]", `■ キャラ：${name}`, `■ 種類：${kind}`, `■ 中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
-      .concat(ref.value.trim() ? [`■ 参考：${ref.value.trim()}`] : [], ["[/info]"]).join("\n");
+    // 11/18 本人の見本で型を変えた：題「素材の生成」、項目に■を付けない（意思決定DB DEC-2129 41cc12971e2781efb043dabd9e410408）
+    const text = () => ["[info][title]素材の生成[/title]", `キャラ：${name}`, `種類：${kind}`, `中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
+      .concat(ref.value.trim() ? [`参考：${ref.value.trim()}`] : [], ["[/info]"]).join("\n");
     const update = () => { out.textContent = text(); copy.disabled = !what.value.trim(); note.textContent = what.value.trim() ? "" : "中身を書くと、コピーできます"; };
     REQ_KINDS.forEach((k, i) => { const b = $("button", "", k); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
       b.addEventListener("click", () => { kind = k; kindRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x === b ? "true" : "false")); update(); }); kindRow.append(b); });
