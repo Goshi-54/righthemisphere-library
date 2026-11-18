@@ -202,7 +202,9 @@ pre{margin:0;font-family:var(--f-mono);font-size:.72rem;background:var(--surface
 
   function updateJson(){
     var s = Object.assign({}, P, {fps30: $('fps30').checked});
-    $('json').textContent = JSON.stringify(s, null, 2);
+    // Chatworkにそのまま貼れる型（本人の見本どおり。波かっこは付けない）
+    var lines = JSON.stringify(s, null, 2).split('\n').slice(1, -1).join('\n');
+    $('json').textContent = '[info][title]素材の調整[/title]\n■ 設定\n' + lines + '[/info]';
   }
   $('copy').addEventListener('click', function(){
     var t=$('json').textContent, btn=this;
