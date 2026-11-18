@@ -87,7 +87,7 @@ pre{margin:0;font-family:var(--f-mono);font-size:.72rem;background:var(--surface
 <div class="wrap">
   <header class="intro">
     <h1>生成素材の調整ツール</h1>
-    <p class="sub">生成した動画や画像を開き、スライダーで明るさや質感を動かして、元（左）と調整後（右）を同じコマで並べて見る道具です。開いたファイルはこのブラウザの中だけで使い、どこにも送りません。決めた設定は、Claudeに渡すと動画全体にそのままかけられます（30fps化も選べます）。</p>
+    <p class="sub">生成した動画や画像を開き、スライダーで明るさや質感を動かして、元（左）と調整後（右）を同じコマで並べて見る道具です。開いたファイルはこのブラウザの中だけで使い、どこにも送りません。決めた設定は文字でコピーでき、同じ調整を動画全体にかけて書き出すときに使います（30fps化も選べます）。</p>
   </header>
 
   <div class="bench">
@@ -126,7 +126,7 @@ pre{margin:0;font-family:var(--f-mono);font-size:.72rem;background:var(--surface
         <div class="row" style="justify-content:space-between;align-items:center">
           <h2>調整</h2>
           <div class="row">
-            <button type="button" id="preset-b" title="11/18に見比べたB（黒と白の端を広げた補正）に近い値">Bに近づける</button>
+            <button type="button" id="preset-b" title="コントラストを+30にします。生成した動画は黒が浮きやすいため">黒と白を締める</button>
             <button type="button" id="reset">元に戻す</button>
           </div>
         </div>
@@ -137,7 +137,7 @@ pre{margin:0;font-family:var(--f-mono);font-size:.72rem;background:var(--surface
         <label class="check"><input type="checkbox" id="fps30" checked> 30fpsにする（コマを作って足す）</label>
         <pre id="json"></pre>
         <div class="row"><button type="button" id="copy">設定をコピー</button></div>
-        <p class="hint">このページは見て決めるところまでです。動画ファイルにするときは、コピーした設定をClaude Codeに貼って「この設定で〇〇.mp4を書き出して」と頼みます。Claudeが手元の書き出し用スクリプト（apply.py）で、同じ調整を動画全体にかけます。</p>
+        <p class="hint">このページでできるのは、見て決めるところまでです。動画ファイルへの書き出しは、このページではできません。「設定をコピー」で写した設定を使い、書き出し用のスクリプト（apply.py）で同じ調整を動画全体にかけます。</p>
       </div>
     </aside>
   </div>
