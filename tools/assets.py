@@ -90,6 +90,20 @@ def alpha_box(src, pad=16):
     w, h = (x2 - x1) // 2 * 2, (y2 - y1) // 2 * 2
     return x1, y1, w, h
 
+def _gif_box(src):
+    """透過GIFの全コマを合わせた絵のある範囲（x, y, 幅, 高さ）。絵が画面の4割より小さいときだけ返す（それ以外は None）
+    11/19 Vtuberの届いた版（1024×2048の上の方に人物）が、札の中で小さく見えた。全コマの動きが収まる範囲で切り、周りに4％の余白を残す"""
+    r = subprocess.run([FF, "-v", "info", "-i", src, "-vf", "format=rgba,alphaextract,bbox=min_val=128", "-f", "null", "-"], capture_output=True, text=True)
+    bs = re.findall(r"x1:(\d+) x2:(\d+) y1:(\d+) y2:(\d+)", r.stderr)
+    m = re.search(r"Stream #0:0.*?, (\d+)x(\d+)", r.stderr)
+    if not bs or not m: return None
+    W, H = int(m.group(1)), int(m.group(2))
+    x1 = min(int(b[0]) for b in bs); x2 = max(int(b[1]) for b in bs); y1 = min(int(b[2]) for b in bs); y2 = max(int(b[3]) for b in bs)
+    if (x2 - x1 + 1) * (y2 - y1 + 1) >= 0.4 * W * H: return None
+    pad = round(0.04 * max(x2 - x1, y2 - y1))
+    x1, y1, x2, y2 = max(0, x1 - pad), max(0, y1 - pad), min(W - 1, x2 + pad), min(H - 1, y2 + pad)
+    return x1, y1, x2 - x1 + 1, y2 - y1 + 1
+
 def thumb(src, lib, key):
     """見本の画像を media/hold/ に作る。静止画は avif（長い辺480）、GIF はそのまま（3MBまで）、動画は1コマ目
     11/14 3MBを超える動くGIF（等身大の作り直しなど）は、動きと画質を見られるように mp4 にする（透過の余白を切り、長い辺720まで、白地、コマの速さはそのまま）
@@ -98,14 +112,17 @@ def thumb(src, lib, key):
     ext = os.path.splitext(src)[1].lower()
     h = hashlib.sha1(key.encode()).hexdigest()[:14]
     os.makedirs(f"{lib}/media/hold", exist_ok=True)
-    if ext == ".gif" and os.path.getsize(src) <= 3_000_000:
+    box = _gif_box(src) if ext == ".gif" else None
+    if ext == ".gif" and os.path.getsize(src) <= 3_000_000 and not box:
         out = f"media/hold/{h}.gif"; shutil.copyfile(src, f"{lib}/{out}")
     elif ext == ".gif":
         out = f"media/hold/{h}.gif"
-        vf = "scale='if(gt(iw,ih),min(480,iw),-2)':'if(gt(iw,ih),-2,min(480,ih))':flags=lanczos"
-        subprocess.run([FF, "-y", "-loglevel", "error", "-i", src,
-                        "-filter_complex", f"[0:v]{vf},split[a][b];[a]palettegen=reserve_transparent=1:stats_mode=full[p];[b][p]paletteuse=dither=none:alpha_threshold=128",
-                        "-gifflags", "-offsetting", f"{lib}/{out}"], check=True)
+        for side in (480, 360, 270):   # ページが重くならないよう、3MBに収まるまで長い辺を下げる
+            vf = ("crop=%d:%d:%d:%d," % (box[2], box[3], box[0], box[1]) if box else "") + f"scale='if(gt(iw,ih),min({side},iw),-2)':'if(gt(iw,ih),-2,min({side},ih))':flags=lanczos"
+            subprocess.run([FF, "-y", "-loglevel", "error", "-i", src,
+                            "-filter_complex", f"[0:v]{vf},split[a][b];[a]palettegen=reserve_transparent=1:stats_mode=full[p];[b][p]paletteuse=dither=none:alpha_threshold=128",
+                            "-gifflags", "-offsetting", f"{lib}/{out}"], check=True)
+            if os.path.getsize(f"{lib}/{out}") <= 3_000_000: break
     elif ext in (".mp4", ".mov", ".webm"):
         out = f"media/hold/{h}.jpg"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-frames:v", "1", "-vf", "scale='min(480,iw)':-2", f"{lib}/{out}"], check=True)
