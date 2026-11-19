@@ -117,6 +117,15 @@ dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background
       card.append(st, b); cards.append(card);
     });
     main.append($("h2", "shelf-h", "キャラクター"), cards);
+    // 11/19 本人「え、上の階層への依頼だからTOPページへの移動依頼だよね？」→「TOPに入口だけ」：本人の保留への入口
+    const hd = D["保留"];
+    if (hd) {
+      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
+      hd["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
+      const b = $("div", "body"); b.append($("h2", "", hd["名前"]), $("p", "meta", hd["説明"]), $("div", "meta", `${hd["組"]} 組・${hd["点"]} 点`));
+      const row = $("div", "row"); row.append(link("btn", "保留を開く", hd["ページ"])); if (hd["ドライブ"]) row.append(link("btn ghost", "ドライブ", hd["ドライブ"], true)); b.append(row);
+      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "保留（採否を決めていない素材）"), box);
+    }
     // 11/18 背景・アイコン・イメージ強化は、キャラをまたぐ共通素材として一つ上の階層に置く（キャラのページからはリンクだけ）
     const cm = D["共通素材"];
     if (cm) {

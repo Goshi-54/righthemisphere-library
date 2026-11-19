@@ -93,7 +93,12 @@ shutil.copytree(f"{COMMON['lib']}/公開用", dst, ignore=shutil.ignore_patterns
 common = {"名前": CD["ページ名"], "ページ": f"{COMMON['id']}/", "ドライブ": CD["ドライブ"],
           "件数": [["背景", len(CD["背景"])], ["アイコン", len(CD["アイコン"])], ["イメージ強化", len(CD["イメージ強化"])]],
           "見本": [f"{COMMON['id']}/{x['src']}" for x in CD["アイコン"][:6]]}
+# 11/19 本人「え、上の階層への依頼だからTOPページへの移動依頼だよね？」→「TOPに入口だけ」：本人の保留への入口をTOPに置く（中身は共通素材のページの保留のまま）
+hold_items = [x for g in CD.get("保留", []) for x in g.get("素材", [])]
+hold = {"名前": "保留", "説明": "ゴーシさんが作って、まだ採否を決めていない素材（全キャラ分）。採用したものは、各キャラのページのそれぞれの種類のタブに移す。",
+        "組": len(CD.get("保留", [])), "点": len(hold_items), "ページ": f"{COMMON['id']}/#hold", "ドライブ": CD.get("保留のドライブ", ""),
+        "見本": [f"{COMMON['id']}/{x['src']}" for x in hold_items if not x["src"].lower().endswith((".mp4", ".mov"))][:6]}
 
 os.makedirs(f"{HERE}/data", exist_ok=True)
-json.dump({"キャラ": out_chars, "共通素材": common, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+json.dump({"キャラ": out_chars, "保留": hold, "共通素材": common, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("キャラ", len(out_chars), [c["名前"] for c in out_chars])
