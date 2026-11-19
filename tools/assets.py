@@ -251,12 +251,14 @@ def request(a):
     conds = [s.strip() for s in re.split(r"[;\n；]", a.条件 or "") if s.strip()]
     if conds: L += ["", "■ 求める品質・条件"] + [f"- {s}" for s in conds]
     L += ["", "■ 見た目のもと（ここに合わせる）",
-          f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
-          "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。",
+          *([] if a.キャラなし else [f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
+          "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。"]),
           f"- 同じ種類の今ある素材：{SITE}/{CHARS[owner]['ページ']}/#{k['タブ']}",
           (f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。" if not (LATER and REF) else
            f"  本体はGoogleドライブの「{place}/{k['フォルダ']}/」。この作業からはドライブを開けないので、見本の写し「{ref_of(kdrv + '/' + k['フォルダ'])}/」を見る。")
-          + "大きさ・形式・線・色・動きの速さをこれにそろえる。" + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
+          # 11/19 本人「アイコンやイメージ強化素材もClaude Codeキャラと同様に変に縛られたりしないで作れるようにして。」：共通素材系は参考どまり
+          + ("大きさ・形式・線・色・動きの速さの参考にする（そろえることは求めない。中身に合う形で作る）。" if owner == "common" else "大きさ・形式・線・色・動きの速さをこれにそろえる。")
+          + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
     if ex: L += ["  例：" + "、".join(ex)]
     if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。" if not (LATER and REF) else f"  もとのコマのPNG（見本の分だけ）は「{ref_of(kdrv + '/' + k['コマ'])}/」。"]
     L += ["", "■ 納品のしかた",
@@ -399,7 +401,7 @@ def lst(a):
 
 ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
 p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID"); p.add_argument("--先", choices=["保留", "要望素材", "Claude Codeキャラの要望素材"], default="保留"); p.add_argument("--受付")
-p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件")
+p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件"); p.add_argument("--キャラなし", action="store_true")   # 11/19 キャラの出ない素材（キャラ情報とリファレンスを入れない）
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
 p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", default=""); p.add_argument("--時期")
 p = sp.add_parser("list"); p.add_argument("char")
