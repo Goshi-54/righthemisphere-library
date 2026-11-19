@@ -254,6 +254,11 @@ dialog::backdrop{background:#000a}
       const C = await (await fetch(CM["ページ"] + "data/library.json")).json();
       const fix = v => typeof v === "string" && v.startsWith("media/") ? CM["ページ"] + v : v;
       ["背景", "アイコン", "イメージ強化"].forEach(k => { D[k] = (C[k] || []).map(x => ({ ...x, src: fix(x.src), poster: fix(x.poster) })); });
+      // 11/20 本人「でぷれさんの素材ライブラリの共通素材系もちゃんと合わせてください。」：Claude Codeキャラ（中の要望素材も）も共通素材のページと同じに出す
+      if (C["Claude Codeキャラ"]) {
+        D["Claude Codeキャラ"] = C["Claude Codeキャラ"].map(x => ({ ...x, src: fix(x.src) }));
+        D["Claude Codeキャラの要望素材"] = (C["Claude Codeキャラの要望素材"] || []).map(g => ({ ...g, 素材: g["素材"].map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) }));
+      }
       ["背景のドライブ", "アイコンのドライブ", "イメージ強化のドライブ"].forEach(k => { if (C[k]) D[k] = C[k]; });
     } catch (e) { ["背景", "アイコン", "イメージ強化"].forEach(k => { D[k] = []; }); }
   }
