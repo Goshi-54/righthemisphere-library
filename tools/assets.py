@@ -21,6 +21,9 @@
 #   → 本人の保留：台帳は一つ上の階層（共通素材 common の library.json の「保留」）、ドライブは 2.素材ライブラリ/90_保留/。組に「キャラ」を持つ
 #   → 要望素材（Chatworkの要望で作った物）：receive に --先 要望素材。台帳は各キャラの library.json の「要望素材」、ドライブは <キャラ>/91_要望素材/。組のIDは q…
 #   → promote は、保留・要望素材のどちらからでも、正式な場所（キャラのページ、共通素材）へ下ろす。今はアイコン・イメージ強化・Vtuber（--時期）
+# 11/19 本人「後で写す」（意思決定DB 41cc12971e2781aab2f3eec80f673509）：Chatworkの自動の流れ（3分おきの定時の作業）はドライブを開けない。
+#   DRV_LATER（ドライブ待ちの置き場。ドライブと同じ並びで置き、あとで chatwork/本番の準備/drive_sync.py が写す）と
+#   DRV_REF（見本の写し。drive_sync.py がドライブから写した、種類ごとの見本とそのコマ）を渡すと、ドライブの代わりにそこを使う
 # 試し運転：環境変数 DRV_OVERRIDE（ドライブの代わりのフォルダ）と LIB_OVERRIDE（ライブラリの元フォルダの代わり。共通素材は LIB_OVERRIDE_common）
 import os, sys, csv, json, shutil, hashlib, argparse, subprocess, datetime, re
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -33,9 +36,16 @@ HOLD = "90_保留"
 REQ = "91_要望素材"
 LIBROOT_PLACE = "マイドライブ/1. クリエイティブ/2.素材ライブラリ"   # 本人の保留はこの直下の 90_保留
 
+LATER = os.environ.get("DRV_LATER", "").rstrip("/")
+REF = os.environ.get("DRV_REF", "").rstrip("/")
+
 def hold_root():
     o = os.environ.get("DRV_OVERRIDE")
-    return f"{o}/_素材ライブラリ" if o else f"{DRIVE_ROOT}/{LIBROOT_PLACE}"
+    return f"{o}/_素材ライブラリ" if o else f"{LATER or DRIVE_ROOT}/{LIBROOT_PLACE}"
+
+def ref_of(d):
+    """ドライブ待ちの置き場の道を、見本の写しの道に読み替える（見本の写しが無いときはそのまま）"""
+    return REF + d[len(LATER):] if LATER and REF and d.startswith(LATER + "/") else d
 STATES = ("保留", "採用", "仮置き", "直し", "見送り")
 now = lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -44,7 +54,7 @@ def paths(char):
     lib = os.environ.get(f"LIB_OVERRIDE_{char}") or (os.environ.get("LIB_OVERRIDE") if not c.get("共通素材") else None) or os.path.expanduser(c["lib"])
     D = json.load(open(f"{lib}/data/library.json", encoding="utf-8"))
     place = D["キャラ"]["ドライブの場所"] if "キャラ" in D else D["ドライブの場所"]   # 共通素材の台帳は「キャラ」を持たない
-    drv = os.environ.get("DRV_OVERRIDE") or f"{DRIVE_ROOT}/{place.rstrip('/')}"
+    drv = os.environ.get("DRV_OVERRIDE") or f"{LATER or DRIVE_ROOT}/{place.rstrip('/')}"
     if os.environ.get("DRV_OVERRIDE") and "キャラ" not in D: drv = f"{drv}/_共通素材"   # 試し運転で、キャラと共通素材の置き場を分ける
     return lib, drv, D
 
@@ -82,20 +92,20 @@ def alpha_box(src, pad=16):
 
 def thumb(src, lib, key):
     """見本の画像を media/hold/ に作る。静止画は avif（長い辺480）、GIF はそのまま（3MBまで）、動画は1コマ目
-    11/14 3MBを超える動くGIF（等身大の作り直しなど）は、動きと画質を見られるように mp4 にする（透過の余白を切り、長い辺720まで、白地、コマの速さはそのまま）"""
+    11/14 3MBを超える動くGIF（等身大の作り直しなど）は、動きと画質を見られるように mp4 にする（透過の余白を切り、長い辺720まで、白地、コマの速さはそのまま）
+    11/19 本人「小さなアイコンも嫌だし、透過素材なのに白いものの上も嫌。素材として見やすいようにバランスとって」（意思決定DB 41dc12971e278162ab04d0a1f806c3cb）
+      → mp4（白地・余白を切って大きく見える）をやめ、3MBを超えるGIFも、余白を切らずに長い辺480の透過のGIFにする（ほかのGIFと同じ見え方にそろえる）"""
     ext = os.path.splitext(src)[1].lower()
     h = hashlib.sha1(key.encode()).hexdigest()[:14]
     os.makedirs(f"{lib}/media/hold", exist_ok=True)
     if ext == ".gif" and os.path.getsize(src) <= 3_000_000:
         out = f"media/hold/{h}.gif"; shutil.copyfile(src, f"{lib}/{out}")
     elif ext == ".gif":
-        out = f"media/hold/{h}.mp4"
-        b = alpha_box(src)
-        crop = f"crop={b[2]}:{b[3]}:{b[0]}:{b[1]}," if b else ""
-        vf = f"{crop}scale='if(gt(iw,ih),min(720,iw),-2)':'if(gt(iw,ih),-2,min(720,ih))':flags=lanczos"
+        out = f"media/hold/{h}.gif"
+        vf = "scale='if(gt(iw,ih),min(480,iw),-2)':'if(gt(iw,ih),-2,min(480,ih))':flags=lanczos"
         subprocess.run([FF, "-y", "-loglevel", "error", "-i", src,
-                        "-filter_complex", f"[0:v]{vf},format=rgba,split[a][b];[a]drawbox=c=white:t=fill[bg];[bg][b]overlay,format=yuv420p",
-                        "-c:v", "h264_videotoolbox", "-b:v", "3M", "-an", "-movflags", "+faststart", f"{lib}/{out}"], check=True)
+                        "-filter_complex", f"[0:v]{vf},split[a][b];[a]palettegen=reserve_transparent=1:stats_mode=full[p];[b][p]paletteuse=dither=none:alpha_threshold=128",
+                        "-gifflags", "-offsetting", f"{lib}/{out}"], check=True)
     elif ext in (".mp4", ".mov", ".webm"):
         out = f"media/hold/{h}.jpg"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-frames:v", "1", "-vf", "scale='min(480,iw)':-2", f"{lib}/{out}"], check=True)
@@ -125,9 +135,12 @@ def no_tojin_group(s):
 def receive(a):
     lib, drv, D = paths(a.char)
     a.依頼 = no_tojin_group(a.依頼)
-    req = a.先 == "要望素材"
+    req = a.先 in ("要望素材", "Claude Codeキャラの要望素材")
+    # 11/19 共通素材の中の「Claude Codeキャラ」（意思決定DB 41dc12971e278192a110e40da35606b2）：Claude Codeキャラの要望は、共通素材の台帳と 共通素材/91_要望素材 に置く
+    cc = a.先 == "Claude Codeキャラの要望素材"
     # 本人の保留は一つ上の階層（common の台帳・2.素材ライブラリ/90_保留）、要望素材はキャラの台帳・<キャラ>/91_要望素材
-    if req: owner, olib, OD, root, key, pre, top = a.char, lib, D, drv, "要望素材", "q", REQ
+    if cc: owner, (olib, root, OD), key, pre, top = "common", paths("common"), "Claude Codeキャラの要望素材", "qc", REQ
+    elif req: owner, olib, OD, root, key, pre, top = a.char, lib, D, drv, "要望素材", "q", REQ
     else: owner, (olib, _, OD), root, key, pre, top = "common", paths("common"), hold_root(), "保留", "h", HOLD
     base = os.path.dirname(os.path.abspath(a.memo))
     rows = list(csv.DictReader(open(a.memo, encoding="utf-8-sig")))
@@ -141,16 +154,27 @@ def receive(a):
     OD.setdefault(key, [])
     gid = f"{pre}{day}-{len([g for g in OD[key] if g['id'].startswith(pre + day)]) + 1:02d}"
     items = []
+    others = lambda r: [x.strip() for x in re.split(r"[;；]", r.get("ほかのファイル") or "") if x.strip()]
     for r in rows:
-        src = os.path.join(base, r["ファイル"])
-        if not os.path.isfile(src): sys.exit(f"ファイルがない：{src}")
+        for f in [r["ファイル"]] + others(r):
+            src = os.path.join(base, f)
+            if not os.path.isfile(src): sys.exit(f"ファイルがない：{src}")
     os.makedirs(dst)
     for r in rows:
         src = os.path.join(base, r["ファイル"])
         name = no_tojin(os.path.basename(r["ファイル"]))
         if os.path.exists(f"{dst}/{name}"): sys.exit(f"同じ名前のファイルが2つある：{name}")
         shutil.copyfile(src, f"{dst}/{name}")
-        it = {"名前": no_tojin(r["名前"]), "種類": "Vtuber" if r["種類"] == "等身大" else r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(src, olib, f"{folder}/{name}"), "状態": "要望" if req else "保留"}
+        # 11/19 ほかのファイル：同じ素材の別の版（通常版に対するループ版など。段階2が納品メモに書く）。同じフォルダに置き、ダウンロードにも出す。
+        #   公開ページの見本は、ループ版があればそちらで作る（1回再生の通常版だと、ページで止まって見えるため）
+        more = []
+        for f in others(r):
+            m = no_tojin(os.path.basename(f))
+            if os.path.exists(f"{dst}/{m}"): sys.exit(f"同じ名前のファイルが2つある：{m}")
+            shutil.copyfile(os.path.join(base, f), f"{dst}/{m}"); more.append(m)
+        show = next((os.path.join(base, f) for f in others(r) if "_ループ" in f), src)
+        it = {"名前": no_tojin(r["名前"]), "種類": "Vtuber" if r["種類"] == "等身大" else r["種類"], "ファイル": name, "場所": f"{folder}/{name}", "src": thumb(show, olib, f"{folder}/{name}"), "状態": "要望" if req else "保留"}
+        if more: it["ほかのファイル"] = more
         if r.get("メモ"): it["メモ"] = r["メモ"]
         compare(it, a.char, olib)
         if r.get("コマのフォルダ"):
@@ -159,7 +183,7 @@ def receive(a):
             for f in os.listdir(f"{dst}/{kname}"):
                 if no_tojin(f) != f: os.rename(f"{dst}/{kname}/{f}", f"{dst}/{kname}/{no_tojin(f)}")
         items.append(it)
-    g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "キャラ": a.char, "キャラ名": CHARS[a.char]["名前"], "素材": items}
+    g = {"id": gid, "依頼": a.依頼, "出どころ": a.出どころ, "届いた日": now(), "フォルダ": folder, "キャラ": a.char, "キャラ名": "Claude Code" if cc else CHARS[a.char]["名前"], "素材": items}
     if a.原文: g["依頼の原文"] = a.原文
     if a.依頼のID: g["依頼のID"] = a.依頼のID
     if a.受付: g["受付番号"] = a.受付
@@ -176,7 +200,7 @@ MEMO_URL = "https://github.com/Goshi-54/righthemisphere-library/blob/main/tools/
 def examples(drv, folder, n=2):
     """同じ種類の今ある素材から、名前と大きさの例を取る"""
     out = []
-    d = f"{drv}/{folder}"
+    d = ref_of(f"{drv}/{folder}")
     if not os.path.isdir(d): return out
     order = {".gif": 0, ".mp4": 1, ".png": 2, ".jpg": 3}   # 動くものを先に
     for f in sorted(os.listdir(d), key=lambda f: (order.get(os.path.splitext(f)[1].lower(), 9), f)):
@@ -213,9 +237,11 @@ def request(a):
           f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
           "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。",
           f"- 同じ種類の今ある素材：{SITE}/{CHARS[owner]['ページ']}/#{k['タブ']}",
-          f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。大きさ・形式・線・色・動きの速さをこれにそろえる。" + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
+          (f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。" if not (LATER and REF) else
+           f"  本体はGoogleドライブの「{place}/{k['フォルダ']}/」。この作業からはドライブを開けないので、見本の写し「{ref_of(kdrv + '/' + k['フォルダ'])}/」を見る。")
+          + "大きさ・形式・線・色・動きの速さをこれにそろえる。" + ("「求める品質・条件」と食い違うときは、条件を優先する。" if conds else "")]
     if ex: L += ["  例：" + "、".join(ex)]
-    if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。"]
+    if k.get("コマ"): L += [f"  もとのコマのPNGは「{place}/{k['コマ']}/」。" if not (LATER and REF) else f"  もとのコマのPNG（見本の分だけ）は「{ref_of(kdrv + '/' + k['コマ'])}/」。"]
     L += ["", "■ 納品のしかた",
           f"- 作業フォルダの中に「納品_{rid}」フォルダを作り、素材のファイルと「納品メモ.csv」を置く。",
           f"- 納品メモの書き方：{MEMO_URL}（このMacでは ~/Code/righthemisphere-library/tools/納品メモの書き方.md）",
@@ -355,7 +381,7 @@ def lst(a):
             for x in g["素材"]: print("  ", x["状態"], x["種類"], x["名前"], x["ファイル"])
 
 ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
-p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID"); p.add_argument("--先", choices=["保留", "要望素材"], default="保留"); p.add_argument("--受付")
+p = sp.add_parser("receive"); p.add_argument("char"); p.add_argument("memo"); p.add_argument("--依頼", required=True); p.add_argument("--出どころ", required=True); p.add_argument("--原文"); p.add_argument("--依頼のID"); p.add_argument("--先", choices=["保留", "要望素材", "Claude Codeキャラの要望素材"], default="保留"); p.add_argument("--受付")
 p = sp.add_parser("request"); p.add_argument("char"); p.add_argument("--種類", required=True); p.add_argument("--依頼", required=True); p.add_argument("--中身", required=True); p.add_argument("--原文"); p.add_argument("--出どころ"); p.add_argument("--作業ID"); p.add_argument("--条件")
 p = sp.add_parser("decide"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("state"); p.add_argument("--本人"); p.add_argument("--決定")
 p = sp.add_parser("promote"); p.add_argument("char"); p.add_argument("gid"); p.add_argument("name"); p.add_argument("kind"); p.add_argument("--組", default=""); p.add_argument("--時期")

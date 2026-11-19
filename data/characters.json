@@ -797,12 +797,12 @@
   "ページ": "common/#hold",
   "ドライブ": "https://drive.google.com/drive/folders/190MdsfG-HmJgI6krPd2png-Yl4q0eahV",
   "見本": [
+   "common/media/hold/f6446633ff300a.gif",
+   "common/media/hold/9b0c6caa274b32.gif",
+   "common/media/hold/9024e71d54415f.gif",
+   "common/media/hold/e433cf27313040.gif",
    "common/media/hold/a300e14176bcb0.gif",
-   "common/media/hold/36cb69d7c30777.gif",
-   "common/media/hold/b466303687d568.gif",
-   "common/media/hold/1b30fbe4119bb1.gif",
-   "common/media/hold/563687d3b212fd.gif",
-   "common/media/hold/ead5b9f6bce767.gif"
+   "common/media/hold/36cb69d7c30777.gif"
   ]
  },
  "共通素材": {
@@ -816,11 +816,15 @@
    ],
    [
     "アイコン",
-    93
+    78
    ],
    [
     "イメージ強化",
     0
+   ],
+   [
+    "Claude Codeキャラ",
+    16
    ]
   ],
   "見本": [

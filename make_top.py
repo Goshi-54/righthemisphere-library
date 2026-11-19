@@ -91,7 +91,8 @@ dst = f"{HERE}/{COMMON['id']}"
 if os.path.exists(dst): shutil.rmtree(dst)
 shutil.copytree(f"{COMMON['lib']}/公開用", dst, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
 common = {"名前": CD["ページ名"], "ページ": f"{COMMON['id']}/", "ドライブ": CD["ドライブ"],
-          "件数": [["背景", len(CD["背景"])], ["アイコン", len(CD["アイコン"])], ["イメージ強化", len(CD["イメージ強化"])]],
+          "件数": [["背景", len(CD["背景"])], ["アイコン", len(CD["アイコン"])], ["イメージ強化", len(CD["イメージ強化"])]]
+                  + ([["Claude Codeキャラ", len(CD["Claude Codeキャラ"]) + sum(len(g["素材"]) for g in CD.get("Claude Codeキャラの要望素材", []))]] if CD.get("Claude Codeキャラ") else []),
           "見本": [f"{COMMON['id']}/{x['src']}" for x in CD["アイコン"][:6]]}
 # 11/19 本人「え、上の階層への依頼だからTOPページへの移動依頼だよね？」→「TOPに入口だけ」：本人の保留への入口をTOPに置く（中身は共通素材のページの保留のまま）
 hold_items = [x for g in CD.get("保留", []) for x in g.get("素材", [])]

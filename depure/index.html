@@ -130,29 +130,33 @@ p{margin:0 0 10px}
 .small-btn{min-height:30px;padding:3px 10px;font-size:12px}
 .bg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:14px}
 .bg-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;display:block}
-.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+/* 11/19 本人「今の保留やアイコンに入っている素材含め表示に一貫性を持たせたいです。」「小さなアイコンも嫌だし、透過素材なのに白いものの上も嫌。素材として見やすいようにバランスとって」
+   （意思決定DB 41dc12971e2781e19431e1e3d9da663e・41dc12971e278162ab04d0a1f806c3cb）→ 札の絵の枠を、どの種類も同じ大きさ（4:3）にし、透過が分かる市松の地に置く */
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:12px}
 .hold-empty{color:var(--muted);padding:24px 0}
 .group-title.group-target{scroll-margin-top:72px;outline:2px solid var(--accent,#7aa7ff);outline-offset:6px;border-radius:6px}
 .hold-meta{color:var(--muted);font-size:13px;margin:-4px 0 10px}
 .hold-kind{font-size:11px;color:var(--muted)}
 .hold-state{display:inline-block;font-size:11px;font-weight:700;padding:0 8px;border-radius:10px;background:var(--warnbg);color:var(--warn);margin-top:2px}
 .hold-state.s-採用,.hold-state.s-仮置き{background:var(--okbg);color:var(--ok)}
-.hold-memo{font-size:11px;color:var(--muted)}
+.hold-memo{font-size:11px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .icon-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
-.icon-card img{width:72px;height:72px;object-fit:contain;display:block;margin:2px auto 8px}
+.icon-card{--chk-a:#e9ecf0;--chk-b:#dfe3e8}
+:root[data-theme="dark"] .icon-card{--chk-a:#262b33;--chk-b:#2e343d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .icon-card{--chk-a:#262b33;--chk-b:#2e343d}}
+.icon-card>img,.icon-card>video,.hold-compare img,.hold-compare video{width:100%;aspect-ratio:4/3;height:auto;object-fit:contain;display:block;margin:0 0 8px;padding:5%;border-radius:8px;background:repeating-conic-gradient(var(--chk-a) 0 25%,var(--chk-b) 0 50%) 0 0/16px 16px}
+.icon-card.pixel>img{image-rendering:pixelated}
 .hold-grid-wide{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .hold-native-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
 .hold-native-gif>img{width:min(100%,362px);height:auto;border-radius:8px}
 .hold-native-gif .hold-open{display:inline-flex;margin-top:8px}
-.hold-movie video{width:100%;height:auto;max-height:420px;object-fit:contain;display:block;margin:2px auto 8px;border-radius:8px;background:#fff}
 .hold-movie .dl-fab{top:auto;bottom:8px}
 .hold-grid-wide:has(.hold-compare){grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
 .hold-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 8px}
-.hold-compare figure{margin:0;background:#fff;border-radius:8px;overflow:hidden}
-.hold-compare img,.hold-compare video{width:100%;height:clamp(200px,55vw,340px);object-fit:contain;display:block;margin:0;border-radius:0;max-height:none}
+.hold-compare figure{margin:0;border-radius:8px;overflow:hidden}
 .hold-compare figcaption{font-size:11px;color:var(--muted,#667);padding:4px 0 6px}
 .icon-card strong{display:block;font-size:12px;font-weight:600}
-.icon-card.dark img{background:#2b3038;border-radius:8px;padding:4px}
+.icon-card.dark>img{--chk-a:#2b3038;--chk-b:#323843}
 .group-title{font-size:15px;margin:22px 0 10px}
 .group-title:first-child{margin-top:4px}
 .grid.wide{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
@@ -286,6 +290,10 @@ dialog::backdrop{background:#000a}
     has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
     has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
     has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
+    // 11/19 本人「Claude Codeキャラ用の素材ライブラリページ作りたいです。階層は共通素材のアイコンやイメージ素材と同じ階層にClaude Codeキャラです。」→「共通素材の中に並べる」
+    //   （意思決定DB 41dc12971e27812e9136de1797481e43・41dc12971e278192a110e40da35606b2）。中の分け方（基本・イメージ強化・要望素材）は AI案（未承認）
+    has("Claude Codeキャラ") && { id: "cc", group: SG, label: "Claude Codeキャラ", n: D["Claude Codeキャラ"].length + (D["Claude Codeキャラの要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0),
+      icons: D["Claude Codeキャラ"].slice(0, 4).map(x => x.src), render: renderCC },
     has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
     // 11/18 本人「別口で「要望素材」みたいなカテゴリを素材ライブラリに用意してそこに格納したい。…各キャラクターページそれぞれに「要望素材」があるイメージ。」（意思決定DB 41cc12971e278179b8c0c7d8a228e510）
     has("要望素材") && { id: "req", group: "確かめの場", label: "要望素材", n: (D["要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderReq },
@@ -294,7 +302,7 @@ dialog::backdrop{background:#000a}
   const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
   const narrow = matchMedia("(max-width:820px)");
   // 11/18 返信のURL（#組のID）から、その組の素材へ直接行けるようにする
-  const groupTab = h => (D["要望素材"] || []).some(g => g.id === h) ? "req" : (D["保留"] || []).some(g => g.id === h) ? "hold" : null;
+  const groupTab = h => (D["要望素材"] || []).some(g => g.id === h) ? "req" : (D["保留"] || []).some(g => g.id === h) ? "hold" : (D["Claude Codeキャラの要望素材"] || []).some(g => g.id === h) ? "cc" : null;
   const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : (groupTab(h) && TABS.some(t => t.id === groupTab(h))) ? groupTab(h) : "home"; };
   const toGroup = () => { const h = decodeURIComponent(location.hash.slice(1)); const el = h && groupTab(h) && document.getElementById(h); if (el) { el.classList.add("group-target"); setTimeout(() => el.scrollIntoView({ block: "start" }), 50); } };
   let current = fromHash();
@@ -364,7 +372,7 @@ dialog::backdrop{background:#000a}
   const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
   const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
   const TAB_ITEMS = { script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
-    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), req: () => (D["要望素材"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), req: () => (D["要望素材"] || []).flatMap(g => g["素材"]), cc: () => (D["Claude Codeキャラ"] || []).concat((D["Claude Codeキャラの要望素材"] || []).flatMap(g => g["素材"])), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
   PERIODS.forEach(p => { TAB_ITEMS[periodId(p)] = () => periodItems(p); });
   const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
   const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
@@ -639,6 +647,32 @@ dialog::backdrop{background:#000a}
     });
   }
 
+  function renderCC() {
+    panel.append($("p", "home-lead", "Claude Codeのドット絵のキャラの素材です。基本の15点が見た目の正で、Chatworkの要望で作る素材もこの見た目にそろえます。"));
+    const label = { "基本": "基本（ドット絵キャラ）", "イメージ強化": "イメージ強化" };
+    ["基本", "イメージ強化"].forEach(grp => {
+      const items = D["Claude Codeキャラ"].filter(x => x["組"] === grp);
+      if (!items.length) return;
+      panel.append($("h2", "group-title", `${label[grp]}（${items.length}）`));
+      const g = $("div", "icon-grid");
+      items.forEach(x => {
+        const c = $("div", "icon-card pixel"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
+        c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+        pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
+      });
+      panel.append(g);
+    });
+    const groups = D["Claude Codeキャラの要望素材"] || [];
+    panel.append($("h2", "group-title", `要望素材（${groups.reduce((a, g) => a + g["素材"].length, 0)}）`));
+    reqMaker({ chara: "Claude Code", kinds: ["アイコン", "イメージ強化"], example: "例：考え込んでから、ひらめいて喜ぶ" });
+    if (!groups.length) { panel.append($("p", "hold-empty", "今は要望素材はありません。")); return; }
+    groups.slice().reverse().forEach(g => {
+      const h = $("h3", "group-title", `${g["依頼"].replace(/^ClaudeCodeキャラ_/, "")}（${g["素材"].length}）`); h.id = g.id; panel.append(h);
+      panel.append($("p", "hold-meta", `${g["届いた日"]} 届いた・${g["出どころ"]}`));
+      holdGrid(g, true);
+    });
+  }
+
   // 11/14 本人（意思決定DBに登録済み）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
   function renderHold() {
     panel.append($("p", "home-lead", "本人が作って、まだ採否を決めていない素材です（全キャラ分をここにまとめています）。採用したものは、各キャラのページのそれぞれの種類のタブに移ります。Chatworkの要望で作った素材は、各キャラのページの「要望素材」にあります。"));
@@ -659,43 +693,27 @@ dialog::backdrop{background:#000a}
   const REQ_KINDS = ["口パク", "全身の動き", "掛け合い", "Vtuber", "マイクラ", "アイコン", "イメージ強化", "背景", "そのほか"];
   // 11/19 本人「足して公開して」（意思決定DB 41cc12971e2781029483d4804c865d63）：8種類とも受け付けるので、マイクラのボタンを足した
   // 11/18 本人「いつまでにの項目はいらないかな。／動画の明るさ・質感の調整は、調整ツールの「設定をコピー」から頼めますの文もいらない」（同じ行）→ 外した
-  function reqMaker() {
-    const box = $("details", "req-maker"), name = (D["キャラ"] || {})["名前"] || D["ページ名"] || "";
+  function reqMaker(opt) {
+    opt = opt || {};
+    const box = $("details", "req-maker"), chara = opt.chara || (D["キャラ"] || {})["名前"] || D["ページ名"] || "", kinds = opt.kinds || REQ_KINDS;
     box.append($("summary", "link-btn", "依頼の文を作る"));
     const kindRow = $("div", "req-kinds"); kindRow.setAttribute("role", "radiogroup"); kindRow.setAttribute("aria-label", "種類");
-    let kind = REQ_KINDS[0];
-    // 11/19 本人「後、Cluade CodeのキャラクターもChatwork生成できる準備はできてる？」→「準備を進める」：
-    // でぷれさんのページから、Claude Codeのキャラ（アイコンのドット絵キャラ）も頼めるようにする。作れるのはアイコンとイメージ強化だけ（AI案・未承認）
-    const CC = "Claude Code", CC_KINDS = ["アイコン", "イメージ強化"];
-    let chara = name;
-    const charRow = $("div", "req-kinds"); charRow.setAttribute("role", "radiogroup"); charRow.setAttribute("aria-label", "キャラ");
-    const charNote = $("p", "req-hint", "");
+    let kind = kinds[0];
     const field = (label, el, opt) => { const l = $("label", "req-field"); l.append($("span", "", label + (opt ? "（あれば）" : "")), el); return l; };
-    const what = $("textarea"); what.id = "req-what"; what.rows = 2; what.placeholder = "例：驚いて「えっ」と言う";
+    const what = $("textarea"); what.id = "req-what"; what.rows = 2; what.placeholder = opt.example || "例：驚いて「えっ」と言う";
     const ref = $("input"); ref.id = "req-ref"; ref.type = "text"; ref.placeholder = "例：参考の動画のURL、似せたい素材の名前";
     const out = $("pre", "req-out"), copy = $("button", "", "文をコピー"), note = $("p", "req-note", "");
     // 11/18 本人の見本で型を変えた：題「素材の生成」、項目に■を付けない（意思決定DB DEC-2129 41cc12971e2781efb043dabd9e410408）
     const text = () => ["[info][title]素材の生成[/title]", `キャラ：${chara}`, `種類：${kind}`, `中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
       .concat(ref.value.trim() ? [`参考：${ref.value.trim()}`] : [], ["[/info]"]).join("\n");
     const update = () => { out.textContent = text(); copy.disabled = !what.value.trim(); note.textContent = what.value.trim() ? "" : "中身を書くと、コピーできます"; };
-    REQ_KINDS.forEach((k, i) => { const b = $("button", "", k); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
+    kinds.forEach((k, i) => { const b = $("button", "", k); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
       b.addEventListener("click", () => { kind = k; kindRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x === b ? "true" : "false")); update(); }); kindRow.append(b); });
     [what, ref].forEach(el => el.addEventListener("input", update));
-    const pickChara = c => {
-      chara = c; charRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x.textContent === c ? "true" : "false"));
-      const only = c === CC;
-      kindRow.querySelectorAll("button").forEach(x => { x.disabled = only && !CC_KINDS.includes(x.textContent); });
-      if (only && !CC_KINDS.includes(kind)) kindRow.querySelectorAll("button").forEach(x => { if (x.textContent === CC_KINDS[0]) x.click(); });
-      charNote.textContent = only ? "Claude Codeのキャラは、共通素材のアイコン「ドット絵」の見た目で作ります。作れるのはアイコンとイメージ強化です" : "";
-      update();
-    };
-    if (name === "でぷれさん") [name, CC].forEach((c, i) => { const b = $("button", "", c); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
-      b.addEventListener("click", () => pickChara(c)); charRow.append(b); });
     copy.type = "button";
     copy.addEventListener("click", async () => { try { await navigator.clipboard.writeText(text()); copy.textContent = "コピーしました"; note.textContent = "Chatworkの動画素材要望グループに貼って送ると、受け付けます"; }
       catch (e) { const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); note.textContent = "コピーできなかったので、文を選びました。そのまま写してください"; }
       setTimeout(() => copy.textContent = "文をコピー", 1800); });
-    if (charRow.children.length) { const f = field("キャラ", charRow); f.append(charNote); box.append(f); }
     box.append(field("種類", kindRow), field("中身（どんな素材がほしいか）", what), field("参考", ref, true));
     const foot = $("div", "req-foot"); foot.append(copy, note); box.append($("span", "req-label", "Chatworkに貼る文"), out, foot);
     update(); panel.append(box);
@@ -711,15 +729,15 @@ dialog::backdrop{background:#000a}
       holdGrid(g);
     });
   }
-  function holdGrid(g) {
+  function holdGrid(g, pixelCard) {
     {
       const isNativeGif = x => /新規動作20種$/.test(g["依頼"]) && (x["種類"] === "Vtuber" || x["種類"] === "等身大") && /\.gif$/.test(x.src);
-      const grid = $("div", "icon-grid" + (g["素材"].some(x => /\.mp4$/.test(x.src) || x["比べる"]) ? " hold-grid-wide" : "") +
+      const grid = $("div", "icon-grid" + (g["素材"].some(x => x["比べる"]) ? " hold-grid-wide" : "") +
         (g["素材"].some(isNativeGif) ? " hold-native-grid" : ""));
       g["素材"].forEach(x => {
         // 11/14 動く素材の見本（mp4）は、動きと画質を見られるように大きめの動画で出す
         const mv = /\.mp4$/.test(x.src), nativeGif = isNativeGif(x);
-        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "")), im = mv ? $("video") : $("img");
+        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "") + (pixelCard ? " pixel" : "")), im = mv ? $("video") : $("img");
         if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"]); }
         else { im.src = x.src; im.alt = x["名前"]; im.loading = "lazy"; }
         // 11/14 同じ名前の素材が既にあるとき（差し替えの候補）は、今の版と同じ高さで並べて見比べる
@@ -727,7 +745,7 @@ dialog::backdrop{background:#000a}
           o.append(oi, $("figcaption", "", "今の版")); n.append(im, $("figcaption", "", "届いた版")); cmp.append(o, n); c.append(cmp); }
         else c.append(im);
         c.append($("strong", "", x["名前"]), $("span", "hold-kind", x["種類"]), $("span", "hold-state s-" + x["状態"], x["状態"]));
-        if (x["メモ"]) c.append($("span", "hold-memo", x["メモ"]));
+        if (x["メモ"]) { const m = $("span", "hold-memo", x["メモ"]); m.title = x["メモ"]; c.append(m); }
         if (nativeGif && !sel.on) {
           const original = $("a", "link-btn small-btn hold-open", "原寸GIFを開く");
           original.href = x.src; original.target = "_blank"; original.rel = "noopener";
