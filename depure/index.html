@@ -42,6 +42,9 @@ p{margin:0 0 10px}
 /* 11/18 要望素材：依頼の文を作る */
 .req-maker{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 22px;display:grid;gap:12px;max-width:760px}
 .req-maker .group-title{margin:0}
+.req-kinds button:disabled{opacity:.35;cursor:not-allowed}
+.req-hint{margin:6px 0 0;color:var(--muted);font-size:13px}
+.req-hint:empty{display:none}
 /* 11/18 本人「トグル形式みたいな感じで必要な時に出す感じにしたい。非表示時のサイズ感は下のフォルダを開くボタンと合わせれれば。」（意思決定DB 41cc12971e278177925acc5c8e93f04d） */
 .req-maker:not([open]){background:none;border:0;padding:0;margin:0 0 10px}
 .req-maker>summary{list-style:none;cursor:pointer;width:max-content}
@@ -661,21 +664,38 @@ dialog::backdrop{background:#000a}
     box.append($("summary", "link-btn", "依頼の文を作る"));
     const kindRow = $("div", "req-kinds"); kindRow.setAttribute("role", "radiogroup"); kindRow.setAttribute("aria-label", "種類");
     let kind = REQ_KINDS[0];
+    // 11/19 本人「後、Cluade CodeのキャラクターもChatwork生成できる準備はできてる？」→「準備を進める」：
+    // でぷれさんのページから、Claude Codeのキャラ（アイコンのドット絵キャラ）も頼めるようにする。作れるのはアイコンとイメージ強化だけ（AI案・未承認）
+    const CC = "Claude Code", CC_KINDS = ["アイコン", "イメージ強化"];
+    let chara = name;
+    const charRow = $("div", "req-kinds"); charRow.setAttribute("role", "radiogroup"); charRow.setAttribute("aria-label", "キャラ");
+    const charNote = $("p", "req-hint", "");
     const field = (label, el, opt) => { const l = $("label", "req-field"); l.append($("span", "", label + (opt ? "（あれば）" : "")), el); return l; };
     const what = $("textarea"); what.id = "req-what"; what.rows = 2; what.placeholder = "例：驚いて「えっ」と言う";
     const ref = $("input"); ref.id = "req-ref"; ref.type = "text"; ref.placeholder = "例：参考の動画のURL、似せたい素材の名前";
     const out = $("pre", "req-out"), copy = $("button", "", "文をコピー"), note = $("p", "req-note", "");
     // 11/18 本人の見本で型を変えた：題「素材の生成」、項目に■を付けない（意思決定DB DEC-2129 41cc12971e2781efb043dabd9e410408）
-    const text = () => ["[info][title]素材の生成[/title]", `キャラ：${name}`, `種類：${kind}`, `中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
+    const text = () => ["[info][title]素材の生成[/title]", `キャラ：${chara}`, `種類：${kind}`, `中身：${what.value.trim().replace(/\s*\n\s*/g, "　")}`]
       .concat(ref.value.trim() ? [`参考：${ref.value.trim()}`] : [], ["[/info]"]).join("\n");
     const update = () => { out.textContent = text(); copy.disabled = !what.value.trim(); note.textContent = what.value.trim() ? "" : "中身を書くと、コピーできます"; };
     REQ_KINDS.forEach((k, i) => { const b = $("button", "", k); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
       b.addEventListener("click", () => { kind = k; kindRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x === b ? "true" : "false")); update(); }); kindRow.append(b); });
     [what, ref].forEach(el => el.addEventListener("input", update));
+    const pickChara = c => {
+      chara = c; charRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", x.textContent === c ? "true" : "false"));
+      const only = c === CC;
+      kindRow.querySelectorAll("button").forEach(x => { x.disabled = only && !CC_KINDS.includes(x.textContent); });
+      if (only && !CC_KINDS.includes(kind)) kindRow.querySelectorAll("button").forEach(x => { if (x.textContent === CC_KINDS[0]) x.click(); });
+      charNote.textContent = only ? "Claude Codeのキャラは、共通素材のアイコン「ドット絵」の見た目で作ります。作れるのはアイコンとイメージ強化です" : "";
+      update();
+    };
+    if (name === "でぷれさん") [name, CC].forEach((c, i) => { const b = $("button", "", c); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", i === 0 ? "true" : "false");
+      b.addEventListener("click", () => pickChara(c)); charRow.append(b); });
     copy.type = "button";
     copy.addEventListener("click", async () => { try { await navigator.clipboard.writeText(text()); copy.textContent = "コピーしました"; note.textContent = "Chatworkの動画素材要望グループに貼って送ると、受け付けます"; }
       catch (e) { const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); note.textContent = "コピーできなかったので、文を選びました。そのまま写してください"; }
       setTimeout(() => copy.textContent = "文をコピー", 1800); });
+    if (charRow.children.length) { const f = field("キャラ", charRow); f.append(charNote); box.append(f); }
     box.append(field("種類", kindRow), field("中身（どんな素材がほしいか）", what), field("参考", ref, true));
     const foot = $("div", "req-foot"); foot.append(copy, note); box.append($("span", "req-label", "Chatworkに貼る文"), out, foot);
     update(); panel.append(box);
