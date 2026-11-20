@@ -165,6 +165,11 @@ p{margin:0 0 10px}
 .icon-card strong{display:block;font-size:12px;font-weight:600}
 .icon-card.dark>img{--chk-a:#2b3038;--chk-b:#323843}
 .group-title{font-size:15px;margin:22px 0 10px}
+.pending{margin-top:34px;padding-top:6px;border-top:2px dashed var(--line)}
+.pending-title .badge{vertical-align:2px}
+.pending-group{margin:10px 0}
+.pending-group>summary{cursor:pointer;font-weight:700;font-size:14px;padding:6px 0}
+.pending-group>summary .hold-meta{font-weight:400}
 .group-title:first-child{margin-top:4px}
 .grid.wide{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
 .grid.wide .stage{aspect-ratio:16/9}
@@ -260,7 +265,23 @@ dialog::backdrop{background:#000a}
         D["Claude Codeキャラの要望素材"] = (C["Claude Codeキャラの要望素材"] || []).map(g => ({ ...g, 素材: g["素材"].map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) }));
       }
       ["背景のドライブ", "アイコンのドライブ", "イメージ強化のドライブ"].forEach(k => { if (C[k]) D[k] = C[k]; });
+      // 11/20 本人「おすすめで作る」（意思決定DB 41ec12971e278191a188c6f94f4f8484）：本人の保留（一つ上の階層）のうち、このキャラの物も種類のタブに「未採用」で出す
+      D["上の保留"] = (C["保留"] || []).filter(g => g["キャラ名"] === (D["キャラ"] || {})["名前"]).map(g => ({ ...g, 素材: g["素材"].map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) }));
     } catch (e) { ["背景", "アイコン", "イメージ強化"].forEach(k => { D[k] = []; }); }
+  }
+
+  // 11/20 共通素材のページ：キャラのページの要望素材のうち、背景・アイコン・イメージ強化の物も、種類のタブに「未採用」で出す
+  if (!isChar) {
+    try {
+      const T = await (await fetch("../data/characters.json")).json();
+      D["キャラの要望素材"] = (await Promise.all((T["キャラ"] || []).map(async c => {
+        try {
+          const L = await (await fetch(`../${c.id}/data/library.json`)).json();
+          const fix = v => typeof v === "string" && v.startsWith("media/") ? `../${c.id}/` + v : v;
+          return (L["要望素材"] || []).map(g => ({ ...g, キャラ名: c["名前"], 素材: g["素材"].filter(x => ["背景", "アイコン", "イメージ強化"].includes(x["種類"])).map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) })).filter(g => g["素材"].length);
+        } catch (e) { return []; }
+      }))).flat();
+    } catch (e) { D["キャラの要望素材"] = []; }
   }
 
   // 画面に見えているカードだけコマ送りで動かす
@@ -314,7 +335,8 @@ dialog::backdrop{background:#000a}
     has("要望素材") && { id: "req", group: "確かめの場", label: "要望素材", n: (D["要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderReq },
     has("保留") && { id: "hold", group: "確かめの場", label: "保留", n: (D["保留"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderHold },
   ].filter(Boolean);
-  const side = document.getElementById("side"), panel = document.getElementById("panel"), root = document.documentElement;
+  const side = document.getElementById("side"), root = document.documentElement;
+  let panel = document.getElementById("panel");   // 11/20 「未採用」の節で、組ごとの開け閉めの枠の中へ描くために一時的に差し替える
   const narrow = matchMedia("(max-width:820px)");
   // 11/18 返信のURL（#組のID）から、その組の素材へ直接行けるようにする
   const groupTab = h => (D["要望素材"] || []).some(g => g.id === h) ? "req" : (D["保留"] || []).some(g => g.id === h) ? "hold" : (D["Claude Codeキャラの要望素材"] || []).some(g => g.id === h) ? "ccreq" : null;
@@ -504,9 +526,46 @@ dialog::backdrop{background:#000a}
     panel.append(g);
   }
 
+  // 11/20 本人「おすすめで作る」（意思決定DB 41ec12971e278191a188c6f94f4f8484）：採否を待つ間も、種類のタブの中に「未採用」の印で出す。
+  //   採用されると、上の一覧に移り、ここからは消える。不採用は台帳の「前の版・非採用」に残し、ページには出さない
+  const PEND_GROUPS = () => [
+    ...(D["要望素材"] || []).map(g => ({ g, from: "Chatworkの要望" })),
+    ...(D["上の保留"] || []).map(g => ({ g, from: "本人の保留" })),
+    ...(isChar ? [] : (D["保留"] || []).map(g => ({ g, from: "本人の保留" }))),
+    ...(D["キャラの要望素材"] || []).map(g => ({ g, from: `Chatworkの要望（${g["キャラ名"]}）` })),
+    ...(D["Claude Codeキャラの要望素材"] || []).map(g => ({ g, from: "Chatworkの要望", cc: true })),
+  ];
+  function pendingSection(kinds, opt) {
+    opt = opt || {};
+    const hit = PEND_GROUPS().map(({ g, from, cc }) => {
+      let items = g["素材"].filter(x => opt.cc ? cc : (!cc && kinds.includes(x["種類"])));
+      if (kinds.includes("口パク") && !opt.cc) {   // 口パクは、正面・斜め角度の切り替えに合わせて片方だけ出す
+        const names = new Set(items.map(x => x["名前"]));
+        items = items.filter(x => state.angle === "斜め角度" ? (x["名前"].endsWith("_斜め") || !names.has(x["名前"] + "_斜め")) : !x["名前"].endsWith("_斜め"));
+      }
+      return { g, from, items };
+    }).filter(h => h.items.length).sort((a, b) => b.g["届いた日"].localeCompare(a.g["届いた日"]));
+    if (!hit.length) return;
+    const n = hit.reduce((a, h) => a + h.items.length, 0);
+    const sec = $("section", "pending"), h = $("h2", "group-title pending-title");
+    h.append($("span", "badge warn", "未採用"), ` 採否を決めていない素材（${n}）`);
+    sec.append(h, $("p", "hold-meta", "Chatworkの要望や本人の作業で届いて、まだ採否が決まっていない物です。採用されると上の一覧に移り、ここからは消えます。使うときは、採否が決まる前の物だと分かったうえで使ってください。"));
+    panel.append(sec);
+    // 1〜4点の組は1つの並びにまとめ（新しい順）、カードに届いた日と組の名前を書く。5点以上の組は、組ごとに開け閉めできる枠に入れる
+    const small = hit.filter(h => h.items.length <= 4), big = hit.filter(h => h.items.length > 4);
+    if (small.length) holdGrid({ 依頼: "", 素材: small.flatMap(({ g, from, items }) => items.map(x => ({ ...x, _when: `${g["届いた日"].slice(5, 10).replace("-", "/")} 届いた・${from}` + (groupName(g) !== x["名前"] ? `・組：${groupName(g)}` : "") }))) }, opt.cc, true);
+    big.forEach(({ g, from, items }) => {
+      const box = $("details", "pending-group");
+      const sm = $("summary", "", `${groupName(g)}（${items.length}）`); sm.append($("span", "hold-meta", `　${g["届いた日"].slice(5, 10).replace("-", "/")} 届いた・${from}`));
+      box.append(sm); panel.append(box);
+      const keep = panel; panel = box; holdGrid({ ...g, 素材: items }, opt.cc, true); panel = keep;
+    });
+  }
+
   function renderMotions(kind) {
     const list = kind === "lip" ? D["口パク"] : kind === "duet" ? D["掛け合い"] : D["全身"];
     motionGrid(list, kind);
+    pendingSection([{ lip: "口パク", duet: "掛け合い", body: "全身の動き" }[kind]]);
   }
   function motionGrid(list, kind) {
     if (kind === "lip") {
@@ -593,10 +652,15 @@ dialog::backdrop{background:#000a}
       panel.append($("h2", "group-title", `動き${grp ? "｜" + grp : ""}（${items.length}）`));
       motionGrid(items, key);
     });
+    pendingSection([key === "マイクラ" ? "マイクラ" : "Vtuber"]);
   }
 
   // 11/18 等身大は、一旦、生成時期別に並べる（新しい時期を上に）
   function renderPeriod(p) {
+    renderPeriodBody(p);
+    if (p === PERIODS[0]) pendingSection(["Vtuber"]);
+  }
+  function renderPeriodBody(p) {
     const r = $("div", "row"); r.style.margin = "0 0 12px";
     if (p["ドライブ"]) r.append(driveLink(p["ドライブ"], "この時期のフォルダを開く"));
     else if (D["保留のドライブ"] && (p["保留のID"] || []).length) r.append(driveLink(D["保留のドライブ"], "保留のフォルダを開く"));
@@ -625,12 +689,13 @@ dialog::backdrop{background:#000a}
 
   function renderImage() {
     const items = D["イメージ強化"];
-    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); return; }
+    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); pendingSection(["イメージ強化"]); return; }
     const g = $("div", "icon-grid");
     items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
-      c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+      c.append(im, $("strong", "", base(x["ファイル"]))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
       pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c); });
     panel.append(g);
+    pendingSection(["イメージ強化"]);
   }
 
   function renderBg() {
@@ -641,12 +706,15 @@ dialog::backdrop{background:#000a}
       row.append(copyBtn(base(b["ファイル"])), driveLink(b.url)); if (b.dl && b.dl[0]) row.append(dlLink(b.dl[0]));
       pickable(c, b); c.addEventListener("click", () => togglePick(c, b));
       n.append($("strong", "", base(b["ファイル"])), row);
+      if (b["仮置き"]) c.append($("span", "badge warn tag", "仮置き"));
       c.append(v, n); g.append(c);
     });
     panel.append(g);
+    pendingSection(["背景"]);
   }
   function renderIcons() {
-    const groups = ["アプリ", "文字バッジ", "ドット絵", "Codex", "ChatGPTペット", "note・Claudeのキャラ"];
+    // 11/20 要望素材から採用したアイコンは「要望素材から」の組。決まった組にない組も最後に出す
+    const groups = [...new Set(["アプリ", "文字バッジ", "ドット絵", "Codex", "ChatGPTペット", "note・Claudeのキャラ", ...D["アイコン"].map(x => x["組"]).filter(Boolean)])];
     const label = { "アプリ": "アプリアイコン", "ドット絵": "ドット絵キャラ", "Codex": "Codexキャラ" };
     groups.forEach(grp => {
       const items = D["アイコン"].filter(x => x["組"] === grp);
@@ -655,11 +723,12 @@ dialog::backdrop{background:#000a}
       const g = $("div", "icon-grid");
       items.forEach(x => {
         const c = $("div", "icon-card" + (x["暗い背景"] ? " dark" : "")), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
-        c.append(im, $("strong", "", base(x["ファイル"]))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+        c.append(im, $("strong", "", base(x["ファイル"]))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
         pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
       });
       panel.append(g);
     });
+    pendingSection(["アイコン"]);
   }
 
   // 11/19 本人「ドット絵キャラ_基本とかの名前も「基本」とかにしてダウンロードしたら素材名が「Claude Codeキャラ_基本」とかでいい。」
@@ -674,10 +743,11 @@ dialog::backdrop{background:#000a}
     const g = $("div", "icon-grid");
     D["Claude Codeキャラ"].forEach(x => {
       const c = $("div", "icon-card pixel"), im = $("img"); im.src = x.src; im.alt = ccName(x); im.loading = "lazy";
-      c.append(im, $("strong", "", ccName(x))); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
+      c.append(im, $("strong", "", ccName(x))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
       pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
     });
     panel.append(g);
+    pendingSection([], { cc: true });
   }
   function renderCCReq() {
     const bc = $("nav", "crumb"), up = $("button", "crumb-link", "Claude Codeキャラ"); up.type = "button"; up.addEventListener("click", () => go("cc"));
@@ -694,7 +764,7 @@ dialog::backdrop{background:#000a}
 
   // 11/14 本人（意思決定DBに登録済み）：保留の素材（Chatwork経由の依頼で作ったものを含む）も公開ページに出す
   function renderHold() {
-    panel.append($("p", "home-lead", "本人が作って、まだ採否を決めていない素材です（全キャラ分をここにまとめています）。採用したものは、各キャラのページのそれぞれの種類のタブに移ります。Chatworkの要望で作った素材は、各キャラのページの「要望素材」にあります。"));
+    // 11/20 説明文は外した（11/18 の問い「保留のタブの説明文」。本人 11/20「おすすめ通りでいい」意思決定DB 41ec12971e27811a9adbe336c576b7b7）
     const groups = D["保留"] || [];
     if (!groups.length) { panel.append($("p", "hold-empty", "今は保留の素材はありません。")); return; }
     if (D["保留のドライブ"]) { const a = $("a", "link-btn", "保留のフォルダを開く"); a.href = D["保留のドライブ"]; a.target = "_blank"; a.rel = "noopener"; panel.append(a); }
@@ -748,7 +818,7 @@ dialog::backdrop{background:#000a}
       holdGrid(g);
     });
   }
-  function holdGrid(g, pixelCard) {
+  function holdGrid(g, pixelCard, pendingMark) {
     {
       const isNativeGif = x => /新規動作20種$/.test(g["依頼"]) && (x["種類"] === "Vtuber" || x["種類"] === "等身大") && /\.gif$/.test(x.src);
       const grid = $("div", "icon-grid" + (g["素材"].some(x => x["比べる"]) ? " hold-grid-wide" : "") +
@@ -763,7 +833,9 @@ dialog::backdrop{background:#000a}
         if (x["比べる"]) { const cmp = $("div", "hold-compare"), o = $("figure"), n = $("figure"), oi = $("img"); oi.src = x["比べる"]; oi.alt = "今の版"; oi.loading = "lazy";
           o.append(oi, $("figcaption", "", "今の版")); n.append(im, $("figcaption", "", "届いた版")); cmp.append(o, n); c.append(cmp); }
         else c.append(im);
-        c.append($("strong", "", x["名前"])); if (!pixelCard) c.append($("span", "hold-kind", x["種類"])); c.append($("span", "hold-state s-" + x["状態"], x["状態"]));
+        if (pendingMark) c.append($("span", "badge warn tag", "未採用"));
+        c.append($("strong", "", x["名前"])); if (!pixelCard) c.append($("span", "hold-kind", x["種類"]));
+        if (x._when) c.append($("span", "hold-kind", x._when)); c.append($("span", "hold-state s-" + x["状態"], x["状態"]));
         if (x["メモ"]) { const m = $("span", "hold-memo", x["メモ"]); m.title = x["メモ"]; c.append(m); }
         if (nativeGif && !sel.on) {
           const original = $("a", "link-btn small-btn hold-open", "原寸GIFを開く");
