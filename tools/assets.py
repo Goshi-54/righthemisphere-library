@@ -166,8 +166,12 @@ def receive(a):
         if need not in rows[0]: sys.exit(f"納品メモに「{need}」の列がない")
     day = datetime.date.today().strftime("%Y%m%d")
     folder = f"{top}/{day}_{slug(a.依頼)}"
+    # 11/20 c20261119-22：同じ日に同じ中身の依頼（口パクと全身の動き）が来て、2件目が「既にある」で止まった。
+    #   前の物は触らず、後から来た方の置き場に「_2」「_3」…を付ける（意思決定DB 41ec12971e278154885ce8894c8d4c4f）
+    n = 1
+    while os.path.exists(f"{root}/{folder}" if n == 1 else f"{root}/{folder}_{n}"): n += 1
+    if n > 1: folder = f"{folder}_{n}"
     dst = f"{root}/{folder}"
-    if os.path.exists(dst): sys.exit(f"既にある：{dst}")
     OD.setdefault(key, [])
     gid = f"{pre}{day}-{len([g for g in OD[key] if g['id'].startswith(pre + day)]) + 1:02d}"
     items = []
