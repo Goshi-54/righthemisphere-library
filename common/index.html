@@ -146,6 +146,11 @@ p{margin:0 0 10px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .icon-card{--chk-a:#262b33;--chk-b:#2e343d}}
 .icon-card>img,.icon-card>video,.hold-compare img,.hold-compare video{width:100%;aspect-ratio:4/3;height:auto;object-fit:contain;display:block;margin:0 0 8px;padding:5%;border-radius:8px;background:repeating-conic-gradient(var(--chk-a) 0 25%,var(--chk-b) 0 50%) 0 0/16px 16px}
 .icon-card.pixel>img{image-rendering:pixelated}
+/* p01 and the requested Claude Code animations use the same native-size preview. */
+.icon-card.cc-sprite>img,.icon-card.cc-sprite .hold-compare img{width:160px;max-width:100%;height:auto;aspect-ratio:1;object-fit:contain;padding:0;margin:0 auto 8px;image-rendering:pixelated}
+.icon-grid:has(>.cc-sprite){grid-template-columns:repeat(auto-fill,minmax(min(100%,184px),1fr))}
+.icon-card.cc-sprite .dl-fab{top:8px}
+
 .side button.sub{padding-left:28px;font-weight:500;font-size:13px;position:relative}
 .side button.sub::before{content:"";position:absolute;left:14px;top:6px;width:8px;height:12px;border-left:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted)}
 .folder-card{display:flex;align-items:center;gap:14px;width:100%;max-width:560px;margin:0 0 18px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-align:left;cursor:pointer;font:inherit}
@@ -742,7 +747,7 @@ dialog::backdrop{background:#000a}
     fd.append(t); fd.addEventListener("click", () => go("ccreq")); panel.append(fd);
     const g = $("div", "icon-grid");
     D["Claude Codeキャラ"].forEach(x => {
-      const c = $("div", "icon-card pixel"), im = $("img"); im.src = x.src; im.alt = ccName(x); im.loading = "lazy";
+      const c = $("div", "icon-card pixel cc-sprite"), im = $("img"); im.src = x.src; im.alt = ccName(x); im.loading = "lazy";
       c.append(im, $("strong", "", ccName(x))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
       pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
     });
@@ -826,7 +831,7 @@ dialog::backdrop{background:#000a}
       g["素材"].forEach(x => {
         // 11/14 動く素材の見本（mp4）は、動きと画質を見られるように大きめの動画で出す
         const mv = /\.mp4$/.test(x.src), nativeGif = isNativeGif(x);
-        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "") + (pixelCard ? " pixel" : "")), im = mv ? $("video") : $("img");
+        const c = $("div", "icon-card hold-card" + (mv ? " hold-movie" : "") + (nativeGif ? " hold-native-gif" : "") + (pixelCard ? " pixel cc-sprite" : "")), im = mv ? $("video") : $("img");
         if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"]); }
         else { im.src = x.src; im.alt = x["名前"]; im.loading = "lazy"; }
         // 11/14 同じ名前の素材が既にあるとき（差し替えの候補）は、今の版と同じ高さで並べて見比べる
