@@ -1,0 +1,14 @@
+cc-library-grid{display:block;margin-bottom:1.25rem}
+.cc-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.cc-controls :is(input,select){max-width:100%;min-width:0;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit;font-size:13px}
+.cc-controls button[aria-pressed=true]{border-color:var(--accent)}
+.cc-count,.cc-info{display:block;color:var(--muted);font-size:12px;margin:6px 0}
+.cc-gallery{margin:8px 0 12px}
+.cc-gallery .cc-pick{display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:13px}
+.cc-gallery .icon-card:has(.cc-pick input:checked){outline:2px solid var(--accent);outline-offset:-2px}
+.cc-gallery .icon-card strong{display:block;overflow-wrap:anywhere}
+.cc-gallery details{text-align:left;margin-top:7px;font-size:12px}
+.cc-gallery summary{color:var(--muted);cursor:pointer}
+.cc-gallery details a{display:block}
+.cc-official{margin:8px 0 16px}.cc-official>summary{cursor:pointer;color:var(--accent);font-weight:600}
+@media(max-width:600px){.icon-grid.cc-gallery:has(>.cc-sprite){grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.cc-gallery .icon-card{min-width:0;padding:8px 5px}.cc-controls{gap:4px}}

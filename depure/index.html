@@ -226,6 +226,8 @@ dialog::backdrop{background:#000a}
 .big{width:100%;max-height:70vh;object-fit:contain;background:var(--stage);border-radius:12px;border:1px solid var(--line);display:block}
 @media (max-width:640px){.bg-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fname strong{font-size:12px}}
 </style>
+<link rel="stylesheet" href="../common/ai-review/library-grid.css">
+<script defer src="../common/ai-review/library-grid.js"></script>
 </head>
 <body>
 <header class="topbar"><div class="topbar-in">
@@ -332,7 +334,7 @@ dialog::backdrop{background:#000a}
     //   （意思決定DB 41dc12971e27812e9136de1797481e43・41dc12971e278192a110e40da35606b2）
     // 11/19 本人「Claude Codeのキャラクターはそこから細分化する必要ない。」「Claude Codeキャラの中の要望素材フォルダを作ってその中に依頼の文章作成ツールも含めて格納して。」
     //   （41dc12971e27817d9c6dc705a8293594・41dc12971e27817c86bac66ab40769e4）→ 中を分けない1つの一覧と、その中の「要望素材」
-    has("Claude Codeキャラ") && { id: "cc", group: SG, label: "Claude Codeキャラ", n: D["Claude Codeキャラ"].length,
+    has("Claude Codeキャラ") && { id: "cc", group: SG, label: "Claude Codeキャラ", n: "正式 " + D["Claude Codeキャラ"].length,
       icons: D["Claude Codeキャラ"].slice(0, 4).map(x => x.src), render: renderCC },
     has("Claude Codeキャラ") && { id: "ccreq", group: SG, sub: true, label: "要望素材", n: (D["Claude Codeキャラの要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderCCReq },
     has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
@@ -426,10 +428,10 @@ dialog::backdrop{background:#000a}
   function dlLink(f, label = "ダウンロード") { const a = $("a", "dl-link", label); a.href = DL(f[1]); a.rel = "noopener"; a.title = f[0]; a.addEventListener("click", e => e.stopPropagation()); return a; }
   function dlTools() {
     const w = $("div", "dl-tools");
-    const pick = $("button", "", sel.on ? "選ぶのをやめる" : "選んでダウンロード"); pick.setAttribute("aria-pressed", String(sel.on));
+    const pick = $("button", "", sel.on ? "選ぶのをやめる" : current === "cc" ? "正式素材を選んでダウンロード" : "選んでダウンロード"); pick.setAttribute("aria-pressed", String(sel.on));
     pick.addEventListener("click", () => { sel.on = !sel.on; if (!sel.on) sel.items.clear(); draw(); });
     const items = TAB_ITEMS[current](), n = items.reduce((a, x) => a + filesOf(x).length, 0);
-    const all = $("button", "", `まとめてダウンロード（${n}）`); all.title = `このタブの${n}ファイルをまとめてダウンロード`;
+    const all = $("button", "", `${current === "cc" ? "正式素材を" : ""}まとめてダウンロード（${n}）`); all.title = `このタブの${n}ファイルをまとめてダウンロード`;
     all.addEventListener("click", () => bulkDownload(items.map(x => [x, current]), TABS.find(t => t.id === current).label));
     if (current !== "script") w.append(pick); w.append(all);
     if (hasKoma(current)) {
@@ -741,9 +743,8 @@ dialog::backdrop{background:#000a}
   const FOLDER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2l2 2.2h8.8A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>';
   const ccName = x => x["名前"] || base(x["ファイル"]).replace(/^(ドット絵キャラ|Claude Codeキャラ)_/, "");
   function renderCC() {
-    const review = $("a", "folder-card"); review.href = "../common/ai-review/"; review.innerHTML = FOLDER_SVG;
-    const reviewLabel = $("span", "folder-txt"); reviewLabel.append($("strong", "", "制作物チェック一覧（354項目）"), $("span", "", "過去と今回の素材を再生・比較して、候補や修正メモを記録する"));
-    review.append(reviewLabel); panel.append(review);
+    const gallery = document.createElement("cc-library-grid");
+    if (!sel.on) panel.append(gallery);
     const reqs = D["Claude Codeキャラの要望素材"] || [], nReq = reqs.reduce((a, g) => a + g["素材"].length, 0);
     const fd = $("button", "folder-card"); fd.type = "button"; fd.innerHTML = FOLDER_SVG;
     const t = $("span", "folder-txt"); t.append($("strong", "", `要望素材（${nReq}）`), $("span", "", "依頼の文を作る道具と、Chatworkの要望で作った素材"));
@@ -754,7 +755,15 @@ dialog::backdrop{background:#000a}
       c.append(im, $("strong", "", ccName(x))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
       pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
     });
-    panel.append(g);
+    if (sel.on) panel.append(g);
+    else {
+      const originals = $("details", "cc-official");
+      originals.append($("summary", "", "正式素材のダウンロード"), g);
+      panel.append(originals);
+    }
+    const records = $("a", "crumb-link", "チェック記録・メモを開く");
+    records.href = "../common/ai-review/";
+    panel.append(records);
     pendingSection([], { cc: true });
   }
   function renderCCReq() {
