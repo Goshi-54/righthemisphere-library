@@ -741,6 +741,9 @@ dialog::backdrop{background:#000a}
   const FOLDER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2l2 2.2h8.8A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>';
   const ccName = x => x["名前"] || base(x["ファイル"]).replace(/^(ドット絵キャラ|Claude Codeキャラ)_/, "");
   function renderCC() {
+    const review = $("a", "folder-card"); review.href = "../common/ai-review/"; review.innerHTML = FOLDER_SVG;
+    const reviewLabel = $("span", "folder-txt"); reviewLabel.append($("strong", "", "制作物チェック一覧（354項目）"), $("span", "", "過去と今回の素材を再生・比較して、候補や修正メモを記録する"));
+    review.append(reviewLabel); panel.append(review);
     const reqs = D["Claude Codeキャラの要望素材"] || [], nReq = reqs.reduce((a, g) => a + g["素材"].length, 0);
     const fd = $("button", "folder-card"); fd.type = "button"; fd.innerHTML = FOLDER_SVG;
     const t = $("span", "folder-txt"); t.append($("strong", "", `要望素材（${nReq}）`), $("span", "", "依頼の文を作る道具と、Chatworkの要望で作った素材"));
