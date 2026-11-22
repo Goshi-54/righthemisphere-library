@@ -26,38 +26,44 @@
   table { width:100%; border-collapse:collapse; font-size:12px; table-layout:auto; }
   th, td { border-bottom:1px solid #e7edf5; padding:8px 6px; text-align:left; vertical-align:middle; }
   th { background:#edf3fc; color:var(--brand); font-size:11px; font-weight:800; white-space:nowrap; position:sticky; top:0; }
+  th.th-center { text-align:center; }
   tr:hover td { background:#f7faff; }
   tr.hidden, .card.hidden { display:none; }
 
-  .col-name { width:142px; }
+  .col-name { width:136px; }
   .n-main { font-weight:800; font-size:13px; color:var(--ink); white-space:nowrap; }
   .n-code { margin-top:2px; }
   .n-orig { font-size:10.5px; color:var(--muted); margin-top:2px; line-height:1.3; }
   .n-orig-sub { font-size:10px; color:#7b879c; line-height:1.25; }
 
-  .col-audio { width:154px; }
-  .col-audio audio { width:148px; height:30px; display:block; }
+  .col-audio { width:146px; }
+  .col-audio audio { width:140px; height:30px; display:block; }
 
-  .col-age { width:68px; white-space:nowrap; }
+  .col-age { width:64px; white-space:nowrap; }
   .cell-main { font-size:11.5px; font-weight:600; color:var(--ink); }
   .cell-sub { font-size:10.5px; color:var(--muted); }
 
-  .col-tags { width:86px; }
+  .col-tags { width:82px; }
   .tag-col { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
   .tag { display:inline-block; font-size:10.5px; font-weight:600; padding:1px 6px; border-radius:5px; white-space:nowrap; }
   .tag.tone { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
   .tag.use { background:#e0f2fe; color:#075985; }
 
-  .col-cr { width:96px; }
+  .col-cr { width:90px; text-align:center; }
   .cr-main { font-weight:700; color:#1e3a8a; font-size:11.5px; white-space:nowrap; }
-  .cr-item { font-weight:700; color:#1e3a8a; font-size:11px; white-space:nowrap; line-height:1.4; }
+  .cr-item { font-weight:700; color:#1e3a8a; font-size:11px; white-space:nowrap; line-height:1.45; }
 
-  .col-model { width:116px; }
-  .m-vendor { font-size:10px; font-weight:700; color:var(--muted); white-space:nowrap; }
+  .col-tool { width:76px; white-space:nowrap; }
+  .tool-label { font-size:11.5px; font-weight:800; color:var(--ink); }
+  .tool-label.tool-fish { color:#0f766e; }
+  .tool-label.tool-el { color:#1e293b; }
+  .tool-label.tool-unk { color:#64748b; font-weight:700; }
+
+  .col-model { width:86px; white-space:nowrap; }
   .m-main { font-size:11.5px; font-weight:700; color:#1e293b; white-space:nowrap; }
   .m-sub { font-size:10px; color:var(--muted); margin-top:1px; white-space:nowrap; }
 
-  .col-origin { width:88px; white-space:nowrap; }
+  .col-origin { width:84px; white-space:nowrap; }
   .pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; white-space:nowrap; }
   .pill.orig-preset { background:#ede9fe; color:#5b21b6; }
   .pill.orig-custom { background:#fce7f3; color:#9d174d; }
@@ -68,13 +74,15 @@
   .cost-badge { display:inline-block; font-size:10px; font-weight:800; padding:2px 7px; border-radius:5px; white-space:nowrap; }
   .cost-badge.cost-sub { background:#dbeafe; color:#1e40af; }
   .cost-badge.cost-payg { background:#fef3c7; color:#92400e; }
+  .cost-badge.cost-reg { background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; }
+  .cost-badge.cost-clone { background:#fce7f3; color:#9d174d; }
 
-  .col-cost { width:98px; white-space:nowrap; font-size:11px; }
+  .col-cost { width:94px; white-space:nowrap; font-size:11px; }
   .cost-unit { font-weight:700; color:var(--ink); }
   .cost-500 { font-weight:800; color:var(--brand); font-size:10.5px; margin-top:2px; }
   .cost-none { color:#94a3b8; font-weight:600; }
 
-  .col-act { width:64px; white-space:nowrap; }
+  .col-act { width:60px; white-space:nowrap; }
   .act-stack { display:flex; flex-direction:column; gap:4px; }
   .btn-xs { border-radius:6px; padding:4px 6px; font-size:10.5px; font-weight:700; cursor:pointer; border:1px solid var(--line); width:100%; text-align:center; }
   .btn-xs.primary, .btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
@@ -108,7 +116,7 @@
 </div></header>
 
 <div class="guard"><div class="guard-box">
-  <strong>コストの見方：</strong>ElevenLabs は月額サブスク枠内（消費クレジット目安を表示）、Fish Audio は従量課金（円換算目安を表示）です。過去CRストックはAPI未登録のため「—」表示にしています。
+  <strong>見方：</strong>利用・課金列は、生成可能な声を「サブスク内／従量課金」、過去CRストックを「要登録／要複製」で表示しています。コスト目安はElevenLabsがクレジット消費、Fish Audioが円換算です。
 </div></div>
 
 <div class="bar">
@@ -135,16 +143,17 @@
             <th>年代・性別</th>
             <th>声質・トーン</th>
             <th>推奨用途</th>
-            <th>使用CR実績</th>
+            <th class="th-center">使用CR実績</th>
+            <th>ツール</th>
             <th>モデル・機能</th>
             <th>登録区分</th>
-            <th>課金区分</th>
+            <th>利用・課金</th>
             <th>コスト目安</th>
             <th>コピー</th>
           </tr>
         </thead>
         <tbody>
-    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-01 ハル 元気な女性v2 20代後半・女性 ツール既存声 従量課金 明るい 親しみ sns長尺vlog 広告cta 新規（e2e検証済） fish audio / s2.1-pro">
+    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-01 ハル 元気な女性v2 20代後半・女性 ツール既存声 fish audio s2.1-pro  従量課金 明るい 親しみ sns長尺vlog 広告cta 新規（e2e検証済）">
       <td class="col-name">
         <div class="n-main">ハル <span class="rate-chip">◎ 最有力</span></div>
         <div class="n-code"><code>V-FISH-01</code></div>
@@ -155,13 +164,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">明るい</span><span class="tag tone">親しみ</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（E2E検証済）</div></td>
-      <td class="col-model"><div class="m-vendor">Fish Audio</div><div class="m-main">s2.1-pro</div></td>
+      <td class="col-tool"><span class="tool-label tool-fish">Fish Audio</span></td>
+      <td class="col-model"><div class="m-main">s2.1-pro</div></td>
       <td class="col-origin"><span class="pill orig-preset">ツール既存声</span></td>
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ハル（V-FISH-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-01&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-02 佐藤 葵 佐藤 葵 20代半ば・女性 ツール既存声 従量課金 クリア 無音最静 sns長尺vlog 広告cta 新規（50s/cta○） fish audio / s2.1-pro">
+    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-02 佐藤 葵 佐藤 葵 20代半ば・女性 ツール既存声 fish audio s2.1-pro  従量課金 クリア 無音最静 sns長尺vlog 広告cta 新規（50s/cta○）">
       <td class="col-name">
         <div class="n-main">佐藤 葵 <span class="rate-chip">◎ 最クリーン</span></div>
         <div class="n-code"><code>V-FISH-02</code></div>
@@ -172,13 +182,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">クリア</span><span class="tag tone">無音最静</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（50s/CTA○）</div></td>
-      <td class="col-model"><div class="m-vendor">Fish Audio</div><div class="m-main">s2.1-pro</div></td>
+      <td class="col-tool"><span class="tool-label tool-fish">Fish Audio</span></td>
+      <td class="col-model"><div class="m-main">s2.1-pro</div></td>
       <td class="col-origin"><span class="pill orig-preset">ツール既存声</span></td>
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「佐藤 葵（V-FISH-02）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-02&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-fish-03 キョウコ きょうこ kyoko 30代前後・女性 ツール既存声 従量課金 丁寧 落ち着き ai・解説 sns長尺vlog 新規（50s○） fish audio / s2.1-pro">
+    <tr class="voice-item" data-eng="fish" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-fish-03 キョウコ きょうこ kyoko 30代前後・女性 ツール既存声 fish audio s2.1-pro  従量課金 丁寧 落ち着き ai・解説 sns長尺vlog 新規（50s○）">
       <td class="col-name">
         <div class="n-main">キョウコ <span class="rate-chip">◎ 丁寧枠</span></div>
         <div class="n-code"><code>V-FISH-03</code></div>
@@ -189,13 +200,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">丁寧</span><span class="tag tone">落ち着き</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">AI・解説</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（50s○）</div></td>
-      <td class="col-model"><div class="m-vendor">Fish Audio</div><div class="m-main">s2.1-pro</div></td>
+      <td class="col-tool"><span class="tool-label tool-fish">Fish Audio</span></td>
+      <td class="col-model"><div class="m-main">s2.1-pro</div></td>
       <td class="col-origin"><span class="pill orig-preset">ツール既存声</span></td>
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「キョウコ（V-FISH-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-03&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-01 ユイ vd_吐息vlog_a 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 sns長尺vlog 新規（40s長尺○） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-01 ユイ vd_吐息vlog_a 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 sns長尺vlog 新規（40s長尺○）">
       <td class="col-name">
         <div class="n-main">ユイ <span class="rate-chip">◎ 実戦○</span></div>
         <div class="n-code"><code>V-VD-01</code></div>
@@ -206,13 +218,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">吐息</span><span class="tag tone">自然体</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（40s長尺○）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ユイ（V-VD-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-01&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="explainer sns_vlog" data-search="v-vd-02 カナ vd_吐息vlog_b 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 ai・解説 sns長尺vlog 新規（ai解説○） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="explainer sns_vlog" data-search="v-vd-02 カナ vd_吐息vlog_b 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 ai・解説 sns長尺vlog 新規（ai解説○）">
       <td class="col-name">
         <div class="n-main">カナ <span class="rate-chip">◎ 実戦○</span></div>
         <div class="n-code"><code>V-VD-02</code></div>
@@ -223,13 +236,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">吐息</span><span class="tag tone">自然体</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">AI・解説</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（AI解説○）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「カナ（V-VD-02）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-02&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-04 ソラ vd_澄んだsns女性 20代・女性 オリジナル自作 サブスク内 澄んだ クリア 広告cta sns長尺vlog 新規（広告cta○） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-04 ソラ vd_澄んだsns女性 20代・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 澄んだ クリア 広告cta sns長尺vlog 新規（広告cta○）">
       <td class="col-name">
         <div class="n-main">ソラ <span class="rate-chip">◎ 実戦○</span></div>
         <div class="n-code"><code>V-VD-04</code></div>
@@ -240,13 +254,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">澄んだ</span><span class="tag tone">クリア</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（広告CTA○）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ソラ（V-VD-04）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-04&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-05 マホ vd_柔らか日常女性 30歳前後・女性 オリジナル自作 サブスク内 柔らか 親しみ 広告cta sns長尺vlog 新規（広告cta○） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-05 マホ vd_柔らか日常女性 30歳前後・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 柔らか 親しみ 広告cta sns長尺vlog 新規（広告cta○）">
       <td class="col-name">
         <div class="n-main">マホ <span class="rate-chip">◎ 実戦○</span></div>
         <div class="n-code"><code>V-VD-05</code></div>
@@ -257,13 +272,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">柔らか</span><span class="tag tone">親しみ</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（広告CTA○）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「マホ（V-VD-05）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-05&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-lib-02 ミカ mika 20代後半・女性 ツール既存声 サブスク内 澄んだ 明るい ai・解説 sns長尺vlog 新規（ai解説○） elevenlabs / v4（公開声）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-lib-02 ミカ mika 20代後半・女性 ツール既存声 elevenlabs v4 公開声 サブスク内 澄んだ 明るい ai・解説 sns長尺vlog 新規（ai解説○）">
       <td class="col-name">
         <div class="n-main">ミカ <span class="rate-chip">◎ 実戦○</span></div>
         <div class="n-code"><code>V-LIB-02</code></div>
@@ -274,13 +290,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">澄んだ</span><span class="tag tone">明るい</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">AI・解説</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（AI解説○）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（公開声）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">公開声</div></td>
       <td class="col-origin"><span class="pill orig-preset">ツール既存声</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ミカ（V-LIB-02）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-LIB-02&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-03 ミナ vd_吐息vlog_c 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 sns長尺vlog 新規（短文◎） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-03 ミナ vd_吐息vlog_c 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 sns長尺vlog 新規（短文◎）">
       <td class="col-name">
         <div class="n-main">ミナ <span class="rate-chip">◎ 予備</span></div>
         <div class="n-code"><code>V-VD-03</code></div>
@@ -291,13 +308,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">吐息</span><span class="tag tone">自然体</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（短文◎）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ミナ（V-VD-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-03&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-06 ノア vd_夜vlog_asmr系a 20代後半・女性 オリジナル自作 サブスク内 asmr ささやき 夜・asmr 新規（短文◎） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-06 ノア vd_夜vlog_asmr系a 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 asmr ささやき 夜・asmr 新規（短文◎）">
       <td class="col-name">
         <div class="n-main">ノア <span class="rate-chip">◎ ASMR</span></div>
         <div class="n-code"><code>V-VD-06</code></div>
@@ -308,13 +326,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">ASMR</span><span class="tag tone">ささやき</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">夜・ASMR</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（短文◎）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ノア（V-VD-06）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-06&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-07 ルナ vd_夜vlog_asmr系b 20代後半・女性 オリジナル自作 サブスク内 asmr 親密 夜・asmr 新規（短文◎） elevenlabs / v4（voice design）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-07 ルナ vd_夜vlog_asmr系b 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 asmr 親密 夜・asmr 新規（短文◎）">
       <td class="col-name">
         <div class="n-main">ルナ <span class="rate-chip">◎ ASMR</span></div>
         <div class="n-code"><code>V-VD-07</code></div>
@@ -325,13 +344,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">ASMR</span><span class="tag tone">親密</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">夜・ASMR</span></div></td>
       <td class="col-cr"><div class="cr-main">新規</div><div class="m-sub">（短文◎）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（Voice Design）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-custom">オリジナル自作</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ルナ（V-VD-07）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-07&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-fixed" data-uses="fixed" data-search="v-sns-depure でぷれ ig協業_ナレーション複製 男性 本人複製（固定） サブスク内 本人再現 落ち着き 協業固定 ig協業（台本01/02） elevenlabs / v4（ivc固定）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-fixed" data-uses="fixed" data-search="v-sns-depure でぷれ ig協業_ナレーション複製 男性 本人複製（固定） elevenlabs v4 ivc固定 サブスク内 本人再現 落ち着き 協業固定 ig協業（台本01/02）">
       <td class="col-name">
         <div class="n-main">でぷれ <span class="rate-chip">◎ 固定</span></div>
         <div class="n-code"><code>V-SNS-DEPURE</code></div>
@@ -342,13 +362,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">本人再現</span><span class="tag tone">落ち着き</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">協業固定</span></div></td>
       <td class="col-cr"><div class="cr-main">IG協業</div><div class="m-sub">（台本01/02）</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（IVC固定）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">IVC固定</div></td>
       <td class="col-origin"><span class="pill orig-fixed">本人複製</span><div class="m-sub">（固定）</div></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「でぷれ（V-SNS-DEPURE）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-DEPURE&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-sns-01 ミオ hg050 / hg037複製（b11統合） 20代後半・女性 過去cr複製（登録済） サブスク内 自然体 基準ugc sns長尺vlog 広告cta hg037 / hg050 / bu005 elevenlabs / v4（ivc複製）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-sns-01 ミオ hg050 / hg037複製（b11統合） 20代後半・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 自然体 基準ugc sns長尺vlog 広告cta hg037 / hg050 / bu005">
       <td class="col-name">
         <div class="n-main">ミオ <span class="rate-chip">◎ 実績CR</span></div>
         <div class="n-code"><code>V-SNS-01</code></div>
@@ -358,14 +379,15 @@
       <td class="col-age"><div class="cell-main">20代後半</div><div class="cell-sub">女性</div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag tone">自然体</span><span class="tag tone">基準UGC</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div></td>
-      <td class="col-cr"><div class="cr-item">・HG037</div><div class="cr-item">・HG050</div><div class="cr-item">・BU005</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（IVC複製）</div></td>
+      <td class="col-cr"><div class="cr-item">HG037</div><div class="cr-item">HG050</div><div class="cr-item">BU005</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">IVC複製</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CR複製</span><div class="m-sub">（登録済）</div></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ミオ（V-SNS-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-01&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-both-04 ナナ hg036 live配信（b10統合） 30代・女性 過去cr複製（登録済） サブスク内 語りかけ 自然体 sns長尺vlog 広告cta hg036 elevenlabs / v4（ivc複製）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-both-04 ナナ hg036 live配信（b10統合） 30代・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 語りかけ 自然体 sns長尺vlog 広告cta hg036">
       <td class="col-name">
         <div class="n-main">ナナ <span class="rate-chip">○ 実績CR</span></div>
         <div class="n-code"><code>V-BOTH-04</code></div>
@@ -376,13 +398,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">語りかけ</span><span class="tag tone">自然体</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div></td>
       <td class="col-cr"><div class="cr-main">HG036</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（IVC複製）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">IVC複製</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CR複製</span><div class="m-sub">（登録済）</div></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ナナ（V-BOTH-04）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-04&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer ad_cta" data-search="v-both-03 リン rin - warm &amp; clear 20代後半・女性 ツール既存声 サブスク内 クリア 丁寧 ai・解説 広告cta レバンスcr2 elevenlabs / v4（公開声）">
+    <tr class="voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer ad_cta" data-search="v-both-03 リン rin - warm &amp; clear 20代後半・女性 ツール既存声 elevenlabs v4 公開声 サブスク内 クリア 丁寧 ai・解説 広告cta レバンスcr2">
       <td class="col-name">
         <div class="n-main">リン <span class="rate-chip">○ 解説枠</span></div>
         <div class="n-code"><code>V-BOTH-03</code></div>
@@ -393,13 +416,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">クリア</span><span class="tag tone">丁寧</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">AI・解説</span><span class="tag use">広告CTA</span></div></td>
       <td class="col-cr"><div class="cr-main">レバンスCR2</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v4</div><div class="m-sub">（公開声）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v4</div><div class="m-sub">公開声</div></td>
       <td class="col-origin"><span class="pill orig-preset">ツール既存声</span></td>
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「リン（V-BOTH-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-03&quot; --script 台本.txt">CMD</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a01 サクラ sakura - narrational 女性 過去crストック  丁寧 ナレ寄り 広告cta ai・解説 hg029 / hg041 elevenlabs / 公開声（要登録）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a01 サクラ sakura - narrational 女性 過去crストック elevenlabs 公開声  要登録 丁寧 ナレ寄り 広告cta ai・解説 hg029 / hg041">
       <td class="col-name">
         <div class="n-main">サクラ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-A01</code></div>
@@ -409,14 +433,15 @@
       <td class="col-age"><div class="cell-main">女性</div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag tone">丁寧</span><span class="tag tone">ナレ寄り</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div></td>
-      <td class="col-cr"><div class="cr-item">・HG029</div><div class="cr-item">・HG041</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録）</div></td>
+      <td class="col-cr"><div class="cr-item">HG029</div><div class="cr-item">HG041</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「サクラ（T1-A01 / HG029 / HG041）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a02 キョウコ kyoko - warm, clear 女性 過去crストック  温かい 自然 広告cta sns長尺vlog hg028 / bu005 elevenlabs / 公開声（要登録・整音◎）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a02 キョウコ kyoko - warm, clear 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 温かい 自然 広告cta sns長尺vlog hg028 / bu005">
       <td class="col-name">
         <div class="n-main">キョウコ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-A02</code></div>
@@ -426,14 +451,15 @@
       <td class="col-age"><div class="cell-main">女性</div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag tone">温かい</span><span class="tag tone">自然</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
-      <td class="col-cr"><div class="cr-item">・HG028</div><div class="cr-item">・BU005</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録・整音◎）</div></td>
+      <td class="col-cr"><div class="cr-item">HG028</div><div class="cr-item">BU005</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div><div class="m-sub">整音◎</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「キョウコ（T1-A02 / HG028 / BU005）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a04 チーちゃん chii-chan - neutral 女性 過去crストック  フラット クリア 広告cta ai・解説 hg024 elevenlabs / 公開声（要登録・整音◎）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a04 チーちゃん chii-chan - neutral 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 フラット クリア 広告cta ai・解説 hg024">
       <td class="col-name">
         <div class="n-main">チーちゃん <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-A04</code></div>
@@ -444,13 +470,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">フラット</span><span class="tag tone">クリア</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div></td>
       <td class="col-cr"><div class="cr-main">HG024</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録・整音◎）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div><div class="m-sub">整音◎</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「チーちゃん（T1-A04 / HG024）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="t1-a05 アヤ aya - friendly casual 女性 過去crストック  親しみ カジュアル sns長尺vlog 広告cta 足立さん制作cr elevenlabs / 公開声（要登録・整音◎）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="t1-a05 アヤ aya - friendly casual 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 親しみ カジュアル sns長尺vlog 広告cta 足立さん制作cr">
       <td class="col-name">
         <div class="n-main">アヤ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-A05</code></div>
@@ -461,13 +488,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">親しみ</span><span class="tag tone">カジュアル</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div></td>
       <td class="col-cr"><div class="cr-main">足立さん制作CR</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録・整音◎）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div><div class="m-sub">整音◎</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「アヤ（T1-A05 / 足立さん制作CR）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a09 キリエ kyrie 女性 過去crストック  自然体 クリア 広告cta sns長尺vlog リモラボ過去cr elevenlabs / 公開声（要登録）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a09 キリエ kyrie 女性 過去crストック elevenlabs 公開声  要登録 自然体 クリア 広告cta sns長尺vlog リモラボ過去cr">
       <td class="col-name">
         <div class="n-main">キリエ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-A09</code></div>
@@ -478,13 +506,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">自然体</span><span class="tag tone">クリア</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">リモラボ過去CR</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「キリエ（T1-A09 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a10 アカリ akari 女性 過去crストック  明るめ 自然 広告cta sns長尺vlog hg025 elevenlabs / 公開声（要登録・bgm分離○）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a10 アカリ akari 女性 過去crストック elevenlabs 公開声 bgm分離○ 要登録 明るめ 自然 広告cta sns長尺vlog hg025">
       <td class="col-name">
         <div class="n-main">アカリ <span class="rate-chip">○ 過去CR</span></div>
         <div class="n-code"><code>T1-A10</code></div>
@@ -495,13 +524,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">明るめ</span><span class="tag tone">自然</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">HG025</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">公開声</div><div class="m-sub">（要登録・BGM分離○）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">公開声</div><div class="m-sub">BGM分離○</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-reg">要登録</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「アカリ（T1-A10 / HG025）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-d04 ユキ 元ファイル名 morioki_male（中身は女性声） 女性 過去crストック  自然体 聴きやすい 広告cta sns長尺vlog リモラボ過去cr 不明（過去cr素材・要複製）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-d04 ユキ 元ファイル名 morioki_male（中身は女性声） 女性 過去crストック 不明 —  要複製 自然体 聴きやすい 広告cta sns長尺vlog リモラボ過去cr">
       <td class="col-name">
         <div class="n-main">ユキ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-D04</code></div>
@@ -512,13 +542,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">自然体</span><span class="tag tone">聴きやすい</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">リモラボ過去CR</div></td>
-      <td class="col-model"><div class="m-main">不明</div><div class="m-sub">（過去CR素材・要複製）</div></td>
+      <td class="col-tool"><span class="tool-label tool-unk">不明</span></td>
+      <td class="col-model"><div class="m-main">—</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-clone">要複製</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「ユキ（T1-D04 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-b01 レイカ 30代女性_知的で落ち着いた 30代・女性 過去crストック  知的 落ち着き 広告cta ai・解説 bu002 elevenlabs / v3（voice design・要複製）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-b01 レイカ 30代女性_知的で落ち着いた 30代・女性 過去crストック elevenlabs v3 voice design 要複製 知的 落ち着き 広告cta ai・解説 bu002">
       <td class="col-name">
         <div class="n-main">レイカ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-B01</code></div>
@@ -529,13 +560,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">知的</span><span class="tag tone">落ち着き</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div></td>
       <td class="col-cr"><div class="cr-main">BU002</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v3</div><div class="m-sub">（Voice Design・要複製）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v3</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-clone">要複製</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「レイカ（T1-B01 / BU002）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta" data-search="t1-b02 アスカ 30代_少し低めテンション高 30代・女性 過去crストック  やや低め 快活 広告cta bu001 / hg031 elevenlabs / v3（voice design・要複製）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta" data-search="t1-b02 アスカ 30代_少し低めテンション高 30代・女性 過去crストック elevenlabs v3 voice design 要複製 やや低め 快活 広告cta bu001 / hg031">
       <td class="col-name">
         <div class="n-main">アスカ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-B02</code></div>
@@ -545,14 +577,15 @@
       <td class="col-age"><div class="cell-main">30代</div><div class="cell-sub">女性</div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag tone">やや低め</span><span class="tag tone">快活</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span></div></td>
-      <td class="col-cr"><div class="cr-item">・BU001</div><div class="cr-item">・HG031</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v3</div><div class="m-sub">（Voice Design・要複製）</div></td>
+      <td class="col-cr"><div class="cr-item">BU001</div><div class="cr-item">HG031</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v3</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-clone">要複製</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「アスカ（T1-B02 / BU001 / HG031）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="asmr sns_vlog" data-search="t1-b03 エマ 20代・アンニュイ_ダウナー 20代・女性 過去crストック  アンニュイ 低体温 夜・asmr sns長尺vlog リモラボ過去cr elevenlabs / v3（voice design・要複製）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="asmr sns_vlog" data-search="t1-b03 エマ 20代・アンニュイ_ダウナー 20代・女性 過去crストック elevenlabs v3 voice design 要複製 アンニュイ 低体温 夜・asmr sns長尺vlog リモラボ過去cr">
       <td class="col-name">
         <div class="n-main">エマ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-B03</code></div>
@@ -563,13 +596,14 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">アンニュイ</span><span class="tag tone">低体温</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">夜・ASMR</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">リモラボ過去CR</div></td>
-      <td class="col-model"><div class="m-vendor">ElevenLabs</div><div class="m-main">v3</div><div class="m-sub">（Voice Design・要複製）</div></td>
+      <td class="col-tool"><span class="tool-label tool-el">ElevenLabs</span></td>
+      <td class="col-model"><div class="m-main">v3</div><div class="m-sub">Voice Design</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-clone">要複製</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「エマ（T1-B03 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr>
-    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-b06 メイ hg027 元の声 女性 過去crストック  自然体 実績声 広告cta sns長尺vlog hg027 不明（過去cr素材・要複製）">
+    <tr class="voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-b06 メイ hg027 元の声 女性 過去crストック 不明 —  要複製 自然体 実績声 広告cta sns長尺vlog hg027">
       <td class="col-name">
         <div class="n-main">メイ <span class="rate-chip">◎ 過去CR</span></div>
         <div class="n-code"><code>T1-B06</code></div>
@@ -580,9 +614,10 @@
       <td class="col-tags"><div class="tag-col"><span class="tag tone">自然体</span><span class="tag tone">実績声</span></div></td>
       <td class="col-tags"><div class="tag-col"><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div></td>
       <td class="col-cr"><div class="cr-main">HG027</div></td>
-      <td class="col-model"><div class="m-main">不明</div><div class="m-sub">（過去CR素材・要複製）</div></td>
+      <td class="col-tool"><span class="tool-label tool-unk">不明</span></td>
+      <td class="col-model"><div class="m-main">—</div></td>
       <td class="col-origin"><span class="pill orig-stock">過去CRストック</span></td>
-      <td class="col-billing"><div class="cost-none">—</div></td>
+      <td class="col-billing"><span class="cost-badge cost-clone">要複製</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs ghost copy-btn" data-copy="過去CRストック「メイ（T1-B06 / HG027）」を登録・複製して音声生成できる状態にして。">登録依頼</button></div></td>
     </tr></tbody>
@@ -592,7 +627,7 @@
 
   <div class="view-panel" id="panel-card">
     <div class="grid">
-    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-01 ハル 元気な女性v2 20代後半・女性 ツール既存声 従量課金 明るい 親しみ sns長尺vlog 広告cta 新規（e2e検証済） fish audio / s2.1-pro">
+    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-01 ハル 元気な女性v2 20代後半・女性 ツール既存声 fish audio s2.1-pro  従量課金 明るい 親しみ sns長尺vlog 広告cta 新規（e2e検証済）">
       <div class="card-top">
         <div><span class="pill orig-preset">ツール既存声</span><span class="rate-chip">◎ 最有力</span></div>
         <code>V-FISH-01</code>
@@ -604,7 +639,7 @@
       <audio controls preload="none" src="audio/V-FISH-01_E2E_Fish_GenkiV2.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ハル（V-FISH-01）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-01&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-02 佐藤 葵 佐藤 葵 20代半ば・女性 ツール既存声 従量課金 クリア 無音最静 sns長尺vlog 広告cta 新規（50s/cta○） fish audio / s2.1-pro">
+    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-02 佐藤 葵 佐藤 葵 20代半ば・女性 ツール既存声 fish audio s2.1-pro  従量課金 クリア 無音最静 sns長尺vlog 広告cta 新規（50s/cta○）">
       <div class="card-top">
         <div><span class="pill orig-preset">ツール既存声</span><span class="rate-chip">◎ 最クリーン</span></div>
         <code>V-FISH-02</code>
@@ -616,7 +651,7 @@
       <audio controls preload="none" src="audio/V-FISH-02_F05_PresetExtra2.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「佐藤 葵（V-FISH-02）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-02&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-fish-03 キョウコ きょうこ kyoko 30代前後・女性 ツール既存声 従量課金 丁寧 落ち着き ai・解説 sns長尺vlog 新規（50s○） fish audio / s2.1-pro">
+    <div class="card voice-item" data-eng="fish" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-fish-03 キョウコ きょうこ kyoko 30代前後・女性 ツール既存声 fish audio s2.1-pro  従量課金 丁寧 落ち着き ai・解説 sns長尺vlog 新規（50s○）">
       <div class="card-top">
         <div><span class="pill orig-preset">ツール既存声</span><span class="rate-chip">◎ 丁寧枠</span></div>
         <code>V-FISH-03</code>
@@ -628,7 +663,7 @@
       <audio controls preload="none" src="audio/V-FISH-03_F04_PresetExtra1.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「キョウコ（V-FISH-03）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-03&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-01 ユイ vd_吐息vlog_a 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 sns長尺vlog 新規（40s長尺○） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-01 ユイ vd_吐息vlog_a 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 sns長尺vlog 新規（40s長尺○）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ 実戦○</span></div>
         <code>V-VD-01</code>
@@ -640,7 +675,7 @@
       <audio controls preload="none" src="audio/V-VD-01_RS_01_SNSLong_VD01A.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ユイ（V-VD-01）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-01&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="explainer sns_vlog" data-search="v-vd-02 カナ vd_吐息vlog_b 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 ai・解説 sns長尺vlog 新規（ai解説○） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="explainer sns_vlog" data-search="v-vd-02 カナ vd_吐息vlog_b 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 ai・解説 sns長尺vlog 新規（ai解説○）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ 実戦○</span></div>
         <code>V-VD-02</code>
@@ -652,7 +687,7 @@
       <audio controls preload="none" src="audio/V-VD-02_RS_06_Explainer_VD01B.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「カナ（V-VD-02）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-02&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-04 ソラ vd_澄んだsns女性 20代・女性 オリジナル自作 サブスク内 澄んだ クリア 広告cta sns長尺vlog 新規（広告cta○） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-04 ソラ vd_澄んだsns女性 20代・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 澄んだ クリア 広告cta sns長尺vlog 新規（広告cta○）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ 実戦○</span></div>
         <code>V-VD-04</code>
@@ -664,7 +699,7 @@
       <audio controls preload="none" src="audio/V-VD-04_RS_03_AdHook_VD02P3.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ソラ（V-VD-04）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-04&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-05 マホ vd_柔らか日常女性 30歳前後・女性 オリジナル自作 サブスク内 柔らか 親しみ 広告cta sns長尺vlog 新規（広告cta○） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-05 マホ vd_柔らか日常女性 30歳前後・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 柔らか 親しみ 広告cta sns長尺vlog 新規（広告cta○）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ 実戦○</span></div>
         <code>V-VD-05</code>
@@ -676,7 +711,7 @@
       <audio controls preload="none" src="audio/V-VD-05_RS_04_AdHook_VD04P3.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「マホ（V-VD-05）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-05&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-lib-02 ミカ mika 20代後半・女性 ツール既存声 サブスク内 澄んだ 明るい ai・解説 sns長尺vlog 新規（ai解説○） elevenlabs / v4（公開声）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-lib-02 ミカ mika 20代後半・女性 ツール既存声 elevenlabs v4 公開声 サブスク内 澄んだ 明るい ai・解説 sns長尺vlog 新規（ai解説○）">
       <div class="card-top">
         <div><span class="pill orig-preset">ツール既存声</span><span class="rate-chip">◎ 実戦○</span></div>
         <code>V-LIB-02</code>
@@ -688,7 +723,7 @@
       <audio controls preload="none" src="audio/V-LIB-02_RS_05_Explainer_Mika.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ミカ（V-LIB-02）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-LIB-02&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-03 ミナ vd_吐息vlog_c 20代後半・女性 オリジナル自作 サブスク内 吐息 自然体 sns長尺vlog 新規（短文◎） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-03 ミナ vd_吐息vlog_c 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 吐息 自然体 sns長尺vlog 新規（短文◎）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ 予備</span></div>
         <code>V-VD-03</code>
@@ -700,7 +735,7 @@
       <audio controls preload="none" src="audio/V-VD-03_VD01_NaturalBreath_20s_P3.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ミナ（V-VD-03）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-03&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-06 ノア vd_夜vlog_asmr系a 20代後半・女性 オリジナル自作 サブスク内 asmr ささやき 夜・asmr 新規（短文◎） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-06 ノア vd_夜vlog_asmr系a 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 asmr ささやき 夜・asmr 新規（短文◎）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ ASMR</span></div>
         <code>V-VD-06</code>
@@ -712,7 +747,7 @@
       <audio controls preload="none" src="audio/V-VD-06_VD06_NightQuiet_Diary_P2.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ノア（V-VD-06）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-06&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-07 ルナ vd_夜vlog_asmr系b 20代後半・女性 オリジナル自作 サブスク内 asmr 親密 夜・asmr 新規（短文◎） elevenlabs / v4（voice design）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-07 ルナ vd_夜vlog_asmr系b 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 asmr 親密 夜・asmr 新規（短文◎）">
       <div class="card-top">
         <div><span class="pill orig-custom">オリジナル自作</span><span class="rate-chip">◎ ASMR</span></div>
         <code>V-VD-07</code>
@@ -724,7 +759,7 @@
       <audio controls preload="none" src="audio/V-VD-07_VD06_NightQuiet_Diary_P3.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ルナ（V-VD-07）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-07&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-fixed" data-uses="fixed" data-search="v-sns-depure でぷれ ig協業_ナレーション複製 男性 本人複製（固定） サブスク内 本人再現 落ち着き 協業固定 ig協業（台本01/02） elevenlabs / v4（ivc固定）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-fixed" data-uses="fixed" data-search="v-sns-depure でぷれ ig協業_ナレーション複製 男性 本人複製（固定） elevenlabs v4 ivc固定 サブスク内 本人再現 落ち着き 協業固定 ig協業（台本01/02）">
       <div class="card-top">
         <div><span class="pill orig-fixed">本人複製（固定）</span><span class="rate-chip">◎ 固定</span></div>
         <code>V-SNS-DEPURE</code>
@@ -736,7 +771,7 @@
       <audio controls preload="none" src="audio/V-SNS-DEPURE_T09_Depure_current.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「でぷれ（V-SNS-DEPURE）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-DEPURE&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-sns-01 ミオ hg050 / hg037複製（b11統合） 20代後半・女性 過去cr複製（登録済） サブスク内 自然体 基準ugc sns長尺vlog 広告cta hg037 / hg050 / bu005 elevenlabs / v4（ivc複製）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-sns-01 ミオ hg050 / hg037複製（b11統合） 20代後半・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 自然体 基準ugc sns長尺vlog 広告cta hg037 / hg050 / bu005">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CR複製（登録済）</span><span class="rate-chip">◎ 実績CR</span></div>
         <code>V-SNS-01</code>
@@ -748,7 +783,7 @@
       <audio controls preload="none" src="audio/V-SNS-01_T01_HG050_v4_stab50.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ミオ（V-SNS-01）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-01&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-both-04 ナナ hg036 live配信（b10統合） 30代・女性 過去cr複製（登録済） サブスク内 語りかけ 自然体 sns長尺vlog 広告cta hg036 elevenlabs / v4（ivc複製）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-both-04 ナナ hg036 live配信（b10統合） 30代・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 語りかけ 自然体 sns長尺vlog 広告cta hg036">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CR複製（登録済）</span><span class="rate-chip">○ 実績CR</span></div>
         <code>V-BOTH-04</code>
@@ -760,7 +795,7 @@
       <audio controls preload="none" src="audio/V-BOTH-04_R2_04_HG036_LiveFemale_v4_stab50.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「ナナ（V-BOTH-04）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-04&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer ad_cta" data-search="v-both-03 リン rin - warm &amp; clear 20代後半・女性 ツール既存声 サブスク内 クリア 丁寧 ai・解説 広告cta レバンスcr2 elevenlabs / v4（公開声）">
+    <div class="card voice-item" data-eng="eleven" data-origin="orig-preset" data-uses="explainer ad_cta" data-search="v-both-03 リン rin - warm &amp; clear 20代後半・女性 ツール既存声 elevenlabs v4 公開声 サブスク内 クリア 丁寧 ai・解説 広告cta レバンスcr2">
       <div class="card-top">
         <div><span class="pill orig-preset">ツール既存声</span><span class="rate-chip">○ 解説枠</span></div>
         <code>V-BOTH-03</code>
@@ -772,7 +807,7 @@
       <audio controls preload="none" src="audio/V-BOTH-03_R2_02_Rin_v4_stab50.m4a"></audio>
       <div class="actions"><button class="btn primary copy-btn" data-copy="「リン（V-BOTH-03）」の声で、この台本の自動編集3点セットを作って。">一言指示をコピー</button><button class="btn ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-03&quot; --script 台本.txt">生成コマンドをコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a01 サクラ sakura - narrational 女性 過去crストック  丁寧 ナレ寄り 広告cta ai・解説 hg029 / hg041 elevenlabs / 公開声（要登録）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a01 サクラ sakura - narrational 女性 過去crストック elevenlabs 公開声  要登録 丁寧 ナレ寄り 広告cta ai・解説 hg029 / hg041">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-A01</code>
@@ -780,11 +815,11 @@
       <h3>サクラ <span class="orig-inline">（Sakura - Narrational）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：HG029 / HG041</span></div>
       <div class="tag-row"><span class="tag tone">丁寧</span><span class="tag tone">ナレ寄り</span><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A01_A01_Sakura_HG029_HG041.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「サクラ（T1-A01 / HG029 / HG041）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a02 キョウコ kyoko - warm, clear 女性 過去crストック  温かい 自然 広告cta sns長尺vlog hg028 / bu005 elevenlabs / 公開声（要登録・整音◎）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a02 キョウコ kyoko - warm, clear 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 温かい 自然 広告cta sns長尺vlog hg028 / bu005">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-A02</code>
@@ -792,11 +827,11 @@
       <h3>キョウコ <span class="orig-inline">（Kyoko - Warm, Clear）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：HG028 / BU005</span></div>
       <div class="tag-row"><span class="tag tone">温かい</span><span class="tag tone">自然</span><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録・整音◎）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声（整音◎）</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A02_A02_Kyoko_HG028_BU005.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「キョウコ（T1-A02 / HG028 / BU005）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a04 チーちゃん chii-chan - neutral 女性 過去crストック  フラット クリア 広告cta ai・解説 hg024 elevenlabs / 公開声（要登録・整音◎）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a04 チーちゃん chii-chan - neutral 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 フラット クリア 広告cta ai・解説 hg024">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-A04</code>
@@ -804,11 +839,11 @@
       <h3>チーちゃん <span class="orig-inline">（Chii-chan - Neutral）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：HG024</span></div>
       <div class="tag-row"><span class="tag tone">フラット</span><span class="tag tone">クリア</span><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録・整音◎）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声（整音◎）</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A04_A04_Chiichan_HG024.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「チーちゃん（T1-A04 / HG024）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="t1-a05 アヤ aya - friendly casual 女性 過去crストック  親しみ カジュアル sns長尺vlog 広告cta 足立さん制作cr elevenlabs / 公開声（要登録・整音◎）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="t1-a05 アヤ aya - friendly casual 女性 過去crストック elevenlabs 公開声 整音◎ 要登録 親しみ カジュアル sns長尺vlog 広告cta 足立さん制作cr">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-A05</code>
@@ -816,11 +851,11 @@
       <h3>アヤ <span class="orig-inline">（Aya - Friendly Casual）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：足立さん制作CR</span></div>
       <div class="tag-row"><span class="tag tone">親しみ</span><span class="tag tone">カジュアル</span><span class="tag use">SNS長尺Vlog</span><span class="tag use">広告CTA</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録・整音◎）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声（整音◎）</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A05_A05_Aya_Adachi.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「アヤ（T1-A05 / 足立さん制作CR）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a09 キリエ kyrie 女性 過去crストック  自然体 クリア 広告cta sns長尺vlog リモラボ過去cr elevenlabs / 公開声（要登録）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a09 キリエ kyrie 女性 過去crストック elevenlabs 公開声  要登録 自然体 クリア 広告cta sns長尺vlog リモラボ過去cr">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-A09</code>
@@ -828,11 +863,11 @@
       <h3>キリエ <span class="orig-inline">（Kyrie）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：リモラボ過去CR</span></div>
       <div class="tag-row"><span class="tag tone">自然体</span><span class="tag tone">クリア</span><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A09_A09_Kyrie_Remolabo.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「キリエ（T1-A09 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a10 アカリ akari 女性 過去crストック  明るめ 自然 広告cta sns長尺vlog hg025 elevenlabs / 公開声（要登録・bgm分離○）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a10 アカリ akari 女性 過去crストック elevenlabs 公開声 bgm分離○ 要登録 明るめ 自然 広告cta sns長尺vlog hg025">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">○ 過去CR</span></div>
         <code>T1-A10</code>
@@ -840,11 +875,11 @@
       <h3>アカリ <span class="orig-inline">（Akari）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：HG025</span></div>
       <div class="tag-row"><span class="tag tone">明るめ</span><span class="tag tone">自然</span><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>ElevenLabs / 公開声（要登録・BGM分離○）</span></div>
+      <div class="meta-line"><span>ElevenLabs / 公開声（BGM分離○）</span><span><span class="cost-badge cost-reg">要登録</span></span></div>
       <audio controls preload="none" src="audio/T1-A10_A10_Akari_HG025.m4a"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「アカリ（T1-A10 / HG025）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-d04 ユキ 元ファイル名 morioki_male（中身は女性声） 女性 過去crストック  自然体 聴きやすい 広告cta sns長尺vlog リモラボ過去cr 不明（過去cr素材・要複製）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-d04 ユキ 元ファイル名 morioki_male（中身は女性声） 女性 過去crストック 不明 —  要複製 自然体 聴きやすい 広告cta sns長尺vlog リモラボ過去cr">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-D04</code>
@@ -852,11 +887,11 @@
       <h3>ユキ <span class="orig-inline">（元ファイル名 Morioki_Male（中身は女性声））</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：リモラボ過去CR</span></div>
       <div class="tag-row"><span class="tag tone">自然体</span><span class="tag tone">聴きやすい</span><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>不明（過去CR素材・要複製）</span></div>
+      <div class="meta-line"><span>不明 / —</span><span><span class="cost-badge cost-clone">要複製</span></span></div>
       <audio controls preload="none" src="audio/T1-D04_D04_Morioki_Male.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「ユキ（T1-D04 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-b01 レイカ 30代女性_知的で落ち着いた 30代・女性 過去crストック  知的 落ち着き 広告cta ai・解説 bu002 elevenlabs / v3（voice design・要複製）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-b01 レイカ 30代女性_知的で落ち着いた 30代・女性 過去crストック elevenlabs v3 voice design 要複製 知的 落ち着き 広告cta ai・解説 bu002">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-B01</code>
@@ -864,11 +899,11 @@
       <h3>レイカ <span class="orig-inline">（30代女性_知的で落ち着いた）</span></h3>
       <div class="meta-line"><span>30代・女性</span><span>CR：BU002</span></div>
       <div class="tag-row"><span class="tag tone">知的</span><span class="tag tone">落ち着き</span><span class="tag use">広告CTA</span><span class="tag use">AI・解説</span></div>
-      <div class="meta-line"><span>ElevenLabs / v3（Voice Design・要複製）</span></div>
+      <div class="meta-line"><span>ElevenLabs / v3（Voice Design）</span><span><span class="cost-badge cost-clone">要複製</span></span></div>
       <audio controls preload="none" src="audio/T1-B01_B01_BU002_Chiteki30s.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「レイカ（T1-B01 / BU002）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta" data-search="t1-b02 アスカ 30代_少し低めテンション高 30代・女性 過去crストック  やや低め 快活 広告cta bu001 / hg031 elevenlabs / v3（voice design・要複製）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta" data-search="t1-b02 アスカ 30代_少し低めテンション高 30代・女性 過去crストック elevenlabs v3 voice design 要複製 やや低め 快活 広告cta bu001 / hg031">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-B02</code>
@@ -876,11 +911,11 @@
       <h3>アスカ <span class="orig-inline">（30代_少し低めテンション高）</span></h3>
       <div class="meta-line"><span>30代・女性</span><span>CR：BU001 / HG031</span></div>
       <div class="tag-row"><span class="tag tone">やや低め</span><span class="tag tone">快活</span><span class="tag use">広告CTA</span></div>
-      <div class="meta-line"><span>ElevenLabs / v3（Voice Design・要複製）</span></div>
+      <div class="meta-line"><span>ElevenLabs / v3（Voice Design）</span><span><span class="cost-badge cost-clone">要複製</span></span></div>
       <audio controls preload="none" src="audio/T1-B02_B02_HG031_BU001_HikumeTension.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「アスカ（T1-B02 / BU001 / HG031）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="asmr sns_vlog" data-search="t1-b03 エマ 20代・アンニュイ_ダウナー 20代・女性 過去crストック  アンニュイ 低体温 夜・asmr sns長尺vlog リモラボ過去cr elevenlabs / v3（voice design・要複製）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="asmr sns_vlog" data-search="t1-b03 エマ 20代・アンニュイ_ダウナー 20代・女性 過去crストック elevenlabs v3 voice design 要複製 アンニュイ 低体温 夜・asmr sns長尺vlog リモラボ過去cr">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-B03</code>
@@ -888,11 +923,11 @@
       <h3>エマ <span class="orig-inline">（20代・アンニュイ_ダウナー）</span></h3>
       <div class="meta-line"><span>20代・女性</span><span>CR：リモラボ過去CR</span></div>
       <div class="tag-row"><span class="tag tone">アンニュイ</span><span class="tag tone">低体温</span><span class="tag use">夜・ASMR</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>ElevenLabs / v3（Voice Design・要複製）</span></div>
+      <div class="meta-line"><span>ElevenLabs / v3（Voice Design）</span><span><span class="cost-badge cost-clone">要複製</span></span></div>
       <audio controls preload="none" src="audio/T1-B03_B03_20sEnnuiDowner.mp3"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「エマ（T1-B03 / リモラボ過去CR）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div>
-    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-b06 メイ hg027 元の声 女性 過去crストック  自然体 実績声 広告cta sns長尺vlog hg027 不明（過去cr素材・要複製）">
+    <div class="card voice-item" data-eng="stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-b06 メイ hg027 元の声 女性 過去crストック 不明 —  要複製 自然体 実績声 広告cta sns長尺vlog hg027">
       <div class="card-top">
         <div><span class="pill orig-stock">過去CRストック</span><span class="rate-chip">◎ 過去CR</span></div>
         <code>T1-B06</code>
@@ -900,7 +935,7 @@
       <h3>メイ <span class="orig-inline">（HG027 元の声）</span></h3>
       <div class="meta-line"><span>女性</span><span>CR：HG027</span></div>
       <div class="tag-row"><span class="tag tone">自然体</span><span class="tag tone">実績声</span><span class="tag use">広告CTA</span><span class="tag use">SNS長尺Vlog</span></div>
-      <div class="meta-line"><span>不明（過去CR素材・要複製）</span></div>
+      <div class="meta-line"><span>不明 / —</span><span><span class="cost-badge cost-clone">要複製</span></span></div>
       <audio controls preload="none" src="audio/T1-B06_B06_HG027_Orig.m4a"></audio>
       <div class="actions"><button class="btn ghost copy-btn" data-copy="過去CRストック「メイ（T1-B06 / HG027）」を登録・複製して音声生成できる状態にして。">登録・複製指示をコピー</button></div>
     </div></div>
