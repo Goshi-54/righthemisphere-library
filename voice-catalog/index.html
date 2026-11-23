@@ -97,16 +97,19 @@
   .local-badge { display:inline-block; font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px; background:#fee2e2; color:#991b1b; margin-left:4px; }
   code { background:#edf2f7; padding:1px 4px; border-radius:4px; font-size:10px; }
 
-  /* 評価入力モード（デフォルト非表示・body.eval-mode時のみ表示） */
+  /* 評価入力モード（デフォルト非表示・body.eval-mode時のみ行直下に全幅展開して横スクロールを防止） */
   .eval-only { display:none; }
-  body.eval-mode th.eval-only, body.eval-mode td.eval-only { display:table-cell; }
+  body.eval-mode tr.eval-only { display:table-row; }
+  body.eval-mode tr.eval-only.hidden { display:none; }
   body.eval-mode div.eval-only { display:flex; }
-  .col-eval { min-width:170px; }
+  .eval-subcell { background:#f0fdf4 !important; padding:6px 12px 8px !important; border-bottom:2px solid #cbd5e1 !important; }
   .eval-box { flex-direction:column; gap:5px; }
-  .eval-btns { display:flex; gap:4px; }
-  .eval-btn { border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:6px; padding:3px 7px; font-size:11.5px; font-weight:800; cursor:pointer; }
+  .eval-box.eval-inline { display:flex; flex-direction:row; align-items:center; gap:8px; flex-wrap:wrap; }
+  .eval-label { font-size:11.5px; font-weight:800; color:#0f766e; white-space:nowrap; }
+  .eval-btns { display:flex; gap:4px; flex-shrink:0; }
+  .eval-btn { border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:6px; padding:3px 9px; font-size:11.5px; font-weight:800; cursor:pointer; }
   .eval-btn.active { background:#0f766e; color:#fff; border-color:#0f766e; }
-  .eval-memo { width:100%; border:1px solid var(--line); border-radius:6px; padding:4px 7px; font-size:11.5px; }
+  .eval-memo { flex:1; min-width:220px; border:1px solid var(--line); border-radius:6px; padding:5px 9px; font-size:12px; background:#fff; }
 
   .eval-dock { position:fixed; bottom:0; left:0; right:0; background:#0f172a; color:#fff; padding:10px 18px; display:none; justify-content:space-between; align-items:center; gap:12px; z-index:40; box-shadow:0 -4px 16px rgba(15,23,42,.25); }
   body.eval-mode .eval-dock { display:flex; }
@@ -182,7 +185,6 @@
             <th>利用・課金</th>
             <th>コスト目安</th>
             <th>コピー</th>
-            <th class="eval-only">評価・メモ</th>
           </tr>
         </thead>
         <tbody>
@@ -203,16 +205,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ユイ（V-VD-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-01&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-01" data-nick="ユイ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-01" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="sns_vlog ad_cta" data-search="v-vd-01 ユイ vd_吐息vlog_a（標準マイク距離・クリア） 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 標準距離 自然体 吐息 sns長尺vlog 広告cta 新規（主力◎・40s○）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-01" data-nick="ユイ">
+          <span class="eval-label">評価（ユイ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -233,16 +237,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「カナ（V-VD-02）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-02&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-02" data-nick="カナ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-02" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="explainer sns_vlog" data-search="v-vd-02 カナ vd_吐息vlog_b（近接マイク・吐息感あり） 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 近接マイク 吐息感 自然体 ai・解説 sns長尺vlog 新規（主力◎・ai解説○）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-02" data-nick="カナ">
+          <span class="eval-label">評価（カナ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -263,16 +269,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ソラ（V-VD-04）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-04&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-04" data-nick="ソラ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-04" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-04 ソラ vd_澄んだsns女性 20代・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 澄んだ クリア 広告cta sns長尺vlog 新規（広告cta○）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-04" data-nick="ソラ">
+          <span class="eval-label">評価（ソラ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -293,16 +301,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「マホ（V-VD-05）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-05&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-05" data-nick="マホ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-05" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="ad_cta sns_vlog" data-search="v-vd-05 マホ vd_柔らか日常女性（30代ナチュラル） 30代・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 30代ナチュラル 柔らか 親しみ 広告cta sns長尺vlog 新規（30代主力◎）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-05" data-nick="マホ">
+          <span class="eval-label">評価（マホ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -323,16 +333,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ミナ（V-VD-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-03&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-03" data-nick="ミナ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-03" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="sns_vlog" data-search="v-vd-03 ミナ vd_吐息vlog_c（カナ派生・しっとり系） 20代後半・女性 オリジナル自作 elevenlabs v4 voice design サブスク内 カナ派生 しっとり 低めテンション sns長尺vlog 新規（しっとり派生◎）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-03" data-nick="ミナ">
+          <span class="eval-label">評価（ミナ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -353,16 +365,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「こもりん（V-REAL-KOMORIN-ISO）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-REAL-KOMORIN-ISO&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-REAL-KOMORIN-ISO" data-nick="こもりん">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-REAL-KOMORIN-ISO" data-eng="eleven" data-tier="primary" data-origin="orig-fixed" data-uses="ad_cta explainer sns_vlog" data-search="v-real-komorin-iso こもりん 小森さん 実収録iso（クリア標準・推奨） 30代前後・女性 本人複製（本採用） elevenlabs v4 実収録ivc・iso サブスク内 本人再現 クリア標準 広告cta ai・解説 sns長尺vlog 小森さんカメラ語り（11/22本採用◎）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-REAL-KOMORIN-ISO" data-nick="こもりん">
+          <span class="eval-label">評価（こもりん）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -383,16 +397,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「こもりん（Raw予備）（V-REAL-KOMORIN）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-REAL-KOMORIN&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-REAL-KOMORIN" data-nick="こもりん（Raw予備）">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-REAL-KOMORIN" data-eng="eleven" data-tier="primary" data-origin="orig-fixed" data-uses="ad_cta sns_vlog" data-search="v-real-komorin こもりん（raw予備） 小森さん 実収録raw（肉声予備・微ノイズ注意） 30代前後・女性 本人複製（予備） elevenlabs v4 実収録ivc・raw サブスク内 本人再現 生っぽい 広告cta sns長尺vlog 小森さん予備（raw版）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-REAL-KOMORIN" data-nick="こもりん（Raw予備）">
+          <span class="eval-label">評価（こもりん（Raw予備））：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -413,16 +429,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「でぷれ（V-SNS-DEPURE）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-DEPURE&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-SNS-DEPURE" data-nick="でぷれ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-SNS-DEPURE" data-eng="eleven" data-tier="primary" data-origin="orig-fixed" data-uses="fixed" data-search="v-sns-depure でぷれ ig協業_ナレーション複製 男性 本人複製（固定） elevenlabs v4 ivc固定 サブスク内 本人再現 落ち着き 協業固定 ig協業（台本01/02）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-SNS-DEPURE" data-nick="でぷれ">
+          <span class="eval-label">評価（でぷれ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -443,16 +461,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ノア（V-VD-06）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-06&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-06" data-nick="ノア">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-06" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-06 ノア vd_夜vlog_asmr系a（アンニュイ・isolator整音済） 20代前半・女性 オリジナル自作 elevenlabs v4 voice design・iso整音 サブスク内 asmr ささやき アンニュイ 夜・asmr 新規（asmr・ノイズ除去済）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-06" data-nick="ノア">
+          <span class="eval-label">評価（ノア）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -473,16 +493,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ルナ（V-VD-07）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-VD-07&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-VD-07" data-nick="ルナ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-VD-07" data-eng="eleven" data-tier="primary" data-origin="orig-custom" data-uses="asmr" data-search="v-vd-07 ルナ vd_夜vlog_asmr系b（大人・色気・isolator整音済） 20代後半〜30代前半・女性 オリジナル自作 elevenlabs v4 voice design・iso整音 サブスク内 asmr 親密 大人・色気 夜・asmr 新規（asmr・ノイズ除去済）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-VD-07" data-nick="ルナ">
+          <span class="eval-label">評価（ルナ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -503,16 +525,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ミオ（V-SNS-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-SNS-01&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-SNS-01" data-nick="ミオ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-SNS-01" data-eng="eleven" data-tier="primary" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-sns-01 ミオ hg050 / hg037複製（b11統合） 20代後半・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 自然体 基準ugc sns長尺vlog 広告cta hg037 / hg050 / bu005">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-SNS-01" data-nick="ミオ">
+          <span class="eval-label">評価（ミオ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -533,16 +557,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ナナ（V-BOTH-04）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-04&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-BOTH-04" data-nick="ナナ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-BOTH-04" data-eng="eleven" data-tier="primary" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="v-both-04 ナナ hg036 live配信（b10統合） 30代・女性 過去cr複製（登録済） elevenlabs v4 ivc複製 サブスク内 語りかけ 自然体 sns長尺vlog 広告cta hg036">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-BOTH-04" data-nick="ナナ">
+          <span class="eval-label">評価（ナナ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -563,16 +589,18 @@
       <td class="col-billing"><span class="cost-badge cost-sub">サブスク内</span></td>
       <td class="col-cost"><div class="cost-unit">約0.5 cr / 字</div><div class="cost-500">500字 ≒ 約250 cr</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「リン（V-BOTH-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-BOTH-03&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-BOTH-03" data-nick="リン">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-BOTH-03" data-eng="eleven" data-tier="primary" data-origin="orig-preset" data-uses="explainer ad_cta" data-search="v-both-03 リン rin - warm &amp; clear 20代後半・女性 ツール既存声 elevenlabs v4 公開声 サブスク内 クリア 丁寧 ai・解説 広告cta レバンスcr2">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-BOTH-03" data-nick="リン">
+          <span class="eval-label">評価（リン）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -593,16 +621,18 @@
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「ハル（V-FISH-01）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-01&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-FISH-01" data-nick="ハル">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-FISH-01" data-eng="fish" data-tier="sub_fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-01 ハル 元気な女性v2（サブ・従量枠） 20代後半・女性 ツール既存声 fish audio s2.1-pro  従量課金 明るい 標準フラット sns長尺vlog 広告cta fishサブ枠（e2e済）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-FISH-01" data-nick="ハル">
+          <span class="eval-label">評価（ハル）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -623,16 +653,18 @@
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「佐藤 葵（V-FISH-02）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-02&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-FISH-02" data-nick="佐藤 葵">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-FISH-02" data-eng="fish" data-tier="sub_fish" data-origin="orig-preset" data-uses="sns_vlog ad_cta" data-search="v-fish-02 佐藤 葵 佐藤 葵（サブ・キャラ/アニメ調） 20代半ば・女性 ツール既存声 fish audio s2.1-pro  従量課金 キャラ・アニメ調 クリア sns長尺vlog 広告cta fishサブ枠（50s○）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-FISH-02" data-nick="佐藤 葵">
+          <span class="eval-label">評価（佐藤 葵）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -653,16 +685,18 @@
       <td class="col-billing"><span class="cost-badge cost-payg">従量課金</span></td>
       <td class="col-cost"><div class="cost-unit">約0.007円 / 字</div><div class="cost-500">500字 ≒ 約3.4円</div></td>
       <td class="col-act"><div class="act-stack"><button class="btn-xs primary copy-btn" data-copy="「キョウコ（V-FISH-03）」の声で、この台本の自動編集3点セットを作って。">指示</button><button class="btn-xs ghost copy-btn" data-copy="python3 ~/Code/systems/voice-audio/generate_voice.py --voice &quot;V-FISH-03&quot; --script 台本.txt --variants 3">CMD</button></div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="V-FISH-03" data-nick="キョウコ">
+    </tr>
+    <tr class="eval-subrow eval-only" data-eval-for="V-FISH-03" data-eng="fish" data-tier="sub_fish" data-origin="orig-preset" data-uses="explainer sns_vlog" data-search="v-fish-03 キョウコ きょうこ kyoko（サブ・朗読調） 30代前後・女性 ツール既存声 fish audio s2.1-pro  従量課金 朗読・ナレ調 丁寧 ai・解説 sns長尺vlog fishサブ枠（50s○）">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="V-FISH-03" data-nick="キョウコ">
+          <span class="eval-label">評価（キョウコ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr></tbody>
@@ -688,7 +722,6 @@
               <th>利用・課金</th>
               <th>コスト目安</th>
               <th>扱い</th>
-              <th class="eval-only">評価・メモ</th>
             </tr>
           </thead>
           <tbody>
@@ -709,16 +742,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A01" data-nick="サクラ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A01" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a01 サクラ sakura - narrational 女性 過去crストック elevenlabs 公開声  参考 丁寧 ナレ寄り 広告cta ai・解説 hg029 / hg041">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A01" data-nick="サクラ">
+          <span class="eval-label">評価（サクラ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -739,16 +774,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A02" data-nick="キョウコ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A02" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a02 キョウコ kyoko - warm, clear 女性 過去crストック elevenlabs 公開声  参考 温かい 自然 広告cta sns長尺vlog hg028 / bu005">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A02" data-nick="キョウコ">
+          <span class="eval-label">評価（キョウコ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -769,16 +806,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A04" data-nick="チーちゃん">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A04" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-a04 チーちゃん chii-chan - neutral 女性 過去crストック elevenlabs 公開声  参考 フラット クリア 広告cta ai・解説 hg024">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A04" data-nick="チーちゃん">
+          <span class="eval-label">評価（チーちゃん）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -799,16 +838,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A05" data-nick="アヤ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A05" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="sns_vlog ad_cta" data-search="t1-a05 アヤ aya - friendly casual 女性 過去crストック elevenlabs 公開声  参考 親しみ カジュアル sns長尺vlog 広告cta 足立さん制作cr">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A05" data-nick="アヤ">
+          <span class="eval-label">評価（アヤ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -829,16 +870,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A09" data-nick="キリエ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A09" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a09 キリエ kyrie 女性 過去crストック elevenlabs 公開声  参考 自然体 クリア 広告cta sns長尺vlog リモラボ過去cr">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A09" data-nick="キリエ">
+          <span class="eval-label">評価（キリエ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -859,16 +902,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-A10" data-nick="アカリ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-A10" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-a10 アカリ akari 女性 過去crストック elevenlabs 公開声  参考 明るめ 自然 広告cta sns長尺vlog hg025">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-A10" data-nick="アカリ">
+          <span class="eval-label">評価（アカリ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -889,16 +934,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-D04" data-nick="ユキ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-D04" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-d04 ユキ 元ファイル名 morioki_male（中身は女性声） 女性 過去crストック 過去cr —  参考 自然体 聴きやすい 広告cta sns長尺vlog リモラボ過去cr">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-D04" data-nick="ユキ">
+          <span class="eval-label">評価（ユキ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -919,16 +966,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-B01" data-nick="レイカ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-B01" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta explainer" data-search="t1-b01 レイカ 30代女性_知的で落ち着いた 30代・女性 過去crストック elevenlabs v3  参考 知的 落ち着き 広告cta ai・解説 bu002">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-B01" data-nick="レイカ">
+          <span class="eval-label">評価（レイカ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -949,16 +998,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-B02" data-nick="アスカ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-B02" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta" data-search="t1-b02 アスカ 30代_少し低めテンション高 30代・女性 過去crストック elevenlabs v3  参考 やや低め 快活 広告cta bu001 / hg031">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-B02" data-nick="アスカ">
+          <span class="eval-label">評価（アスカ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -979,16 +1030,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-B03" data-nick="エマ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-B03" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="asmr sns_vlog" data-search="t1-b03 エマ 20代・アンニュイ_ダウナー 20代・女性 過去crストック elevenlabs v3  参考 アンニュイ 低体温 夜・asmr sns長尺vlog リモラボ過去cr">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-B03" data-nick="エマ">
+          <span class="eval-label">評価（エマ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr>
@@ -1009,16 +1062,18 @@
       <td class="col-billing"><span class="cost-badge cost-reg">参考</span></td>
       <td class="col-cost"><div class="cost-none">—</div></td>
       <td class="col-act"><div class="cost-none">参考試聴のみ</div></td>
-      
-      <td class="col-eval eval-only">
-        <div class="eval-box" data-code="T1-B06" data-nick="メイ">
+    </tr>
+    <tr class="eval-subrow eval-only archive-item" data-eval-for="T1-B06" data-eng="stock" data-tier="archive_stock" data-origin="orig-stock" data-uses="ad_cta sns_vlog" data-search="t1-b06 メイ hg027 元の声 女性 過去crストック 過去cr —  参考 自然体 実績声 広告cta sns長尺vlog hg027">
+      <td colspan="12" class="eval-subcell">
+        <div class="eval-box eval-inline" data-code="T1-B06" data-nick="メイ">
+          <span class="eval-label">評価（メイ）：</span>
           <div class="eval-btns">
             <button type="button" class="eval-btn" data-val="◎">◎</button>
             <button type="button" class="eval-btn" data-val="○">○</button>
             <button type="button" class="eval-btn" data-val="△">△</button>
             <button type="button" class="eval-btn" data-val="×">×</button>
           </div>
-          <input type="text" class="eval-memo" placeholder="所感・メモ（自動保存）">
+          <input type="text" class="eval-memo" placeholder="所感・メモを入力（ブラウザ自動保存・横スクロール不要）">
         </div>
       </td>
     </tr></tbody>
@@ -1749,7 +1804,7 @@
   }));
 
   let currentFilter = 'all';
-  const items = Array.from(document.querySelectorAll('.voice-item:not(.archive-item)'));
+  const items = Array.from(document.querySelectorAll('.voice-item:not(.archive-item), tr.eval-subrow:not(.archive-item)'));
   const searchInput = document.getElementById('searchInput');
   function applyFilter() {
     const q = searchInput.value.trim().toLowerCase();
