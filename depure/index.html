@@ -334,7 +334,7 @@ dialog::backdrop{background:#000a}
     has("全身") && { id: "body", group: "ミニキャラ", label: "全身の動き", n: D["全身"].length, frames: D["全身"][0]["コマ"], render: () => renderMotions("body") },
     has("掛け合い") && { id: "duet", group: "ミニキャラ", label: "掛け合い", n: D["掛け合い"].length, frames: D["掛け合い"][0]["コマ"], render: () => renderMotions("duet") },
     ...(PERIODS.length ? periodTabs : [has("等身大") && { id: "life", group: "Vtuber", label: "Vtuber（仮置き）", n: D["等身大"]["動作"].length, frames: D["等身大"]["動作"][0]["コマ"], render: () => renderProv("等身大") }]),
-    has("マイクラ") && { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
+    has("マイクラ") && (D["マイクラ"]["正本"] ? { id: "mc", group: "その他", label: "マイクラ", n: "正本 " + D["マイクラ"]["正本"]["合計"], thumb: "media/mc_seihon/a_01.png", render: () => renderProv("マイクラ") } : { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") }),
     has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
     has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
     has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
@@ -358,7 +358,7 @@ dialog::backdrop{background:#000a}
   const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.some(t => t.id === h) ? h : (groupTab(h) && TABS.some(t => t.id === groupTab(h))) ? groupTab(h) : "home"; };
   const toGroup = () => { const h = decodeURIComponent(location.hash.slice(1)); const el = h && groupTab(h) && document.getElementById(h); if (el) { el.classList.add("group-target"); setTimeout(() => el.scrollIntoView({ block: "start" }), 50); } };
   let current = fromHash();
-  const state = { angle: "正面" };
+  const state = { angle: "正面", mcEd: "ALL" };
   let group = null;
   TABS.forEach(t => {
     if (t.group && t.group !== group) { group = t.group; side.append($("h2", "", group)); }
@@ -659,8 +659,67 @@ dialog::backdrop{background:#000a}
     dlg.replaceChildren(head, body); dlg.showModal();
   }
 
+  function openSeihonPreview(item, edLabel) {
+    const head = $("div", "dlg-head"), t = $("h2", "", `${edLabel}｜${item["名前"]}`); t.id = "dlg-title";
+    const x = $("button", "", "閉じる"); x.addEventListener("click", () => dlg.close()); head.append(t, x);
+    const body = $("div", "dlg-body");
+    const im = $("img", "big"); im.src = item.src; im.alt = item["名前"];
+    im.style.background = "repeating-conic-gradient(#e9ecf0 0 25%,#dfe3e8 0 50%) 0 0/16px 16px";
+    const bar = $("div", "row"); bar.style.marginTop = "12px";
+    const dl = $("a", "dl-link", "PNGを保存"); dl.href = item.src; dl.download = item["ファイル"];
+    bar.append(dl, copyBtn(base(item["ファイル"]), "名前を写す"), $("span", "badge ok", item["版"]));
+    body.append(im, bar);
+    dlg._stop = null; dlg.replaceChildren(head, body); dlg.showModal();
+  }
+
   function renderProv(key) {
     const G = D[key];
+    if (key === "マイクラ" && G["正本"]) {
+      const S = G["正本"];
+      const f = $("div", "filters"), sg = $("div", "seg");
+      [["ALL", `すべて（${S["合計"]}）`], ...S["系統"].map(e => [e.id, `${e.id}版（${e["枚数"]}）`])].forEach(([val, lb]) => {
+        const b = $("button", "", lb); b.setAttribute("aria-pressed", String(state.mcEd === val));
+        b.addEventListener("click", () => { state.mcEd = val; draw(); }); sg.append(b);
+      });
+      f.append(sg);
+      if (D["マイクラのドライブ"]) f.append(driveLink(D["マイクラのドライブ"], "マイクラのドライブを開く"));
+      panel.append(f);
+      panel.append($("p", "hold-meta", `確定日：${S["確定日"]}（${S["版"]}・全${S["合計"]}枚／透過PNG・1024×1024）。画像をクリックすると拡大表示できます。`));
+      S["系統"].filter(e => state.mcEd === "ALL" || state.mcEd === e.id).forEach(ed => {
+        panel.append($("h2", "group-title", `${ed["名前"]}（${ed["枚数"]}枚）`), $("p", "hold-meta", ed["説明"]));
+        ed["カテゴリ"].forEach(cat => {
+          panel.append($("h3", "home-group", `${cat["組"]}（${cat["素材"].length}枚）`));
+          const g = $("div", "icon-grid");
+          cat["素材"].forEach(it => {
+            const c = $("div", "icon-card"); c.style.cursor = "pointer";
+            const im = $("img"); im.src = it.src; im.alt = it["名前"]; im.loading = "lazy";
+            const nm = $("strong", "", it["名前"]);
+            const row = $("div", "row"); row.style.justifyContent = "center"; row.style.marginTop = "6px";
+            const dl = $("a", "dl-link", "PNG"); dl.href = it.src; dl.download = it["ファイル"]; dl.title = it["ファイル"];
+            dl.addEventListener("click", e => e.stopPropagation());
+            row.append(dl, copyBtn(base(it["ファイル"]), "写す"));
+            c.append(im, nm, $("span", "badge ok", it["版"]), row);
+            c.addEventListener("click", () => openSeihonPreview(it, ed.id + "版"));
+            g.append(c);
+          });
+          panel.append(g);
+        });
+      });
+      const box = $("details", "pending-group"); box.style.marginTop = "28px";
+      const sm = $("summary", "", `既存の動き素材（仮置き・${G["動作"].length}点）を開く`);
+      sm.append($("span", "hold-meta", "　従来の仮置き動作28点は消さずに保全しています"));
+      box.append(sm); panel.append(box);
+      const keep = panel; panel = box;
+      const groups = [...new Set(G["動作"].map(x => x["系統"] || ""))];
+      groups.forEach(grp => {
+        const items = G["動作"].filter(x => (x["系統"] || "") === grp);
+        panel.append($("h2", "group-title", `動き${grp ? "｜" + grp : ""}（${items.length}）`));
+        motionGrid(items, key);
+      });
+      panel = keep;
+      pendingSection(["マイクラ"]);
+      return;
+    }
     const groups = [...new Set(G["動作"].map(x => x["系統"] || ""))];
     groups.forEach(grp => {
       const items = G["動作"].filter(x => (x["系統"] || "") === grp);
