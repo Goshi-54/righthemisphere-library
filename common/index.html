@@ -337,7 +337,7 @@ dialog::backdrop{background:#000a}
     has("マイクラ") && { id: "mc", group: "その他", label: "マイクラ（仮置き）", n: D["マイクラ"]["動作"].length, frames: D["マイクラ"]["動作"][0]["コマ"], render: () => renderProv("マイクラ") },
     has("背景") && { id: "bg", group: SG, label: "背景", n: D["背景"].length, thumb: D["背景"][0] && D["背景"][0].poster, cover: true, render: renderBg },
     has("アイコン") && { id: "icon", group: SG, label: "アイコン", n: D["アイコン"].length, icons: D["アイコン"].slice(0, 4).map(x => x.src), render: renderIcons },
-    has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].length ? D["イメージ強化"].slice(0, 4).map(x => x.src) : null, render: renderImage },
+    has("イメージ強化") && { id: "img", group: SG, label: "イメージ強化", n: D["イメージ強化"].length, icons: D["イメージ強化"].filter(x => !/\.mp4$/i.test(x.src)).length ? D["イメージ強化"].filter(x => !/\.mp4$/i.test(x.src)).slice(0, 4).map(x => x.src) : null, render: renderImage },
     // 11/19 本人「Claude Codeキャラ用の素材ライブラリページ作りたいです。階層は共通素材のアイコンやイメージ素材と同じ階層にClaude Codeキャラです。」→「共通素材の中に並べる」
     //   （意思決定DB 41dc12971e27812e9136de1797481e43・41dc12971e278192a110e40da35606b2）
     // 11/19 本人「Claude Codeのキャラクターはそこから細分化する必要ない。」「Claude Codeキャラの中の要望素材フォルダを作ってその中に依頼の文章作成ツールも含めて格納して。」
@@ -703,12 +703,33 @@ dialog::backdrop{background:#000a}
   const groupName = g => g["依頼"].replace(/^(Vtuber|等身大)_?/, "");
 
   function renderImage() {
+    const bar = $("div", "row"); bar.style.margin = "0 0 14px";
+    const stLink = $("a", "link-btn", "試作スタジオ（全21種）を開く");
+    stLink.href = (CM ? CM["ページ"] : "./") + "studio/";
+    stLink.target = "_blank"; stLink.rel = "noopener";
+    bar.append(stLink);
+    if (D["イメージ強化のドライブ"]) bar.append(driveLink(D["イメージ強化のドライブ"], "イメージ強化のドライブを開く"));
+    panel.append(bar);
     const items = D["イメージ強化"];
     if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); pendingSection(["イメージ強化"]); return; }
-    const g = $("div", "icon-grid");
-    items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
-      c.append(im, $("strong", "", base(x["ファイル"]))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
-      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c); });
+    const g = $("div", "icon-grid hold-grid-wide");
+    items.forEach(x => {
+      const mv = /\.mp4$/i.test(x.src);
+      const c = $("div", "icon-card" + (mv ? " hold-movie" : "")), im = mv ? $("video") : $("img");
+      if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"] || base(x["ファイル"])); }
+      else { im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy"; }
+      c.append(im, $("strong", "", x["名前"] || base(x["ファイル"])));
+      if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き"));
+      if (x.dl && x.dl.length && !sel.on) {
+        c.append(dlFab(x.dl[0]));
+        if (x.dl.length > 1) {
+          const r = $("div", "row"); r.style.justifyContent = "center"; r.style.marginTop = "6px";
+          x.dl.forEach(f => r.append(dlLink(f, f[2] || "DL")));
+          c.append(r);
+        }
+      }
+      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
+    });
     panel.append(g);
     pendingSection(["イメージ強化"]);
   }
