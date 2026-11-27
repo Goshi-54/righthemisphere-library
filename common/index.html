@@ -288,14 +288,13 @@ dialog::backdrop{background:#000a}
   // 11/20 共通素材のページ：キャラのページの要望素材のうち、背景・アイコン・イメージ強化の物も、種類のタブに「未採用」で出す
   if (!isChar) {
     try {
-      const T = await (await fetch("../data/characters.json")).json();
-      D["キャラの要望素材"] = (await Promise.all((T["キャラ"] || []).map(async c => {
-        try {
-          const L = await (await fetch(`../${c.id}/data/library.json`)).json();
-          const fix = v => typeof v === "string" && v.startsWith("media/") ? `../${c.id}/` + v : v;
-          return (L["要望素材"] || []).map(g => ({ ...g, キャラ名: c["名前"], 素材: g["素材"].filter(x => ["背景", "アイコン", "イメージ強化"].includes(x["種類"])).map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) })).filter(g => g["素材"].length);
-        } catch (e) { return []; }
-      }))).flat();
+      const L = await (await fetch("../depure/data/library.json")).json();
+      const fix = v => typeof v === "string" && v.startsWith("media/") ? "../depure/" + v : v;
+      D["キャラの要望素材"] = (L["要望素材"] || []).map(g => ({
+        ...g, キャラ名: L["キャラ"]["名前"],
+        素材: g["素材"].filter(x => ["背景", "アイコン", "イメージ強化"].includes(x["種類"]))
+          .map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) }))
+      })).filter(g => g["素材"].length);
     } catch (e) { D["キャラの要望素材"] = []; }
   }
 
@@ -705,14 +704,10 @@ dialog::backdrop{background:#000a}
 
   function renderImage() {
     const bar = $("div", "row"); bar.style.margin = "0 0 14px";
-    const stLink = $("a", "link-btn", "試作スタジオ（全21種）を開く");
-    stLink.href = (CM ? CM["ページ"] : "./") + "studio/";
-    stLink.target = "_blank"; stLink.rel = "noopener";
-    bar.append(stLink);
     if (D["イメージ強化のドライブ"]) bar.append(driveLink(D["イメージ強化のドライブ"], "イメージ強化のドライブを開く"));
     panel.append(bar);
     const items = D["イメージ強化"];
-    if (!items.length) { panel.append($("p", "hold-meta", "確定済みの動画ファイルはまだありません。上の「試作スタジオ（全21種）を開く」から U01〜U21 を確認できます。")); pendingSection(["イメージ強化"]); return; }
+    if (!items.length) { panel.append($("p", "hold-meta", "確定済みの動画ファイルはまだありません。")); pendingSection(["イメージ強化"]); return; }
     const g = $("div", "icon-grid hold-grid-wide");
     items.forEach(x => {
       const mv = /\.mp4$/i.test(x.src);

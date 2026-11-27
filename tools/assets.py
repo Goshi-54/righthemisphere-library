@@ -255,7 +255,7 @@ def request(a):
     conds = [s.strip() for s in re.split(r"[;\n；]", a.条件 or "") if s.strip()]
     if conds: L += ["", "■ 求める品質・条件"] + [f"- {s}" for s in conds]
     L += ["", "■ 見た目のもと（ここに合わせる）",
-          *([] if a.キャラなし else [f"- キャラ情報とリファレンス：{SITE}/#{c['ページ']}",
+          *([] if a.キャラなし else ["- キャラ情報とリファレンス：このMacの ~/Code/systems/library/メタ環境/ から、依頼に対応する系統の 01_確定リファレンス と 02_仕様書と制作判断軸.md を確認する。",
           "  「採用」と出ているリファレンスを正とする。「採否未確認」は参考まで。「直し待ち」に書いてある失敗をくり返さない。"]),
           f"- 同じ種類の今ある素材：{SITE}/{CHARS[owner]['ページ']}/#{k['タブ']}",
           (f"  本体はGoogleドライブ（このMacのマイドライブ）の「{place}/{k['フォルダ']}/」。" if not (LATER and REF) else

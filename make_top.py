@@ -1,107 +1,67 @@
-# 素材ライブラリの上の階層（キャラの一覧とキャラ情報）を組む
-# 11/14 本人「素材ライブラリはもう一つ上の階層を作る／そこに各キャラクター配置していく／キャラクター用のメタ情報もここで管理（リファレンスシートとかも）」
-#   （意思決定DBに登録済み）。URL は新しい公開リポジトリ、公開ページに載せるのは使用許可を確かめたキャラだけ、最初はでぷれさんだけ
-#   （意思決定DBに登録済み）
-# 11/13 本人「等身大とマイクラはリファレンスシートはライブラリに載せなくていい」→ リファレンスシートは素材のタブではなく、ここ（キャラ情報）に置く
-# 11/18 本人「素材は最終的にはどのキャラクターページにも表示するものになりそうなので、大元はもう一つ上の階層に保管。で、リンクだけでぷれさん素材ライブラリに表示するなどの形式を取りたいです。」
-#   「一覧のとおり進めて」（意思決定DB 41bc12971e27813e92cfd78db77296b0）→ 背景・アイコン・イメージ強化は共通素材（common/）に置き、キャラのページからはリンクだけ
-# 使い方：python3 make_top.py   （各キャラのライブラリと共通素材ライブラリで build_public.py を流したあとに流す）
-import os, json, shutil, subprocess
-HERE = os.path.dirname(os.path.abspath(__file__))
-HOME = os.path.expanduser("~")
+"""2つの編集者向けライブラリをコピーして、公開ルートの案内を作る。"""
+import argparse
+import filecmp
+import shutil
+import subprocess
+from pathlib import Path
 
-# ---------- キャラの一覧（公開してよいキャラだけ）----------
-CHARS = [{
-    "id": "depure",
-    "lib": f"{HOME}/Code/work/sns/instagram/でぷれさん素材ライブラリ",   # ライブラリの元
-    "名前": "でぷれさん",
-    "出どころ": "Instagram協業の出演者（協業先のキャラ）",
-    "公開": "公開中（2026-11-12〜。本人の「公開してよい」で承認）",
-    "声": {
-        "中身": "ElevenLabsで複製したでぷれさんの声（1回目の声）",
-        "設定": ["似せる強さ 0.90・安定性 0.40", "前置き文を付けて生成し、あとで切る（B方式）", "間：段落 0.48秒・行 0.22秒", "音量：-18 LUFS にそろえる"],
-        "作り方": "Claude Code の Skill「goshi-narration-voice」",
-    },
-    "直し待ち": [
-        {"何": "Vtuberの動作14種", "本人": "動作14種の画質、クオリティが悪いのが気になっています。"},
-        {"何": "掛け合い D21〜D26", "本人": "ChatGPTとの掛け合いなどの品質が落ちてない？"},
-    ],
-}]
+ROOT = Path(__file__).resolve().parent
+LIBRARIES = {"depure": "でぷれさん素材ライブラリ", "common": "共通素材ライブラリ"}
+INDEX = """<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>素材ライブラリ</title>
+<main>
+  <h1>素材ライブラリ</h1>
+  <ul>
+    <li><a href="depure/">でぷれさん素材ライブラリ</a></li>
+    <li><a href="common/">共通素材ライブラリ</a></li>
+  </ul>
+</main>
+</html>
+"""
 
-# ---------- 棚（キャラに紐づかないもの）----------
-# 11/14 本人「リンクだけ置く」（意思決定DBに登録済み）：名前帳は中身を公開ページに載せず、非公開のアーティファクトへのリンクだけ置く
-SHELVES = [{
-    "棚": "編集",
-    "名前": "編集の名前帳",
-    "説明": "テロップ・動き・切り替え・エフェクト・色の名前に番号（E01-01 など）を付けた一覧。9タブ・153項目。",
-    "注意": ["非公開のページです。開けるのは共有された人だけです。", "見本の見た目は確認前の試作です。"],
-    "リンク": "https://claude.ai/artifact/Gq1dGzo4nk8wjXxXChk5jM",
-}, {
-    # 11/18 本人「webツールとして素材ライブラリに合流させたい。Web上で使いごごちをみたい。」（意思決定DB 41cc12971e2781ab9dbff3eac78a5564）
-    # 調整ツールの元：~/Code/work/sns/instagram/案件/AI素材女性の生成/成果物/MTG1117_動画生成の検証/調整ツール/（apply.py は手元だけ。公開しない）
-    "棚": "動画生成",
-    "名前": "生成素材の調整ツール",
-    "説明": "生成した動画や画像を開き、明るさや質感をスライダーで動かして、元と並べて見る道具。決めた設定は、書き出し用のスクリプトで動画全体にかけられる（30fps化も選べる）。",
-    "注意": ["開いたファイルはこのブラウザの中だけで使い、どこにも送りません。"],
-    "リンク": "adjust/",
-    "ボタン": "調整ツールを開く",
-    "外部": False,
-}]
 
-# ---------- 共通素材（キャラをまたぐ素材）----------
-COMMON = {"id": "common", "lib": f"{HOME}/Code/work/sns/instagram/共通素材ライブラリ"}
+def assemble(libraries):
+    sources = {section: libraries / name / "公開用" for section, name in LIBRARIES.items()}
+    for source in sources.values():
+        for required in ("index.html", "data/library.json"):
+            if not (source / required).is_file():
+                raise SystemExit(f"公開用ビルドがありません: {source / required}")
+    for private in (sources["depure"] / "media/mc_seihon", sources["common"] / "studio"):
+        if private.exists():
+            raise SystemExit(f"公開用ビルドに除外対象が残っています: {private}")
 
-out_chars = []
-for c in CHARS:
-    D = json.load(open(f"{c['lib']}/data/library.json", encoding="utf-8"))
-    pub = f"{c['lib']}/公開用"
-    dst = f"{HERE}/{c['id']}"
-    # 素材ライブラリ（公開用の一式）を写す
-    if os.path.exists(dst): shutil.rmtree(dst)
-    shutil.copytree(pub, dst, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
-    # リファレンス：画風ごと。見本の画像はライブラリの media から写す
-    os.makedirs(f"{HERE}/media/{c['id']}", exist_ok=True)
-    def take(src):
-        name = src.replace("/", "_")
-        shutil.copyfile(f"{c['lib']}/{src}", f"{HERE}/media/{c['id']}/{name}")
-        return f"media/{c['id']}/{name}"
-    adopted = {"基準_正面顔.jpg": "採用（本人「こちらベースで」）"}
-    refs = [
-        {"画風": "ミニキャラ", "ドライブ": D["キャラ"]["ドライブ"], "説明": "ライブラリを公開したとき（11/12）から載せている参照シート",
-         "画像": [{"名前": x["label"], "src": take(x["src"]), "状態": ""} for x in D["キャラ"]["参照シート"]]},
-        {"画風": "Vtuber（仮置き）", "ドライブ": D["等身大のドライブ"], "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
-         "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": adopted.get(x["ファイル"], "採否未確認")} for x in D["等身大"]["静止画"]]},
-        {"画風": "その他・マイクラ（仮置き）", "ドライブ": D["マイクラのドライブ"], "説明": "Codexで作ったもの。採否を確かめていない",
-         "画像": [{"名前": x["名前"], "src": take(x["src"]), "状態": "採否未確認"} for x in D["マイクラ"]["静止画"]]},
-    ]
-    counts = [["口パク", len(D["口パク"])], ["全身の動き", len(D["全身"])], ["掛け合い", len(D["掛け合い"])],
-              ["Vtuber（仮置き）", len(D["等身大"]["動作"])], ["マイクラ（仮置き）", len(D["マイクラ"]["動作"])],
-              ["保留", sum(len(g["素材"]) for g in D.get("保留", []))], ["台本", len(D["台本"])]]
-    # 履歴：キャラごとの履歴のファイル（正本。11/14 本人、意思決定DBに登録済み）。決定（意思決定DBのページID）は公開しない。新しい順
-    H = json.load(open(f"{c['lib']}/data/history.json", encoding="utf-8"))
-    hist = [{k: h[k] for k in ("日時", "種類", "中身", "状態", "本人") if h.get(k)} for h in reversed(H)]
-    frames = [dict(f, src=f"{c['id']}/{f['src']}") for f in D["口パク"][0]["向き"]["正面"]]
-    out_chars.append({k: v for k, v in c.items() if k != "lib"} | {
-        "ライブラリ": f"{c['id']}/", "ドライブ": D["キャラ"]["ドライブ"], "画風": "ミニキャラ・Vtuber（仮置き）・その他（マイクラ・仮置き）",
-        "見本": frames, "件数": counts, "リファレンス": refs, "履歴": hist})
+    # 公開ツリー上で並行制作中の未追跡ファイルを上書き・消去しない。
+    legacy = ("data/characters.json", "media/depure")
+    if (ROOT / ".git").exists():
+        untracked = subprocess.check_output(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z", "--", *sources, *legacy],
+            cwd=ROOT,
+        )
+        for raw in untracked.split(b"\0"):
+            if not raw:
+                continue
+            path = Path(raw.decode("utf-8"))
+            section = path.parts[0]
+            incoming = sources[section].joinpath(*path.parts[1:]) if section in sources else None
+            if not incoming or not incoming.is_file() or not filecmp.cmp(ROOT / path, incoming, shallow=False):
+                raise SystemExit(f"未追跡ファイルを保全してから再実行してください: {path}")
 
-# 共通素材：公開用の一式を common/ に写し、入口のカードの情報を作る
-CD = json.load(open(f"{COMMON['lib']}/data/library.json", encoding="utf-8"))
-dst = f"{HERE}/{COMMON['id']}"
-if os.path.exists(dst): shutil.rmtree(dst)
-shutil.copytree(f"{COMMON['lib']}/公開用", dst, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
-common = {"名前": CD["ページ名"], "ページ": f"{COMMON['id']}/", "ドライブ": CD["ドライブ"],
-          "件数": [["背景", len(CD["背景"])], ["アイコン", len(CD["アイコン"])], ["イメージ強化", len(CD["イメージ強化"])]]
-                  + ([["Claude Codeキャラ", len(CD["Claude Codeキャラ"]) + sum(len(g["素材"]) for g in CD.get("Claude Codeキャラの要望素材", []))]] if CD.get("Claude Codeキャラ") else []),
-          "見本": [f"{COMMON['id']}/{x['src']}" for x in CD["アイコン"][:6]]}
-# 11/19 本人「え、上の階層への依頼だからTOPページへの移動依頼だよね？」→「TOPに入口だけ」：本人の保留への入口をTOPに置く（中身は共通素材のページの保留のまま）
-hold_items = [x for g in CD.get("保留", []) for x in g.get("素材", [])]
-# 11/20 「全キャラ分」と書いていたが、中身はでぷれさんの物だけだった。中身のキャラ名から書く（11/18 の問いの残り。本人 11/20「おすすめ通りでいい」意思決定DB 41ec12971e27811a9adbe336c576b7b7）
-hold_chars = sorted({g.get("キャラ名", "") for g in CD.get("保留", []) if g.get("キャラ名")})
-hold = {"名前": "保留", "説明": "ゴーシさんが作って、まだ採否を決めていない素材" + (f"（今は{'・'.join(hold_chars)}の物）" if hold_chars else "") + "。採否を決めたものは、そのキャラのページの種類のタブに移す。採否を待つ間も、種類のタブの最後に「未採用」の印で出している。",
-        "組": len(CD.get("保留", [])), "点": len(hold_items), "ページ": f"{COMMON['id']}/#hold", "ドライブ": CD.get("保留のドライブ", ""),
-        "見本": [f"{COMMON['id']}/{x['src']}" for x in hold_items if not x["src"].lower().endswith((".mp4", ".mov"))][:6]}
+    for section, source in sources.items():
+        dest = ROOT / section
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(source, dest, ignore=shutil.ignore_patterns(".git", ".DS_Store"))
+    if (ROOT / legacy[0]).exists():
+        (ROOT / legacy[0]).unlink()
+    if (ROOT / legacy[1]).exists():
+        shutil.rmtree(ROOT / legacy[1])
+    (ROOT / "index.html").write_text(INDEX, encoding="utf-8")
 
-os.makedirs(f"{HERE}/data", exist_ok=True)
-json.dump({"キャラ": out_chars, "保留": hold, "共通素材": common, "棚": SHELVES}, open(f"{HERE}/data/characters.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-print("キャラ", len(out_chars), [c["名前"] for c in out_chars])
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--libraries", type=Path, default=Path.home() / "Code/work/sns/instagram")
+    assemble(parser.parse_args().libraries)
