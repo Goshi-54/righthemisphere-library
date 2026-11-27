@@ -1,13 +1,212 @@
 <!doctype html>
 <html lang="ja">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
 <title>素材ライブラリ</title>
-<main>
-  <h1>素材ライブラリ</h1>
-  <ul>
-    <li><a href="depure/">でぷれさん素材ライブラリ</a></li>
-    <li><a href="common/">共通素材ライブラリ</a></li>
-  </ul>
-</main>
+<style>
+:root{color-scheme:light;--bg:#f5f6f8;--surface:#fff;--ink:#1c2230;--muted:#5d6676;--line:#e2e5ea;--accent:#2563c9;--accent-soft:#e8f0fc;--stage:#eef0f3;--ok:#1d7a4a;--okbg:#e3f4ea;--warn:#9a5b00;--warnbg:#fdf1dc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.6;overflow-wrap:anywhere}
+a{color:var(--accent)}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:6px 12px;background:var(--surface);color:var(--ink);font-weight:600}
+button:hover{border-color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0;line-height:1.35}
+p{margin:0 0 10px}
+.topbar{background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1100px;margin:0 auto;padding:16px clamp(16px,3vw,32px);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar h1{font-size:20px}
+.topbar h1 a{color:inherit;text-decoration:none}
+.crumb{font-size:14px;color:var(--muted)}
+.shell{max-width:1100px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 48px}
+.lead{color:var(--muted);font-size:14px}
+.btn{display:inline-flex;align-items:center;padding:4px 12px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;font-weight:700;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+:root[data-theme="dark"] .btn:not(.ghost){color:#14171c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#14171c}}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .stage{background:var(--stage);aspect-ratio:4/3;display:grid;place-items:center}
+.card .stage img{max-width:80%;max-height:90%;object-fit:contain}
+.card .stage.icons{grid-template-columns:repeat(3,1fr);gap:10px;padding:18px}
+.card .stage.icons img{width:100%;max-height:none;aspect-ratio:1;object-fit:contain}
+.card .body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h2{font-size:18px}
+.meta{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.shelf-h{font-size:15px;color:var(--muted);margin:26px 0 0;letter-spacing:.04em}
+.card.shelf .body{gap:6px}
+.meta.warn{color:var(--warn)}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:16px}
+.sec h3{font-size:16px;margin-bottom:10px}
+.hero{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
+.hero .stage{background:var(--stage);border-radius:12px;aspect-ratio:1;display:grid;place-items:center}
+.hero .stage img{max-width:85%;max-height:85%;object-fit:contain}
+.hero h2{font-size:24px;margin-bottom:6px}
+dl.kv{display:grid;grid-template-columns:7em 1fr;gap:4px 12px;margin:0 0 12px;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--bg)}
+.chip:hover{border-color:var(--accent)}
+.chip b{font-weight:700}
+ul.plain{margin:0;padding-left:1.2em;font-size:14px}
+.refgroup{margin-top:14px}
+.refgroup h4{font-size:14px;margin:0 0 2px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.refgroup h4 a{font-size:12px;font-weight:600}
+.refgroup .note{font-size:13px;color:var(--muted);margin-bottom:8px}
+.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.ref{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);padding:0;text-align:left;font-weight:400}
+.ref .im{background:var(--stage);aspect-ratio:4/3;display:grid;place-items:center}
+.ref img{max-width:100%;max-height:100%;object-fit:contain}
+.ref .cap{padding:6px 8px;font-size:12px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:0 7px;border-radius:10px;margin-top:3px}
+.badge.ok{background:var(--okbg);color:var(--ok)}
+.badge.wait{background:var(--warnbg);color:var(--warn)}
+.quote{font-size:13px;color:var(--muted)}
+details summary{cursor:pointer;font-weight:700;font-size:14px}
+table.hist{border-collapse:collapse;font-size:13px;margin-top:8px;width:100%}
+table.hist td{border-top:1px solid var(--line);padding:5px 8px;vertical-align:top}
+table.hist td:first-child{white-space:nowrap;color:var(--muted)}
+table.hist .kind{font-size:12px;font-weight:700;white-space:nowrap}
+dialog{border:0;border-radius:14px;padding:0;max-width:min(92vw,1000px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog .dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+dialog img{display:block;max-width:100%;max-height:78vh;margin:0 auto;background:var(--stage)}
+@media (max-width:640px){.hero{grid-template-columns:1fr}.hero .stage{max-width:220px}dl.kv{grid-template-columns:1fr}dl.kv dt{margin-top:6px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-in">
+  <h1><a href="./">素材ライブラリ</a></h1><span class="crumb" id="crumb"></span>
+</div></header>
+<main class="shell" id="main"></main>
+<dialog id="dlg"><div class="dhead"><b id="dlg-title"></b><button id="dlg-close">閉じる</button></div><img id="dlg-img" alt=""></dialog>
+<script>
+(async () => {
+  const $ = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
+  const main = document.getElementById("main"), crumb = document.getElementById("crumb");
+  let D;
+  try { D = await (await fetch("data/characters.json")).json(); } catch (e) { main.textContent = "データを読み込めませんでした。"; return; }
+  const timers = new Set();
+  function anim(img, frames) {
+    let i = 0; img.src = frames[0].src;
+    const step = () => { i = (i + 1) % frames.length; img.src = frames[i].src; timers.add(setTimeout(step, frames[i].ms)); };
+    timers.add(setTimeout(step, frames[0].ms));
+  }
+  const dlg = document.getElementById("dlg");
+  document.getElementById("dlg-close").onclick = () => dlg.close();
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+  function openImg(name, src) { document.getElementById("dlg-title").textContent = name; document.getElementById("dlg-img").src = src; document.getElementById("dlg-img").alt = name; dlg.showModal(); }
+  const link = (cls, text, href, ext) => { const a = $("a", cls, text); a.href = href; if (ext) { a.target = "_blank"; a.rel = "noopener"; } return a; };
+
+  function list() {
+    crumb.textContent = ""; document.title = "素材ライブラリ";
+    main.append($("p", "lead", "キャラクターごとの素材の置き場です。キャラを選ぶと、素材ライブラリとキャラ情報（リファレンス・声など）が見られます。"));
+    const cards = $("div", "cards");
+    D["キャラ"].forEach(c => {
+      const card = $("article", "card"), st = $("div", "stage"), im = $("img"); im.alt = c["名前"]; st.append(im); anim(im, c["見本"]);
+      const b = $("div", "body"); b.append($("h2", "", c["名前"]), $("div", "meta", c["出どころ"]), $("div", "meta", c["画風"]));
+      const total = c["件数"].reduce((s, x) => s + x[1], 0);
+      b.append($("div", "meta", `素材 ${total} 件`));
+      const row = $("div", "row"); row.append(link("btn", "素材ライブラリを開く", c["ライブラリ"]), link("btn ghost", "キャラ情報", "#" + c.id)); b.append(row);
+      card.append(st, b); cards.append(card);
+    });
+    main.append($("h2", "shelf-h", "キャラクター"), cards);
+    // 11/19 本人「え、上の階層への依頼だからTOPページへの移動依頼だよね？」→「TOPに入口だけ」：本人の保留への入口
+    const hd = D["保留"];
+    if (hd) {
+      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
+      hd["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
+      const b = $("div", "body"); b.append($("h2", "", hd["名前"]), $("p", "meta", hd["説明"]), $("div", "meta", `${hd["組"]} 組・${hd["点"]} 点`));
+      const row = $("div", "row"); row.append(link("btn", "保留を開く", hd["ページ"])); if (hd["ドライブ"]) row.append(link("btn ghost", "ドライブ", hd["ドライブ"], true)); b.append(row);
+      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "保留（採否を決めていない素材）"), box);
+    }
+    // 11/18 背景・アイコン・イメージ強化は、キャラをまたぐ共通素材として一つ上の階層に置く（キャラのページからはリンクだけ）
+    const cm = D["共通素材"];
+    if (cm) {
+      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
+      cm["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
+      const b = $("div", "body"); b.append($("h2", "", cm["名前"]));
+      const chips = $("div", "chips");
+      cm["件数"].forEach(([k, n]) => { const a = link("chip", "", cm["ページ"] + "#" + ({ "背景": "bg", "アイコン": "icon", "イメージ強化": "img", "Claude Codeキャラ": "cc", "Claude Code_ステッカー": "ccsticker" }[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
+      b.append(chips);
+      const row = $("div", "row"); row.append(link("btn", "共通素材を開く", cm["ページ"]), link("btn ghost", "ドライブ", cm["ドライブ"], true)); b.append(row);
+      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "素材（キャラ共通）"), box);
+    }
+    (D["棚"] || []).forEach(sh => {
+      main.append($("h2", "shelf-h", sh["棚"]));
+      const box = $("div", "cards"), card = $("article", "card shelf"), b = $("div", "body");
+      b.append($("h2", "", sh["名前"]), $("p", "meta", sh["説明"]));
+      sh["注意"].forEach(t => b.append($("div", "meta warn", t)));
+      const row = $("div", "row"); row.append(link("btn", sh["ボタン"] || "名前帳を開く", sh["リンク"], sh["外部"] !== false)); b.append(row);
+      card.append(b); box.append(card); main.append(box);
+    });
+  }
+
+  function detail(c) {
+    crumb.textContent = "／ " + c["名前"]; document.title = c["名前"] + "｜素材ライブラリ";
+    const hero = $("section", "sec hero"), st = $("div", "stage"), im = $("img"); im.alt = c["名前"]; st.append(im); anim(im, c["見本"]);
+    const info = $("div"); info.append($("h2", "", c["名前"]));
+    const kv = $("dl", "kv");
+    [["出どころ", c["出どころ"]], ["画風", c["画風"]], ["公開", c["公開"]]].forEach(([k, v]) => kv.append($("dt", "", k), $("dd", "", v)));
+    info.append(kv);
+    const row = $("div", "row"); row.append(link("btn", "素材ライブラリを開く", c["ライブラリ"]), link("btn ghost", "ドライブを開く（ログインが要る）", c["ドライブ"], true)); info.append(row);
+    hero.append(st, info); main.append(hero);
+
+    const cnt = $("section", "sec"); cnt.append($("h3", "", "素材の件数"));
+    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "Vtuber（仮置き）": "life", "マイクラ（仮置き）": "mc", "保留": "hold", "収録素材": "recordings", "台本": "script" };
+    const chips = $("div", "chips");
+    c["件数"].forEach(([k, n]) => { const a = link("chip", "", c["ライブラリ"] + "#" + (ids[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
+    cnt.append(chips);
+    main.append(cnt);
+
+    const v = c["声"], vs = $("section", "sec"); vs.append($("h3", "", "声"));
+    vs.append($("p", "", v["中身"]));
+    const ul = $("ul", "plain"); v["設定"].forEach(s => ul.append($("li", "", s))); vs.append(ul);
+    vs.append($("p", "meta", "作り方：" + v["作り方"])); main.append(vs);
+
+    const rs = $("section", "sec"); rs.append($("h3", "", "リファレンス"));
+    rs.append($("p", "lead", "画風ごとの参照シートです。採用・未確認の印は、本人の評価が記録にあるかどうかで付けています。"));
+    c["リファレンス"].forEach(g => {
+      const box = $("div", "refgroup"), h = $("h4", "", g["画風"]); h.append(link("", "ドライブ", g["ドライブ"], true)); box.append(h, $("div", "note", g["説明"]));
+      const grid = $("div", "refs");
+      g["画像"].forEach(x => {
+        const b = $("button", "ref"), w = $("div", "im"), i = $("img"); i.src = x.src; i.alt = x["名前"]; i.loading = "lazy"; w.append(i);
+        const cap = $("div", "cap", x["名前"]);
+        if (x["状態"]) { cap.append($("br")); cap.append($("span", "badge " + (x["状態"].startsWith("採用") ? "ok" : "wait"), x["状態"])); }
+        b.append(w, cap); b.onclick = () => openImg(x["名前"], x.src); grid.append(b);
+      });
+      box.append(grid); rs.append(box);
+    });
+    main.append(rs);
+
+    if (c["直し待ち"].length) {
+      const ws = $("section", "sec"); ws.append($("h3", "", "直し待ち・確認中"));
+      const u = $("ul", "plain"); c["直し待ち"].forEach(x => { const li = $("li", "", x["何"]); li.append($("br"), $("span", "quote", "本人「" + x["本人"] + "」")); u.append(li); }); ws.append(u); main.append(ws);
+    }
+
+    const hs = $("section", "sec"), det = $("details"); det.append($("summary", "", `ライブラリの履歴（${c["履歴"].length}件）`));
+    const t = $("table", "hist"); c["履歴"].forEach(x => {
+      const tr = $("tr"), body = $("td", "", x["中身"]);
+      if (x["本人"]) body.append($("br"), $("span", "quote", "本人「" + x["本人"] + "」"));
+      const st = $("td"); st.append($("span", "kind", x["種類"] || "")); if (x["状態"]) st.append($("br"), $("span", "badge " + (/採用/.test(x["状態"]) ? "ok" : "wait"), x["状態"]));
+      tr.append($("td", "", x["日時"]), st, body); t.append(tr);
+    });
+    det.append(t); hs.append(det); main.append(hs);
+  }
+
+  function draw() {
+    timers.forEach(clearTimeout); timers.clear(); main.replaceChildren();
+    const id = decodeURIComponent(location.hash.slice(1)), c = D["キャラ"].find(x => x.id === id);
+    c ? detail(c) : list(); window.scrollTo(0, 0);
+  }
+  addEventListener("hashchange", draw); draw();
+})();
+</script>
+</body>
 </html>

@@ -280,6 +280,10 @@ dialog::backdrop{background:#000a}
         D["Claude Codeキャラの要望素材"] = (C["Claude Codeキャラの要望素材"] || []).map(g => ({ ...g, 素材: g["素材"].map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) }));
       }
       ["背景のドライブ", "アイコンのドライブ", "イメージ強化のドライブ"].forEach(k => { if (C[k]) D[k] = C[k]; });
+      if (C["Claude Code_ステッカー"]) {
+        D["Claude Code_ステッカー"] = C["Claude Code_ステッカー"].map(x => ({ ...x, src: fix(x.src), 静止画: fix(x["静止画"]), ベクター: fix(x["ベクター"]) }));
+        if (C["Claude Code_ステッカーのドライブ"]) D["Claude Code_ステッカーのドライブ"] = C["Claude Code_ステッカーのドライブ"];
+      }
       // 11/20 本人「おすすめで作る」（意思決定DB 41ec12971e278191a188c6f94f4f8484）：本人の保留（一つ上の階層）のうち、このキャラの物も種類のタブに「未採用」で出す
       D["上の保留"] = (C["保留"] || []).filter(g => g["キャラ名"] === (D["キャラ"] || {})["名前"]).map(g => ({ ...g, 素材: g["素材"].map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) }));
     } catch (e) { ["背景", "アイコン", "イメージ強化"].forEach(k => { D[k] = []; }); }
@@ -288,13 +292,14 @@ dialog::backdrop{background:#000a}
   // 11/20 共通素材のページ：キャラのページの要望素材のうち、背景・アイコン・イメージ強化の物も、種類のタブに「未採用」で出す
   if (!isChar) {
     try {
-      const L = await (await fetch("../depure/data/library.json")).json();
-      const fix = v => typeof v === "string" && v.startsWith("media/") ? "../depure/" + v : v;
-      D["キャラの要望素材"] = (L["要望素材"] || []).map(g => ({
-        ...g, キャラ名: L["キャラ"]["名前"],
-        素材: g["素材"].filter(x => ["背景", "アイコン", "イメージ強化"].includes(x["種類"]))
-          .map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) }))
-      })).filter(g => g["素材"].length);
+      const T = await (await fetch("../data/characters.json")).json();
+      D["キャラの要望素材"] = (await Promise.all((T["キャラ"] || []).map(async c => {
+        try {
+          const L = await (await fetch(`../${c.id}/data/library.json`)).json();
+          const fix = v => typeof v === "string" && v.startsWith("media/") ? `../${c.id}/` + v : v;
+          return (L["要望素材"] || []).map(g => ({ ...g, キャラ名: c["名前"], 素材: g["素材"].filter(x => ["背景", "アイコン", "イメージ強化"].includes(x["種類"])).map(x => ({ ...x, src: fix(x.src), 比べる: fix(x["比べる"]) })) })).filter(g => g["素材"].length);
+        } catch (e) { return []; }
+      }))).flat();
     } catch (e) { D["キャラの要望素材"] = []; }
   }
 
@@ -344,6 +349,7 @@ dialog::backdrop{background:#000a}
     has("Claude Codeキャラ") && { id: "cc", group: SG, label: "Claude Codeキャラ", n: "正式 " + D["Claude Codeキャラ"].length,
       icons: D["Claude Codeキャラ"].slice(0, 4).map(x => x.src), render: renderCC },
     has("Claude Codeキャラ") && { id: "ccreq", group: SG, sub: true, label: "要望素材", n: (D["Claude Codeキャラの要望素材"] || []).reduce((a, g) => a + g["素材"].length, 0), render: renderCCReq },
+    has("Claude Code_ステッカー") && { id: "ccsticker", group: SG, label: "Claude Code_ステッカー", n: D["Claude Code_ステッカー"].length, icons: D["Claude Code_ステッカー"].slice(0, 4).map(x => x.src), render: renderCCSticker },
     has("収録素材") && { id: "recordings", group: "台本・音声", label: "収録素材", n: D["収録素材"].length, thumb: D["収録素材"][0].src, render: renderRecordings },
     has("台本") && { id: "script", group: "台本・音声", label: "台本", n: D["台本"].length, render: renderScripts },
     // 11/18 本人「別口で「要望素材」みたいなカテゴリを素材ライブラリに用意してそこに格納したい。…各キャラクターページそれぞれに「要望素材」があるイメージ。」（意思決定DB 41cc12971e278179b8c0c7d8a228e510）
@@ -424,7 +430,7 @@ dialog::backdrop{background:#000a}
   const DL = id => `https://drive.usercontent.google.com/download?id=${id}&export=download`;
   const sel = { on: false, koma: false, items: new Map(), busy: false, msg: "" };  // items: item → タブのid
   const TAB_ITEMS = { recordings: () => D["収録素材"], script: () => D["台本"], lip: () => D["口パク"], body: () => D["全身"], duet: () => D["掛け合い"], bg: () => D["背景"],
-    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), req: () => (D["要望素材"] || []).flatMap(g => g["素材"]), cc: () => D["Claude Codeキャラ"] || [], ccreq: () => (D["Claude Codeキャラの要望素材"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
+    icon: () => D["アイコン"], img: () => D["イメージ強化"], hold: () => (D["保留"] || []).flatMap(g => g["素材"]), req: () => (D["要望素材"] || []).flatMap(g => g["素材"]), cc: () => D["Claude Codeキャラ"] || [], ccsticker: () => D["Claude Code_ステッカー"] || [], ccreq: () => (D["Claude Codeキャラの要望素材"] || []).flatMap(g => g["素材"]), life: () => D["等身大"]["動作"], mc: () => D["マイクラ"]["動作"] };
   PERIODS.forEach(p => { TAB_ITEMS[periodId(p)] = () => periodItems(p); });
   const hasKoma = id => TAB_ITEMS[id]().some(x => (x.dl || []).some(f => f[2] === "コマ"));
   const filesOf = it => (it.dl || []).filter(f => f[2] !== "コマ" || sel.koma);
@@ -439,6 +445,7 @@ dialog::backdrop{background:#000a}
     const pick = $("button", "", sel.on ? "選ぶのをやめる" : current === "cc" ? "正式素材を選んでダウンロード" : "選んでダウンロード"); pick.setAttribute("aria-pressed", String(sel.on));
     pick.addEventListener("click", () => { sel.on = !sel.on; if (!sel.on) sel.items.clear(); draw(); });
     const items = TAB_ITEMS[current](), n = items.reduce((a, x) => a + filesOf(x).length, 0);
+    if (current === "ccsticker" && !n) return;
     const all = $("button", "", `${current === "cc" ? "正式素材を" : ""}まとめてダウンロード（${n}）`); all.title = `このタブの${n}ファイルをまとめてダウンロード`;
     all.addEventListener("click", () => bulkDownload(items.map(x => [x, current]), TABS.find(t => t.id === current).label));
     if (current !== "script") w.append(pick); w.append(all);
@@ -733,12 +740,33 @@ dialog::backdrop{background:#000a}
   }
 
   function renderImage() {
+    const bar = $("div", "row"); bar.style.margin = "0 0 14px";
+    const stLink = $("a", "link-btn", "試作スタジオ（全21種）を開く");
+    stLink.href = (CM ? CM["ページ"] : "./") + "studio/";
+    stLink.target = "_blank"; stLink.rel = "noopener";
+    bar.append(stLink);
+    if (D["イメージ強化のドライブ"]) bar.append(driveLink(D["イメージ強化のドライブ"], "イメージ強化のドライブを開く"));
+    panel.append(bar);
     const items = D["イメージ強化"];
-    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); pendingSection(["イメージ強化"]); return; }
-    const g = $("div", "icon-grid");
-    items.forEach(x => { const c = $("div", "icon-card"), im = $("img"); im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy";
-      c.append(im, $("strong", "", base(x["ファイル"]))); if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き")); if (x.dl && x.dl[0] && !sel.on) c.append(dlFab(x.dl[0]));
-      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c); });
+    if (!items.length) { panel.append($("p", "hold-meta", "確定済みの動画ファイルはまだありません。上の「試作スタジオ（全21種）を開く」から U01〜U21 を確認できます。")); pendingSection(["イメージ強化"]); return; }
+    const g = $("div", "icon-grid hold-grid-wide");
+    items.forEach(x => {
+      const mv = /\.mp4$/i.test(x.src);
+      const c = $("div", "icon-card" + (mv ? " hold-movie" : "")), im = mv ? $("video") : $("img");
+      if (mv) { im.muted = true; im.loop = true; im.autoplay = true; im.playsInline = true; im.preload = "metadata"; im.src = x.src; im.setAttribute("aria-label", x["名前"] || base(x["ファイル"])); }
+      else { im.src = x.src; im.alt = base(x["ファイル"]); im.loading = "lazy"; }
+      c.append(im, $("strong", "", x["名前"] || base(x["ファイル"])));
+      if (x["仮置き"]) c.append($("span", "badge warn tag", "仮置き"));
+      if (x.dl && x.dl.length && !sel.on) {
+        c.append(dlFab(x.dl[0]));
+        if (x.dl.length > 1) {
+          const r = $("div", "row"); r.style.justifyContent = "center"; r.style.marginTop = "6px";
+          x.dl.forEach(f => r.append(dlLink(f, f[2] || "DL")));
+          c.append(r);
+        }
+      }
+      pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
+    });
     panel.append(g);
     pendingSection(["イメージ強化"]);
   }
@@ -812,6 +840,38 @@ dialog::backdrop{background:#000a}
   //   「案A（20枚のまま）」（41dc12971e278125a69ae427ee8638f9）：保留の20点も、止まった絵と動く絵を別の枚のまま並べる
   const FOLDER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2l2 2.2h8.8A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>';
   const ccName = x => x["名前"] || base(x["ファイル"]).replace(/^(ドット絵キャラ|Claude Codeキャラ)_/, "");
+  function renderCCSticker() {
+    const bar = $("div", "row"); bar.style.margin = "0 0 12px";
+    if (D["Claude Code_ステッカーのドライブ"]) bar.append(driveLink(D["Claude Code_ステッカーのドライブ"], "Claude Code_ステッカーのドライブを開く"));
+    panel.append(bar);
+    panel.append($("p", "hold-meta", "白フチダイカット仕様のステッカー素材（全16ポーズ：32-bit透過APNGループ＋静止画PNG＋SVG）です。2Dドット絵の「Claude Codeキャラ」とは別棚で管理しています。"));
+    const items = D["Claude Code_ステッカー"] || [];
+    for (const grp of new Set(items.map(x => x["組"]))) {
+      const sub = items.filter(x => x["組"] === grp);
+      panel.append($("h2", "group-title", `${grp}（${sub.length}）`));
+      const g = $("div", "icon-grid hold-grid-wide");
+      sub.forEach(x => {
+        const c = $("div", "icon-card"), im = $("img");
+        im.src = x.src; im.alt = x["名前"]; im.loading = "lazy";
+        c.append(im, $("strong", "", x["名前"]));
+        if (!sel.on) {
+          const r = $("div", "row"); r.style.justifyContent = "center"; r.style.marginTop = "8px";
+          if (x.dl && x.dl.length) {
+            x.dl.forEach(f => r.append(dlLink(f, f[2] || "DL")));
+          } else {
+            const a1 = $("a", "dl-link", "APNG(動き)"); a1.href = x.src; a1.download = x["ファイル"]; a1.addEventListener("click", e => e.stopPropagation());
+            const a2 = $("a", "dl-link", "静止画PNG"); a2.href = x["静止画"]; a2.download = x["静止画ファイル"]; a2.addEventListener("click", e => e.stopPropagation());
+            const a3 = $("a", "dl-link", "SVG"); a3.href = x["ベクター"]; a3.download = x["ベクターファイル"]; a3.addEventListener("click", e => e.stopPropagation());
+            r.append(a1, a2, a3);
+          }
+          c.append(r);
+        }
+        pickable(c, x); c.addEventListener("click", () => togglePick(c, x)); g.append(c);
+      });
+      panel.append(g);
+    }
+  }
+
   function renderCC() {
     const gallery = document.createElement("cc-library-grid");
     if (!sel.on) panel.append(gallery);
