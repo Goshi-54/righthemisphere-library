@@ -406,7 +406,8 @@ dialog::backdrop{background:#000a}
       else if (t.thumb) { const img = $("img"); img.alt = ""; img.loading = "lazy"; img.src = t.thumb; th.append(img); }
       else if (t.icons) { th.style.gridTemplateColumns = "repeat(2,48px)"; th.style.gap = "14px"; th.style.alignContent = "center"; th.style.justifyContent = "center";
         t.icons.forEach(src => { const img = $("img"); img.alt = ""; img.src = src; img.style.width = "48px"; img.style.height = "48px"; th.append(img); }); }
-      else if (t.link || t.id === "img") { const m = $("div", "script-mark", t.link ? "共通素材のページへ" : "今はなし"); th.append(m); }
+      else if (t.id === "img") { const first = (D["イメージ強化"] || [])[0]; if (first) { const mv = /\.mp4$/i.test(first.src), el = mv ? $("video") : $("img"); if (mv) { el.muted = true; el.preload = "metadata"; el.src = first.src + "#t=0.5"; } else { el.alt = ""; el.loading = "lazy"; el.src = first.src; } th.append(el); } else { th.append($("div", "script-mark", "今はなし")); } }
+      else if (t.link) { const m = $("div", "script-mark", "共通素材のページへ"); th.append(m); }
       else if (t.id === "hold" || t.id === "req") { const first = (D[t.id === "hold" ? "保留" : "要望素材"] || []).flatMap(g => g["素材"]).slice(-1)[0]; if (first) { const img = /\.mp4$/.test(first.src) ? $("video") : $("img"); if (img.tagName === "VIDEO") { img.muted = true; img.preload = "metadata"; img.src = first.src + "#t=0.5"; } else { img.alt = ""; img.loading = "lazy"; img.src = first.src; } th.append(img); } else { const m = $("div", "script-mark", "今はなし"); th.append(m); } }
       else { const m = $("div", "script-mark"); m.textContent = D["台本"].map(x => x["名前"]).join("\n"); m.style.whiteSpace = "pre-line"; th.append(m); }
       const cap = $("div", "cap", t.label); cap.append($("span", "", t.n));

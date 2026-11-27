@@ -1023,7 +1023,299 @@
       ]
     }
   ],
-  "イメージ強化": [],
+  "イメージ強化": [
+    {
+      "名前": "U01｜一発自動生成ウィンドウ（緑バック）",
+      "ファイル": "U01_auto_window_chroma.mp4",
+      "src": "media/img-boost/U01_auto_window_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U01_一発自動生成ウィンドウ_緑バック.mp4",
+          "1kVqqH5bAA4Mx-m9H0pVpr6LK11xh86BK",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U02｜上限ゲージ→赤✕→別ルート切替（緑バック）",
+      "ファイル": "U02_limit_switch_chroma.mp4",
+      "src": "media/img-boost/U02_limit_switch_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U02_上限ゲージ切替_緑バック.mp4",
+          "1dIO5UTyd3av5S6EyFRTC9NkqKzXRsrDq",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U03｜コマンド＆3段階チェック（緑バック）",
+      "ファイル": "U03_triple_check_chroma.mp4",
+      "src": "media/img-boost/U03_triple_check_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U03_3段階チェック_緑バック.mp4",
+          "1CHznQMulr3H18hErBMT3Ag9bOXLzH3Ee",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U04｜AI連携スイッチ→Connected（緑バック）",
+      "ファイル": "U04_connected_chroma.mp4",
+      "src": "media/img-boost/U04_connected_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U04_AI連携Connected_緑バック.mp4",
+          "1lVHqSlYSXMTHQwCOHuPblAG1xpFcC3yx",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U05｜2画面同時並列稼働（緑バック）",
+      "ファイル": "U05_dual_parallel_chroma.mp4",
+      "src": "media/img-boost/U05_dual_parallel_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U05_2画面同時並列稼働_緑バック.mp4",
+          "1qACAsXEBEFGw4e2WA9X05OD1HFRGqZTR",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U06｜拡張機能アイコン一覧フォーカス（緑バック）",
+      "ファイル": "U06_plugin_grid_chroma.mp4",
+      "src": "media/img-boost/U06_plugin_grid_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U06_拡張機能一覧フォーカス_緑バック.mp4",
+          "171F4FsfoKol9ob5QmYENBVxpPD7e5jYZ",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U07｜仮説A/B/C比較スコアバー（緑バック）",
+      "ファイル": "U07_compare_bars_chroma.mp4",
+      "src": "media/img-boost/U07_compare_bars_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U07_比較スコアバー_緑バック.mp4",
+          "1_DTaBzGhBrcaH0w8SPxnfZNV34Z0heTY",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U08｜Before/After並列カード（緑バック）",
+      "ファイル": "U08_before_after_chroma.mp4",
+      "src": "media/img-boost/U08_before_after_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U08_BeforeAfter並列カード_緑バック.mp4",
+          "1B5HNrjdaxsIQ-raX4DpMdtyiXIZQogaQ",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U09｜レベル1→レベル100 ミニ王冠密着（緑バック）",
+      "ファイル": "U09_lv1_to_lv100_chroma.mp4",
+      "src": "media/img-boost/U09_lv1_to_lv100_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U09_レベル1から100王冠_緑バック.mp4",
+          "1TCspcx93wzfN8Pm1OrEDvGcD580ubuTV",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U10｜赤枠フォーカス＆1タップボタン（緑バック）",
+      "ファイル": "U10_red_guide_btn_chroma.mp4",
+      "src": "media/img-boost/U10_red_guide_btn_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U10_赤枠フォーカスボタン_緑バック.mp4",
+          "1Gig7om8vkqdIWKbi-pBfCsH0ymzApg3j",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U11｜黒電卓 実績インパクト単体（緑バック）",
+      "ファイル": "U11_black_calc_chroma.mp4",
+      "src": "media/img-boost/U11_black_calc_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U11_黒電卓単体_緑バック.mp4",
+          "1xMm_q7I_osSSnTiD2dsOOzXZ9QSfMbgE",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U12｜すりガラス保存CTA（緑バック）",
+      "ファイル": "U12_save_cta_chroma.mp4",
+      "src": "media/img-boost/U12_save_cta_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U12_すりガラス保存CTA_緑バック.mp4",
+          "1XWLAid1H4-6wLyP2KHYdw-vCCQ9hnDac",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U13｜右肩上がり折れ線＋面・ライト版（緑バック）",
+      "ファイル": "U13_graph_light_line_chroma.mp4",
+      "src": "media/img-boost/U13_graph_light_line_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U13_右肩上がり折れ線ライト_緑バック.mp4",
+          "1x3fVmnYniHm2FvYnWvYPIHzaSFiJhfAz",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U14｜右肩上がり棒グラフ・ダーク版（緑バック）",
+      "ファイル": "U14_graph_dark_bar_chroma.mp4",
+      "src": "media/img-boost/U14_graph_dark_bar_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U14_右肩上がり棒グラフダーク_緑バック.mp4",
+          "1ZrQHJ8Tsjcj5cSOCoFYMx7VUdyjpcQFQ",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U15｜右肩上がり急成長カーブ・ダーク版（緑バック）",
+      "ファイル": "U15_graph_dark_curve_chroma.mp4",
+      "src": "media/img-boost/U15_graph_dark_curve_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U15_右肩上がり急成長カーブダーク_緑バック.mp4",
+          "12YNe_WB_CODWYRl_dEildWTHWA86Lsdc",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U16｜Claude×100 爆速スケール（緑バック）",
+      "ファイル": "U16_claude_x100_chroma.mp4",
+      "src": "media/img-boost/U16_claude_x100_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U16_Claude100倍スケール_緑バック.mp4",
+          "1zq5lvUWya0g849LvPJo525XFgL6ls6JV",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U17｜AI社員20体同時稼働・cc-v4 20種（緑バック）",
+      "ファイル": "U17_ai_team_20_chroma.mp4",
+      "src": "media/img-boost/U17_ai_team_20_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U17_AI社員20体同時稼働_緑バック.mp4",
+          "1K91-5xfO6wNgYfgPDBL9zlH9JDvM6kna",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U18｜AI社員3役横並び・cc-v4（緑バック）",
+      "ファイル": "U18_ai_team_3role_chroma.mp4",
+      "src": "media/img-boost/U18_ai_team_3role_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U18_AI社員3役横並び_緑バック.mp4",
+          "1W_raIP72D0Mr-NWI3cRxS59NffmJPf6y",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U19｜AI社員2役バトンパス・cc-v4（緑バック）",
+      "ファイル": "U19_ai_team_2baton_chroma.mp4",
+      "src": "media/img-boost/U19_ai_team_2baton_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U19_AI社員2役バトンパス_緑バック.mp4",
+          "1dYpB1VUH_ysTiRwNBLfLrNo3ZS16Z0Rc",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U20｜Mac風4部署2×2ボード・cc-v4（緑バック）",
+      "ファイル": "U20_ai_team_4dept_chroma.mp4",
+      "src": "media/img-boost/U20_ai_team_4dept_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U20_Mac風4部署ボード_緑バック.mp4",
+          "1B5JY3AuefLDdEOPcpRFVs4qc48xksm5W",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U20パーツ分解｜Mac風4部署 枠＋ライト点滅のみ（緑バック）",
+      "ファイル": "U20_ai_team_4dept_base_chroma.mp4",
+      "src": "media/img-boost/U20_ai_team_4dept_base_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_U20パーツ分解_4部署枠ライト点滅のみ_緑バック.mp4",
+          "1vCjUM90aCm-rA19WACcbc8f74NvCqixZ",
+          "緑バックMP4"
+        ]
+      ]
+    },
+    {
+      "名前": "U21｜右下枠なしLoading・Claude歩行（緑バック＋透過MOV）",
+      "ファイル": "U21_loading_chroma.mp4",
+      "src": "media/img-boost/U21_loading_chroma.mp4",
+      "仮置き": true,
+      "dl": [
+        [
+          "イメージ強化_右下Loading_緑バック.mp4",
+          "1U7Xpi2tDuHo1TBaZvkZNzllg_DU8blwL",
+          "緑バックMP4"
+        ],
+        [
+          "イメージ強化_右下Loading_透過.mov",
+          "1j4FnULqV-0bqN327hAb45Pi3fRboxNnN",
+          "透過MOV"
+        ]
+      ]
+    }
+  ],
   "背景のドライブ": "https://drive.google.com/drive/folders/1YP9pa8zgYwzMtYMnFUaXOJX-XYE5w5iu",
   "アイコンのドライブ": "https://drive.google.com/drive/folders/1OvBh5ZGmggK58f9v3M506rpGSPwtcgw5",
   "イメージ強化のドライブ": "https://drive.google.com/drive/folders/1fYhS-OTfRbxciF2e0Cw3uQb9In3iFXQ4",
