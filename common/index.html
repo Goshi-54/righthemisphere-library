@@ -711,7 +711,7 @@ dialog::backdrop{background:#000a}
     if (D["イメージ強化のドライブ"]) bar.append(driveLink(D["イメージ強化のドライブ"], "イメージ強化のドライブを開く"));
     panel.append(bar);
     const items = D["イメージ強化"];
-    if (!items.length) { panel.append($("p", "hold-empty", "まだありません。")); pendingSection(["イメージ強化"]); return; }
+    if (!items.length) { panel.append($("p", "hold-meta", "確定済みの動画ファイルはまだありません。上の「試作スタジオ（全21種）を開く」から U01〜U21 を確認できます。")); pendingSection(["イメージ強化"]); return; }
     const g = $("div", "icon-grid hold-grid-wide");
     items.forEach(x => {
       const mv = /\.mp4$/i.test(x.src);

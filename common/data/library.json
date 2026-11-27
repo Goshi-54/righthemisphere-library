@@ -1023,26 +1023,7 @@
       ]
     }
   ],
-  "イメージ強化": [
-    {
-      "名前": "右下枠なし Loading...（Claude歩行）",
-      "src": "media/img-boost/U21_loading_chroma.mp4",
-      "ファイル": "イメージ強化_右下Loading_緑バック.mp4",
-      "仮置き": true,
-      "dl": [
-        [
-          "イメージ強化_右下Loading_緑バック.mp4",
-          "1U7Xpi2tDuHo1TBaZvkZNzllg_DU8blwL",
-          "本体"
-        ],
-        [
-          "イメージ強化_右下Loading_透過.mov",
-          "1j4FnULqV-0bqN327hAb45Pi3fRboxNnN",
-          "透過MOV"
-        ]
-      ]
-    }
-  ],
+  "イメージ強化": [],
   "背景のドライブ": "https://drive.google.com/drive/folders/1YP9pa8zgYwzMtYMnFUaXOJX-XYE5w5iu",
   "アイコンのドライブ": "https://drive.google.com/drive/folders/1OvBh5ZGmggK58f9v3M506rpGSPwtcgw5",
   "イメージ強化のドライブ": "https://drive.google.com/drive/folders/1fYhS-OTfRbxciF2e0Cw3uQb9In3iFXQ4",
