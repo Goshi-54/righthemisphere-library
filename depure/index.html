@@ -844,8 +844,8 @@ dialog::backdrop{background:#000a}
     const bar = $("div", "row"); bar.style.margin = "0 0 12px";
     if (D["Claude Code_ステッカーのドライブ"]) bar.append(driveLink(D["Claude Code_ステッカーのドライブ"], "Claude Code_ステッカーのドライブを開く"));
     panel.append(bar);
-    panel.append($("p", "hold-meta", "白フチダイカット仕様のステッカー素材（全16ポーズ：32-bit透過APNGループ＋静止画PNG＋SVG）です。2Dドット絵の「Claude Codeキャラ」とは別棚で管理しています。"));
     const items = D["Claude Code_ステッカー"] || [];
+    panel.append($("p", "hold-meta", `白フチダイカット仕様のステッカー素材（全${items.length}ポーズ：32-bit透過APNGループ＋静止画PNG＋SVG）です。2Dドット絵の「Claude Codeキャラ」とは別棚で管理しています。`));
     for (const grp of new Set(items.map(x => x["組"]))) {
       const sub = items.filter(x => x["組"] === grp);
       panel.append($("h2", "group-title", `${grp}（${sub.length}）`));

@@ -1878,6 +1878,118 @@
           "SVG"
         ]
       ]
+    },
+    {
+      "id": "sticker_claude_p17",
+      "名前": "P17｜ひらめき電球Claude",
+      "組": "追加ポーズ（P17〜P20）",
+      "ファイル": "pose_17_loop_animated.png",
+      "src": "media/cc-sticker/pose_17_loop_animated.png",
+      "静止画": "media/cc-sticker/pose_17_claude_lightbulb_idea_1024.png",
+      "静止画ファイル": "pose_17_claude_lightbulb_idea_1024.png",
+      "ベクター": "media/cc-sticker/pose_17_claude_lightbulb_idea_1024.svg",
+      "ベクターファイル": "pose_17_claude_lightbulb_idea_1024.svg",
+      "dl": [
+        [
+          "pose_17_loop_animated.png",
+          "1BvtMSc8m4NgimMtDdl7-0APC16bqEgH4",
+          "透過APNG"
+        ],
+        [
+          "pose_17_claude_lightbulb_idea_1024.png",
+          "11UJpGEnmOJHGbyHnbhpWjbZUiTsylAhH",
+          "静止画PNG"
+        ],
+        [
+          "pose_17_claude_lightbulb_idea_1024.svg",
+          "18MJxC6dvQ7JDsKHCqK6zIIXC3CT8Ye8l",
+          "SVG"
+        ]
+      ]
+    },
+    {
+      "id": "sticker_claude_p18",
+      "名前": "P18｜衝撃・びっくり「！」Claude",
+      "組": "追加ポーズ（P17〜P20）",
+      "ファイル": "pose_18_loop_animated.png",
+      "src": "media/cc-sticker/pose_18_loop_animated.png",
+      "静止画": "media/cc-sticker/pose_18_claude_shock_excl_1024.png",
+      "静止画ファイル": "pose_18_claude_shock_excl_1024.png",
+      "ベクター": "media/cc-sticker/pose_18_claude_shock_excl_1024.svg",
+      "ベクターファイル": "pose_18_claude_shock_excl_1024.svg",
+      "dl": [
+        [
+          "pose_18_loop_animated.png",
+          "1v-FwRXor1WDf1HBMdz1DYScHf2mc4ULh",
+          "透過APNG"
+        ],
+        [
+          "pose_18_claude_shock_excl_1024.png",
+          "1Q83epUzdpOyw8U9d4uqESOzoRNADQojM",
+          "静止画PNG"
+        ],
+        [
+          "pose_18_claude_shock_excl_1024.svg",
+          "16-wBM276N9vLNp1w25oKFqfovEqubB71",
+          "SVG"
+        ]
+      ]
+    },
+    {
+      "id": "sticker_claude_p19",
+      "名前": "P19｜ストップウォッチ時短Claude",
+      "組": "追加ポーズ（P17〜P20）",
+      "ファイル": "pose_19_loop_animated.png",
+      "src": "media/cc-sticker/pose_19_loop_animated.png",
+      "静止画": "media/cc-sticker/pose_19_claude_stopwatch_1024.png",
+      "静止画ファイル": "pose_19_claude_stopwatch_1024.png",
+      "ベクター": "media/cc-sticker/pose_19_claude_stopwatch_1024.svg",
+      "ベクターファイル": "pose_19_claude_stopwatch_1024.svg",
+      "dl": [
+        [
+          "pose_19_loop_animated.png",
+          "1FfXc5-kQnz4ffybOvOM5YmAA_SrAPPnW",
+          "透過APNG"
+        ],
+        [
+          "pose_19_claude_stopwatch_1024.png",
+          "1svuixujkpY3-jYSUPuFbSl87cf8KLbdW",
+          "静止画PNG"
+        ],
+        [
+          "pose_19_claude_stopwatch_1024.svg",
+          "10BnYdvUmplMBQqq4m1rmBQq4Aq2c1cdX",
+          "SVG"
+        ]
+      ]
+    },
+    {
+      "id": "sticker_claude_p20",
+      "名前": "P20｜Claude×ChatGPT白×Codex青 3体集合",
+      "組": "追加ポーズ（P17〜P20）",
+      "ファイル": "pose_20_loop_animated.png",
+      "src": "media/cc-sticker/pose_20_loop_animated.png",
+      "静止画": "media/cc-sticker/pose_20_ai_trio_team_1440x960.png",
+      "静止画ファイル": "pose_20_ai_trio_team_1440x960.png",
+      "ベクター": "media/cc-sticker/pose_20_ai_trio_team_1440x960.svg",
+      "ベクターファイル": "pose_20_ai_trio_team_1440x960.svg",
+      "dl": [
+        [
+          "pose_20_loop_animated.png",
+          "1z5u3uWz8V1U4MORSII9PIRX6BPHr2RjF",
+          "透過APNG"
+        ],
+        [
+          "pose_20_ai_trio_team_1440x960.png",
+          "1sF3a3vPt1B38KwDzJQO33KFHMCHgadcD",
+          "静止画PNG"
+        ],
+        [
+          "pose_20_ai_trio_team_1440x960.svg",
+          "1HlXcAkIy-Vc3ZV11R8TB1cQFe-Wl_ztX",
+          "SVG"
+        ]
+      ]
     }
   ],
   "Claude Codeキャラ": [
