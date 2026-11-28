@@ -13,21 +13,23 @@
      "間：段落 0.48秒・行 0.22秒",
      "音量：-18 LUFS にそろえる"
     ],
-    "作り方": "Claude Code の Skill「goshi-narration-voice」"
+    "作り方": "Skill「goshi-narration-voice」"
    },
    "直し待ち": [
     {
-     "何": "Vtuberの動作14種",
-     "本人": "動作14種の画質、クオリティが悪いのが気になっています。"
+     "何": "Vtuber動画化×GIF併用ハイブリッド展開",
+     "本人": "口パク・目・表情を中心にしつつ、手元の動き等はv5正本ベースの厳選Vtuber GIF切替と組み合わせてアスレ重畳・ワイプ等へ展開する（06_全体計画承認済）。"
     },
     {
-     "何": "掛け合い D21〜D26",
-     "本人": "ChatGPTとの掛け合いなどの品質が落ちてない？"
+     "何": "ミニキャラ C1-01 等 素直な5〜6コマ構成への統一",
+     "本人": "36コマ自動補間モーフィングや0px完全固定の暴走をやめ、承認済パイロット（P03〜P05 v2）と同じ5〜6コマの自然な動き最優先で制作する。"
     }
    ],
    "ライブラリ": "depure/",
    "ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
-   "画風": "ミニキャラ・Vtuber（仮置き）・その他（マイクラ・仮置き）",
+   "メタドライブ": "https://drive.google.com/drive/folders/1ljAiln6FzNJMV0f6FgKHu9jVSlefKxDA",
+   "画風": "ミニキャラ（v5確定61枚）・Vtuber（v5確定26枚）・マイクラ（v8確定66枚）・収録素材（57件）",
+   "chatwork要約": "ミニキャラ：Chatwork自動生成対応済 ／ Vtuber・マイクラ：リファレンス確定（自動生成未接続）",
    "見本": [
     {
      "src": "depure/media/f/2a997d07d4c8.avif",
@@ -94,43 +96,880 @@
      2
     ]
    ],
+   "制作レシピ": [
+    {
+     "系統": "ミニキャラ（v5確定・61枚）",
+     "chatwork": "対応済",
+     "chatwork_state": "ok",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1U78OxQfpOzBszHPl3_CXxnv9AM1PSFML",
+     "メタドライブ": "https://drive.google.com/drive/folders/19klI0cUA3EIHWHtPmGTLO4amMd9M4Uoe",
+     "要件": "承認済パイロット（P03〜P05 v2）と同じ5〜6コマ素直なコマアニメ構造（例：300/230/270/400/420/280ms）＋口パク固定ベース（c20261120-19/run.log）。",
+     "判断軸": "動画素材としての自然な動きと腕のつながりを最優先。36F自動中割りモーフィング補間は気持ち悪くなるため厳禁・0px完全固定の数値暴走も禁止。ハーフリム眼鏡統一。"
+    },
+    {
+     "系統": "Vtuber（v5確定・26枚）",
+     "chatwork": "リファレンス確定・自動生成未接続",
+     "chatwork_state": "wait",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1k2apz-r2qCkVLZmUry0kn9f31x95YwOh",
+     "メタドライブ": "https://drive.google.com/drive/folders/19aTHMQJReF19rXepjZvB_2Ujfv0d5BAi",
+     "要件": "01_確定リファレンス内の対応する単体透過PNG（1カット1ファイル）を必ず個別添付。A層（R&D-2 口パク・目・表情特化）× B層（v5正本ベース厳選Vtuber GIF切替）のハイブリッド運用（アスレ重畳・小窓ワイプ・メイン語り対応）。",
+     "判断軸": "インナー実測色 #4C4CA6〜#5357AA（V≈60%）、シルバー眼鏡チェーン耳後ろ1ループ、向かって右のみ軽シャツイン＆背面両裾アウト、背面襟足 y=467..472（立ち襟オーバーラップ・うなじ露出ゼロ）、素爪・指リングなし、不自然な手元後乗せ禁止。"
+    },
+    {
+     "系統": "マイクラ（v8確定・66枚：A版33＋B版33）",
+     "chatwork": "リファレンス確定・自動生成未接続",
+     "chatwork_state": "wait",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
+     "メタドライブ": "https://drive.google.com/drive/folders/1IVrYdhSgKgmSJNQBzuiFQOf7O__r4T4f",
+     "要件": "A版（立体ボクセル主軸33枚）＋B版（8bitドット33枚）の確定単体PNGを参照してコマ展開（左右斜め2アングル対応）。",
+     "判断軸": "肘を曲げない直線1ブロック腕（肩回転のみ）、自然なPC対面構図（a_11 / b_11a 基準）、逆アングル展開時のブロックロゴ・文字反転防止を徹底。"
+    },
+    {
+     "系統": "YouTube収録素材（57件：PNG47＋note2＋MOV8）",
+     "chatwork": "収録・切り出し系（自動生成対象外）",
+     "chatwork_state": "na",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1zj1U58tQfblO9PWL7IaMSEqQl9t5IGW3",
+     "メタドライブ": "https://drive.google.com/drive/folders/1vJWjn5UdwyGdzZQrzMw_s8HIdxI8KBb5",
+     "要件": "元YouTube収録 .mp4 を直接確認して切り出し（build_clean_edit_assets.sh）。静止画47件＋公式note注意書き2件は角丸RGBA透過PNG、主要実演8本はWeb確認用MP4＋編集投入用 Apple ProRes 4444 透過 .mov のペア格納。",
+     "判断軸": "文字情報だけで切り出さず必ず実動画フレームを確認。角丸外の白残りゼロ・ProRes 4444 アルファチャンネル実透過を確認してから格納。"
+    }
+   ],
    "リファレンス": [
     {
-     "画風": "ミニキャラ",
-     "ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
-     "説明": "ライブラリを公開したとき（11/12）から載せている参照シート",
+     "画風": "Vtuber 確定正本 v5（全26枚）",
+     "ドライブ": "https://drive.google.com/drive/folders/19aTHMQJReF19rXepjZvB_2Ujfv0d5BAi",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1k2apz-r2qCkVLZmUry0kn9f31x95YwOh",
+     "説明": "2026-11-27 本人最終OK確定。新規ポーズ・表情生成時は組シート丸投げを禁止し、構図に対応する単体透過PNGを個別添付する。",
      "画像": [
       {
-       "名前": "全身・正面",
-       "src": "media/depure/media_f_13c3331ce65e.avif",
-       "状態": ""
+       "名前": "00_顔基準01_正面",
+       "src": "media/meta_refs/vtuber/00_顔基準01_正面_透過.png",
+       "状態": "採用・正本確定"
       },
       {
-       "名前": "全身・角度（正面・左右斜め・背面）",
-       "src": "media/depure/media_f_5646f8524ade.avif",
-       "状態": ""
+       "名前": "00_顔基準02_左斜め前",
+       "src": "media/meta_refs/vtuber/00_顔基準02_左斜め前_透過.png",
+       "状態": "採用・正本確定"
       },
       {
-       "名前": "顔アップ・正面",
-       "src": "media/depure/media_f_6941c76c7878.avif",
-       "状態": ""
+       "名前": "00_顔基準03_右斜め前",
+       "src": "media/meta_refs/vtuber/00_顔基準03_右斜め前_透過.png",
+       "状態": "採用・正本確定"
       },
       {
-       "名前": "顔アップ・斜め角度",
-       "src": "media/depure/media_f_6fc37d892fc1.avif",
-       "状態": ""
+       "名前": "01_全身_正面",
+       "src": "media/meta_refs/vtuber/01_全身_正面_透過.png",
+       "状態": "採用・正本確定"
       },
       {
-       "名前": "顔アップ・角度シート（添付原本から描き起こし）",
-       "src": "media/depure/media_f_2217c1d6052f.avif",
-       "状態": ""
+       "名前": "02_全身_左斜め前",
+       "src": "media/meta_refs/vtuber/02_全身_左斜め前_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "03_全身_右斜め前",
+       "src": "media/meta_refs/vtuber/03_全身_右斜め前_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "04_全身_左真横_アウト裾側",
+       "src": "media/meta_refs/vtuber/04_全身_左真横_アウト裾側_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "05_全身_右真横_イン赤ベルト側",
+       "src": "media/meta_refs/vtuber/05_全身_右真横_イン赤ベルト側_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "06_全身_左斜め後ろ",
+       "src": "media/meta_refs/vtuber/06_全身_左斜め後ろ_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "07_全身_右斜め後ろ",
+       "src": "media/meta_refs/vtuber/07_全身_右斜め後ろ_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "08_全身_背面",
+       "src": "media/meta_refs/vtuber/08_全身_背面_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "09A_単体パーツ_多角形眼鏡とチェーン全長_顔なし単体_正面と斜め",
+       "src": "media/meta_refs/vtuber/09A_単体パーツ_多角形眼鏡とチェーン全長_顔なし単体_正面と斜め_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "09B_単体パーツ_多角形眼鏡とチェーン全長_顔なし単体_真横構造",
+       "src": "media/meta_refs/vtuber/09B_単体パーツ_多角形眼鏡とチェーン全長_顔なし単体_真横構造_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "09C_装着参考_顔あり耳元アップ_眼鏡チェーンと青紫インナー位置",
+       "src": "media/meta_refs/vtuber/09C_装着参考_顔あり耳元アップ_眼鏡チェーンと青紫インナー位置_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "10_単体パーツ_髪構造と襟足内側青紫インナーカラー範囲図",
+       "src": "media/meta_refs/vtuber/10_単体パーツ_髪構造と襟足内側青紫インナーカラー範囲図_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "11_単体パーツ_手元バリエーション_素爪_甲と掌と指差しと三本指",
+       "src": "media/meta_refs/vtuber/11_単体パーツ_手元バリエーション_素爪_甲と掌と指差しと三本指_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "12_パーツ_羽根ピアス単体",
+       "src": "media/meta_refs/vtuber/12_パーツ_羽根ピアス単体.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "12_単体パーツ_手元小物_素爪でスマホとタブレット保持",
+       "src": "media/meta_refs/vtuber/12_単体パーツ_手元小物_素爪でスマホとタブレット保持_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "13_パーツ_胸元二重紐と赤タッセルと中華ボタン",
+       "src": "media/meta_refs/vtuber/13_パーツ_胸元二重紐と赤タッセルと中華ボタン.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "13_単体パーツ_足元黒サンダル_真横とかかと背面とソール構造",
+       "src": "media/meta_refs/vtuber/13_単体パーツ_足元黒サンダル_真横とかかと背面とソール構造_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_パーツ_赤編みベルトとシャツ裾インアウト境界",
+       "src": "media/meta_refs/vtuber/14_パーツ_赤編みベルトとシャツ裾インアウト境界.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_正面表情01_柔らかい笑顔",
+       "src": "media/meta_refs/vtuber/14_正面表情01_柔らかい笑顔_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_正面表情02_目閉じ笑顔",
+       "src": "media/meta_refs/vtuber/14_正面表情02_目閉じ笑顔_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_正面表情03_驚き",
+       "src": "media/meta_refs/vtuber/14_正面表情03_驚き_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_正面表情04_困り眉",
+       "src": "media/meta_refs/vtuber/14_正面表情04_困り眉_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "14_正面表情05_真剣解説_口開き",
+       "src": "media/meta_refs/vtuber/14_正面表情05_真剣解説_口開き_透過.png",
+       "状態": "採用・正本確定"
       }
      ]
     },
     {
-     "画風": "Vtuber（仮置き）",
+     "画風": "ミニキャラ 確定正本 v5（全61枚）",
+     "ドライブ": "https://drive.google.com/drive/folders/19klI0cUA3EIHWHtPmGTLO4amMd9M4Uoe",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1U78OxQfpOzBszHPl3_CXxnv9AM1PSFML",
+     "説明": "2026-11-25 本人最終OK確定（全身8面・表情・ポーズ・顔アップ・ハーフリム眼鏡統一）。Chatwork自動生成の基準正本。",
+     "画像": [
+      {
+       "名前": "DF-B01_01_全身_正面_ハーフリム統一_v4",
+       "src": "media/meta_refs/minichara/DF-B01_01_全身_正面_ハーフリム統一_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B02_02_全身_左斜め前_ハーフリム統一_v4",
+       "src": "media/meta_refs/minichara/DF-B02_02_全身_左斜め前_ハーフリム統一_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B03_03_全身_右斜め前_ハーフリム統一_v5",
+       "src": "media/meta_refs/minichara/DF-B03_03_全身_右斜め前_ハーフリム統一_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B04_04_全身_左真横_ハーフリム統一_v4",
+       "src": "media/meta_refs/minichara/DF-B04_04_全身_左真横_ハーフリム統一_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B05_05_全身_右真横_ハーフリム統一_v5",
+       "src": "media/meta_refs/minichara/DF-B05_05_全身_右真横_ハーフリム統一_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B06_06_全身_左斜め後ろ_v2",
+       "src": "media/meta_refs/minichara/DF-B06_06_全身_左斜め後ろ_v2_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B07_07_全身_右斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/DF-B07_07_全身_右斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-B08_08_全身_背面",
+       "src": "media/meta_refs/minichara/DF-B08_08_全身_背面_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E01_11_正面単体表情_01_通常_v4",
+       "src": "media/meta_refs/minichara/DF-E01_11_正面単体表情_01_通常_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E02_11_正面単体表情_02_笑顔_v4",
+       "src": "media/meta_refs/minichara/DF-E02_11_正面単体表情_02_笑顔_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E03_11_正面単体表情_03_驚き_v4",
+       "src": "media/meta_refs/minichara/DF-E03_11_正面単体表情_03_驚き_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E04_11_正面単体表情_04_困り_v4",
+       "src": "media/meta_refs/minichara/DF-E04_11_正面単体表情_04_困り_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E05_11_正面単体表情_05_ニヤリ_v5",
+       "src": "media/meta_refs/minichara/DF-E05_11_正面単体表情_05_ニヤリ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-E06_11_正面単体表情_06_真剣_v4",
+       "src": "media/meta_refs/minichara/DF-E06_11_正面単体表情_06_真剣_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F01_00_顔基準_正面_ハーフリム統一_v4",
+       "src": "media/meta_refs/minichara/DF-F01_00_顔基準_正面_ハーフリム統一_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F02_00_顔アップ_02_左斜め前_v5",
+       "src": "media/meta_refs/minichara/DF-F02_00_顔アップ_02_左斜め前_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F03_00_顔アップ_03_右斜め前_v5",
+       "src": "media/meta_refs/minichara/DF-F03_00_顔アップ_03_右斜め前_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F04_00_顔アップ_04_左真横_v5",
+       "src": "media/meta_refs/minichara/DF-F04_00_顔アップ_04_左真横_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F05_00_顔アップ_05_右真横_v5",
+       "src": "media/meta_refs/minichara/DF-F05_00_顔アップ_05_右真横_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F06_00_顔アップ_06_左斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/DF-F06_00_顔アップ_06_左斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F07_00_顔アップ_07_右斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/DF-F07_00_顔アップ_07_右斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "DF-F08_00_顔アップ_08_背面_v5",
+       "src": "media/meta_refs/minichara/DF-F08_00_顔アップ_08_背面_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HB-01_13_着用ポーズ_片手上げ解説_v4",
+       "src": "media/meta_refs/minichara/HB-01_13_着用ポーズ_片手上げ解説_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HB-02_14_着用ポーズ_白紙フリップボード提示_v4",
+       "src": "media/meta_refs/minichara/HB-02_14_着用ポーズ_白紙フリップボード提示_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-01_01_手元_三本指_v5",
+       "src": "media/meta_refs/minichara/HT-01_01_手元_三本指_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-02_02_手元_グッドサイン_v5",
+       "src": "media/meta_refs/minichara/HT-02_02_手元_グッドサイン_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-03_03_手元_ピース_v5",
+       "src": "media/meta_refs/minichara/HT-03_03_手元_ピース_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-04_04_手元_指差し_v5",
+       "src": "media/meta_refs/minichara/HT-04_04_手元_指差し_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-05_06_手元_口元内緒話_v5",
+       "src": "media/meta_refs/minichara/HT-05_06_手元_口元内緒話_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-06_07_手元別角度_手の甲側と両手広げ_v4",
+       "src": "media/meta_refs/minichara/HT-06_07_手元別角度_手の甲側と両手広げ_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-07_08_手元小物_スマホ保持と操作_v4",
+       "src": "media/meta_refs/minichara/HT-07_08_手元小物_スマホ保持と操作_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-08_09_手元小物_ノートPCタイピング手元_v4",
+       "src": "media/meta_refs/minichara/HT-08_09_手元小物_ノートPCタイピング手元_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-09_12_着用ポーズ_開いた頬杖_v4",
+       "src": "media/meta_refs/minichara/HT-09_12_着用ポーズ_開いた頬杖_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "HT-10_15_口パク用手出し基準_バストアップ片手解説_v5",
+       "src": "media/meta_refs/minichara/HT-10_15_口パク用手出し基準_バストアップ片手解説_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "PT-01_09_専用パーツ_YouTube版ハーフリム眼鏡単体_正面と斜めと横",
+       "src": "media/meta_refs/minichara/PT-01_09_専用パーツ_YouTube版ハーフリム眼鏡単体_正面と斜めと横_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "PT-02_10_専用パーツ_YouTube版中華襟と左胸黒プレート",
+       "src": "media/meta_refs/minichara/PT-02_10_専用パーツ_YouTube版中華襟と左胸黒プレート_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "PT-03_10_専用パーツ_デフォルト版中華襟ボタン4段",
+       "src": "media/meta_refs/minichara/PT-03_10_専用パーツ_デフォルト版中華襟ボタン4段_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "PT-04_10_下半身単体_332準拠バルーンパンツと白ソックス黒靴_4方向_v4",
+       "src": "media/meta_refs/minichara/PT-04_10_下半身単体_332準拠バルーンパンツと白ソックス黒靴_4方向_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B01_01_全身_YouTube版正面_最優先主軸_v4",
+       "src": "media/meta_refs/minichara/YT-B01_01_全身_YouTube版正面_最優先主軸_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B02_02_全身_左斜め前_v4",
+       "src": "media/meta_refs/minichara/YT-B02_02_全身_左斜め前_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B03_03_全身_右斜め前_v5",
+       "src": "media/meta_refs/minichara/YT-B03_03_全身_右斜め前_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B04_04_全身_左真横_v4",
+       "src": "media/meta_refs/minichara/YT-B04_04_全身_左真横_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B05_05_全身_右真横_v5",
+       "src": "media/meta_refs/minichara/YT-B05_05_全身_右真横_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B06_06_全身_左斜め後ろ_v4",
+       "src": "media/meta_refs/minichara/YT-B06_06_全身_左斜め後ろ_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B07_07_全身_右斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/YT-B07_07_全身_右斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-B08_08_全身_背面_v4",
+       "src": "media/meta_refs/minichara/YT-B08_08_全身_背面_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E01_11_単体表情01_YouTube版正面_通常微笑み_v4",
+       "src": "media/meta_refs/minichara/YT-E01_11_単体表情01_YouTube版正面_通常微笑み_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E02_11_単体表情02_YouTube版正面_笑顔目閉じ_v4",
+       "src": "media/meta_refs/minichara/YT-E02_11_単体表情02_YouTube版正面_笑顔目閉じ_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E03_11_単体表情03_YouTube版正面_驚き_v4",
+       "src": "media/meta_refs/minichara/YT-E03_11_単体表情03_YouTube版正面_驚き_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E04_11_単体表情04_YouTube版正面_困りジト目_v4",
+       "src": "media/meta_refs/minichara/YT-E04_11_単体表情04_YouTube版正面_困りジト目_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E05_11_単体表情05_YouTube版正面_ニヤリ自信_v4",
+       "src": "media/meta_refs/minichara/YT-E05_11_単体表情05_YouTube版正面_ニヤリ自信_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-E06_11_単体表情06_YouTube版正面_真剣解説_v4",
+       "src": "media/meta_refs/minichara/YT-E06_11_単体表情06_YouTube版正面_真剣解説_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F01R_00_顔基準_YouTube版正面_反転微斜め対称_v4",
+       "src": "media/meta_refs/minichara/YT-F01R_00_顔基準_YouTube版正面_反転微斜め対称_v4_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F01_00_顔基準_左斜め前_最優先ベース",
+       "src": "media/meta_refs/minichara/YT-F01_00_顔基準_左斜め前_最優先ベース_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F02_00_顔アップ_02_左斜め前_v5",
+       "src": "media/meta_refs/minichara/YT-F02_00_顔アップ_02_左斜め前_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F03_00_顔アップ_03_右斜め前_v5",
+       "src": "media/meta_refs/minichara/YT-F03_00_顔アップ_03_右斜め前_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F04_00_顔アップ_04_左真横_v5",
+       "src": "media/meta_refs/minichara/YT-F04_00_顔アップ_04_左真横_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F05_00_顔アップ_05_右真横_v5",
+       "src": "media/meta_refs/minichara/YT-F05_00_顔アップ_05_右真横_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F06_00_顔アップ_06_左斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/YT-F06_00_顔アップ_06_左斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F07_00_顔アップ_07_右斜め後ろ_v5",
+       "src": "media/meta_refs/minichara/YT-F07_00_顔アップ_07_右斜め後ろ_v5_透過.png",
+       "状態": "採用・正本確定"
+      },
+      {
+       "名前": "YT-F08_00_顔アップ_08_背面_v5",
+       "src": "media/meta_refs/minichara/YT-F08_00_顔アップ_08_背面_v5_透過.png",
+       "状態": "採用・正本確定"
+      }
+     ]
+    },
+    {
+     "画風": "マイクラ 確定正本 v8 — A版（でぷれ寄せ立体ボクセル・33枚）",
+     "ドライブ": "https://drive.google.com/drive/folders/1IVrYdhSgKgmSJNQBzuiFQOf7O__r4T4f",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
+     "説明": "2026-11-27 v8確定正本（主軸：四角寄り頭部＋控えめトップ跳ね毛・直線1ブロック腕・PC作業・SNS/AIブロック・相棒猫）。編集者ページには載せずメタ環境で管理。",
+     "画像": [
+      {
+       "名前": "A版 01 正面",
+       "src": "media/meta_refs/minecraft/a_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 02 左斜め前",
+       "src": "media/meta_refs/minecraft/a_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 03 右斜め前",
+       "src": "media/meta_refs/minecraft/a_03.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 04 左真横",
+       "src": "media/meta_refs/minecraft/a_04.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 05 右真横",
+       "src": "media/meta_refs/minecraft/a_05.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 06 左斜め後ろ",
+       "src": "media/meta_refs/minecraft/a_06.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 07 右斜め後ろ",
+       "src": "media/meta_refs/minecraft/a_07.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 08 背面",
+       "src": "media/meta_refs/minecraft/a_08.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 09_01 表情（驚き）",
+       "src": "media/meta_refs/minecraft/a_09_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 09_02 表情（困り・考え中）",
+       "src": "media/meta_refs/minecraft/a_09_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 09_03 表情（ニッコリ）",
+       "src": "media/meta_refs/minecraft/a_09_03.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 10 グレーブロック持ち",
+       "src": "media/meta_refs/minecraft/a_10.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 11 Mac風シルバーPC作業",
+       "src": "media/meta_refs/minecraft/a_11.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 14_01 歩幅01（正面）",
+       "src": "media/meta_refs/minecraft/a_14_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 14_02 歩幅02（左斜め前）",
+       "src": "media/meta_refs/minecraft/a_14_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 15A 白ブロック（n）",
+       "src": "media/meta_refs/minecraft/a_15a.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 15B 白本（n）",
+       "src": "media/meta_refs/minecraft/a_15b.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 16 白本（n）持ち",
+       "src": "media/meta_refs/minecraft/a_16.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17A Geminiブロック",
+       "src": "media/meta_refs/minecraft/a_17a.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17B Xブロック",
+       "src": "media/meta_refs/minecraft/a_17b.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17C Instagramブロック",
+       "src": "media/meta_refs/minecraft/a_17c.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17D Threadsブロック",
+       "src": "media/meta_refs/minecraft/a_17d.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17E Claudeブロック",
+       "src": "media/meta_refs/minecraft/a_17e.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17F ChatGPT白ブロック",
+       "src": "media/meta_refs/minecraft/a_17f.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 17G 青AIブロック",
+       "src": "media/meta_refs/minecraft/a_17g.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 18 Mac風シルバーPC単体",
+       "src": "media/meta_refs/minecraft/a_18_pc.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "19A 相棒猫（立ち）",
+       "src": "media/meta_refs/minecraft/a_19a_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "19B 相棒猫（お座り）",
+       "src": "media/meta_refs/minecraft/a_19b_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 20A 茶トラ猫",
+       "src": "media/meta_refs/minecraft/a_20a_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 20B 三毛猫",
+       "src": "media/meta_refs/minecraft/a_20b_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 20C シャム猫",
+       "src": "media/meta_refs/minecraft/a_20c_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 P07 笑顔・口開け",
+       "src": "media/meta_refs/minecraft/a_p07.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "A版 P08 頭部パーツ",
+       "src": "media/meta_refs/minecraft/a_p08.png",
+       "状態": "採用・v8確定"
+      }
+     ]
+    },
+    {
+     "画風": "マイクラ 確定正本 v8 — B版（マイクラ寄せ純正8bitドット・33枚）",
+     "ドライブ": "https://drive.google.com/drive/folders/1IVrYdhSgKgmSJNQBzuiFQOf7O__r4T4f",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
+     "説明": "2026-11-27 v8確定正本（表現幅用：純正8bitドット統一33枚）。",
+     "画像": [
+      {
+       "名前": "B版 01 正面",
+       "src": "media/meta_refs/minecraft/b_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 02 左斜め前",
+       "src": "media/meta_refs/minecraft/b_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 03 右斜め前",
+       "src": "media/meta_refs/minecraft/b_03.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 04 左真横",
+       "src": "media/meta_refs/minecraft/b_04.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 05 右真横",
+       "src": "media/meta_refs/minecraft/b_05.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 06 左斜め後ろ",
+       "src": "media/meta_refs/minecraft/b_06.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 07 右斜め後ろ",
+       "src": "media/meta_refs/minecraft/b_07.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 08 背面",
+       "src": "media/meta_refs/minecraft/b_08.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 09_01 表情（驚き）",
+       "src": "media/meta_refs/minecraft/b_09_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 09_02 表情（困り・考え中）",
+       "src": "media/meta_refs/minecraft/b_09_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 09_03 表情（ニッコリ）",
+       "src": "media/meta_refs/minecraft/b_09_03.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 10 グレーブロック持ち",
+       "src": "media/meta_refs/minecraft/b_10.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 11A Mac風シルバーPC作業",
+       "src": "media/meta_refs/minecraft/b_11a.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 12_03 基本小物セット",
+       "src": "media/meta_refs/minecraft/b_12_03.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 13_01 歩幅01（正面）",
+       "src": "media/meta_refs/minecraft/b_13_01.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 13_02 歩幅02（左斜め前）",
+       "src": "media/meta_refs/minecraft/b_13_02.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 14A 白ブロック（n）",
+       "src": "media/meta_refs/minecraft/b_14a.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 14B 白本（n）",
+       "src": "media/meta_refs/minecraft/b_14b.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 15 白本（n）持ち",
+       "src": "media/meta_refs/minecraft/b_15.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16A Geminiブロック",
+       "src": "media/meta_refs/minecraft/b_16a.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16B Xブロック",
+       "src": "media/meta_refs/minecraft/b_16b.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16C Instagramブロック",
+       "src": "media/meta_refs/minecraft/b_16c.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16D Threadsブロック",
+       "src": "media/meta_refs/minecraft/b_16d.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16E Claudeブロック",
+       "src": "media/meta_refs/minecraft/b_16e.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16F ChatGPT白ブロック",
+       "src": "media/meta_refs/minecraft/b_16f.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 16G 青AIブロック",
+       "src": "media/meta_refs/minecraft/b_16g.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 17 Mac風シルバーPC単体",
+       "src": "media/meta_refs/minecraft/b_17_pc.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 18A 相棒猫（立ち）",
+       "src": "media/meta_refs/minecraft/b_18a_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 18B 相棒猫（お座り）",
+       "src": "media/meta_refs/minecraft/b_18b_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 19A 猫01",
+       "src": "media/meta_refs/minecraft/b_19a_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 19B 猫02",
+       "src": "media/meta_refs/minecraft/b_19b_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 19C 猫03",
+       "src": "media/meta_refs/minecraft/b_19c_cat.png",
+       "状態": "採用・v8確定"
+      },
+      {
+       "名前": "B版 P07 笑顔・口開け",
+       "src": "media/meta_refs/minecraft/b_p07.png",
+       "状態": "採用・v8確定"
+      }
+     ]
+    }
+   ],
+   "旧リファレンス": [
+    {
+     "画風": "旧控え：ミニキャラ初期参照（11/12・5枚）",
+     "ドライブ": "https://drive.google.com/drive/folders/1hTbeo7D78qSA-xcqhe_Unfukd7Kppz5Y",
+     "説明": "11/12公開当初の参照シート控え（現在は上の確定正本 v5 全61枚を使用）",
+     "画像": [
+      {
+       "名前": "全身・正面",
+       "src": "media/depure/media_f_13c3331ce65e.avif",
+       "状態": "旧控え"
+      },
+      {
+       "名前": "全身・角度（正面・左右斜め・背面）",
+       "src": "media/depure/media_f_5646f8524ade.avif",
+       "状態": "旧控え"
+      },
+      {
+       "名前": "顔アップ・正面",
+       "src": "media/depure/media_f_6941c76c7878.avif",
+       "状態": "旧控え"
+      },
+      {
+       "名前": "顔アップ・斜め角度",
+       "src": "media/depure/media_f_6fc37d892fc1.avif",
+       "状態": "旧控え"
+      },
+      {
+       "名前": "顔アップ・角度シート（添付原本から描き起こし）",
+       "src": "media/depure/media_f_2217c1d6052f.avif",
+       "状態": "旧控え"
+      }
+     ]
+    },
+    {
+     "画風": "旧控え：Vtuber初期仮置き（11/13・16枚）",
      "ドライブ": "https://drive.google.com/drive/folders/1jsmSAjQt7PXb-2-XowQa-Q7hgw-KMvfp",
-     "説明": "Codexで作ったもの（11/12〜13）。本人が採用を伝えたのは正面顔だけ。ほかは採否を確かめていない",
+     "説明": "11/12〜13試作時の控え（現在は上の確定正本 v5 全26枚を使用）",
      "画像": [
       {
        "名前": "基準_正面顔",
@@ -140,134 +979,134 @@
       {
        "名前": "基準_正面全身",
        "src": "media/depure/media_ls_ls01.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "顔_画面左向き",
        "src": "media/depure/media_ls_ls02.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "顔_画面右向き",
        "src": "media/depure/media_ls_ls03.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "顔アップ_3方向",
        "src": "media/depure/media_ls_ls04.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "全身ポーズ_正面・腕組み・親指",
        "src": "media/depure/media_ls_ls05.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "全身_正面・真横・背面",
        "src": "media/depure/media_ls_ls06.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "表情_正面",
        "src": "media/depure/media_ls_ls07.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "表情_左右",
        "src": "media/depure/media_ls_ls08.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "全身ポーズ",
        "src": "media/depure/media_ls_ls09.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "手",
        "src": "media/depure/media_ls_ls10.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "胸上の装飾_正面と右斜め",
        "src": "media/depure/media_ls_ls11.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "小物単体",
        "src": "media/depure/media_ls_ls12.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "小物とパーツ",
        "src": "media/depure/media_ls_ls13.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "初期の衣装と小物",
        "src": "media/depure/media_ls_ls14.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "初期の全身ポーズ",
        "src": "media/depure/media_ls_ls15.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       }
      ]
     },
     {
-     "画風": "その他・マイクラ（仮置き）",
+     "画風": "旧控え：マイクラ初期仮置き（11/13・10枚）",
      "ドライブ": "https://drive.google.com/drive/folders/1rnx_BnipbmawTReawztqF4m52QtI9NtB",
-     "説明": "Codexで作ったもの。採否を確かめていない",
+     "説明": "初期試作時の控え（現在は上の確定正本 v8 全66枚を使用）",
      "画像": [
       {
        "名前": "でぷれ寄せ版_全身正面",
        "src": "media/depure/media_mc_mc00.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "でぷれ寄せ版_全身4方向",
        "src": "media/depure/media_mc_mc01.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "マイクラ寄せ版_全身正面",
        "src": "media/depure/media_mc_mc02.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "マイクラ寄せ版_全身4方向",
        "src": "media/depure/media_mc_mc03.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "でぷれ寄せ版_作業シーン",
        "src": "media/depure/media_mc_mc04.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "マイクラ寄せ版_作業シーン",
        "src": "media/depure/media_mc_mc05.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "でぷれ寄せ版ベース_表情6種",
        "src": "media/depure/media_mc_mc06.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "でぷれ寄せ版ベース_全身ポーズ4種",
        "src": "media/depure/media_mc_mc07.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "顔アップ3方向",
        "src": "media/depure/media_mc_mc08.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       },
       {
        "名前": "noteの本・Claudeブロック・Claude Code端末",
        "src": "media/depure/media_mc_mc09.avif",
-       "状態": "採否未確認"
+       "状態": "旧控え"
       }
      ]
     }
@@ -1457,6 +2296,180 @@
      "本人": "公開してよい"
     }
    ]
+  },
+  {
+   "id": "sticker_claude",
+   "名前": "Claude Code_ステッカー",
+   "出どころ": "IGイメージ強化・AI訴求用 白フチダイカットステッカー系統（2Dドット絵 cc-v4 / p01 とは完全別口管理）",
+   "公開": "公開中（2026-11-28 全16ポーズ P01〜P16 本人目視OK確定・共通素材の別棚へ登録）",
+   "ライブラリ": "common/#ccsticker",
+   "ボタン名": "ステッカー棚を開く",
+   "ドライブ": "https://drive.google.com/drive/folders/112wA_Zbov-7Xy1ZfUwBdtIVSWL3QpxrJ",
+   "メタドライブ": "https://drive.google.com/drive/folders/1ciG-ASRfZs0HX-PyaILE1emkH8mBtyRQ",
+   "画風": "Master v1 正本5資産 ＋ 全16ポーズ確定（32-bit透過APNG・静止画PNG・SVG）",
+   "chatwork要約": "Chatwork自動生成：リファレンス確定・自動生成未接続（CodexでStickerBuilder直接実行可）",
+   "見本": [
+    {
+     "src": "common/media/cc-sticker/pose_01_loop_animated.png",
+     "ms": 3000
+    }
+   ],
+   "件数": [
+    [
+     "Claude Code_ステッカー",
+     16
+    ]
+   ],
+   "件数リンク先": "common/#ccsticker",
+   "制作レシピ": [
+    {
+     "系統": "Claude Code_ステッカー（Master v1 ＋ P01〜P16）",
+     "chatwork": "リファレンス確定・自動生成未接続（Codex直接制作可）",
+     "chatwork_state": "wait",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/112wA_Zbov-7Xy1ZfUwBdtIVSWL3QpxrJ",
+     "メタドライブ": "https://drive.google.com/drive/folders/1ciG-ASRfZs0HX-PyaILE1emkH8mBtyRQ",
+     "要件": "Python（cv2＋numpy）の StickerBuilder で Master v1 座標をプログラム固定し、SS=2（2倍スーパーサンプリング）＋ border_radius=34px 純白ダイカット縁取りで描画。APNGは標準 struct＋zlib で 320ms×3コマ（f1〜f3）無限ループ出力（generate_pilot_poses / solo_batch_a / pair_batch_b / batch_c / batch_d / build_apng_loops.py）。",
+     "判断軸": "①全身画像生成ガチャ禁止（Master座標固定） ／ ②物理整合（P04ゲームパッド面・P13 PC画面はキャラ向き、P07手つなぎは奥の手が少し下に覗く交差握り） ／ ③目・四角い耳・黒6弁ロゴを絶対に潰さない（両手挙げP12/P16は腕を必ず四角い耳の下から生やす・勝手な口/眉/白ハイライト禁止・緑色ロゴ不使用） ／ ④不要な黄色3本線（キラッ）は静止画・APNGとも付けない ／ ⑤原寸＆3背景検品必須・旧版退避（2Dドット cc-v4 との混在厳禁）。"
+    }
+   ],
+   "リファレンス": [
+    {
+     "画風": "Master v1 正本（5資産：色・骨格・表情E1〜E4固定基準）",
+     "ドライブ": "https://drive.google.com/drive/folders/1ciG-ASRfZs0HX-PyaILE1emkH8mBtyRQ",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/112wA_Zbov-7Xy1ZfUwBdtIVSWL3QpxrJ",
+     "説明": "すべてのポーズ生成で座標固定参照するベクター正本。Claude(#DC6847)・ChatGPT白(#F3F5F8)・Codex青(#3D70FF)。",
+     "画像": [
+      {
+       "名前": "Master 01｜主役Claude（#DC6847・内2脚#B85238・E1目#111111・4本脚・白縁）",
+       "src": "media/meta_refs/sticker_master/master_01_claude_square_1024.svg",
+       "状態": "Master v1 正本"
+      },
+      {
+       "名前": "Master 02｜相棒ChatGPT白（#F3F5F8・7°ハの字脚・黒6弁ロゴ）",
+       "src": "media/meta_refs/sticker_master/master_02_chatgpt_square_1024.svg",
+       "状態": "Master v1 正本"
+      },
+      {
+       "名前": "Master 03｜相棒Codex青（#3D70FF・胸 >_ 記号）",
+       "src": "media/meta_refs/sticker_master/master_03_codex_square_1024.svg",
+       "状態": "Master v1 正本"
+      },
+      {
+       "名前": "Master 04｜Claude多面・比率基準シート",
+       "src": "media/meta_refs/sticker_master/master_04_claude_multiview_sheet.svg",
+       "状態": "Master v1 正本"
+      },
+      {
+       "名前": "Master 05｜表情基準シート（E1〜E4固定）",
+       "src": "media/meta_refs/sticker_master/master_05_claude_expressions_sheet.svg",
+       "状態": "Master v1 正本"
+      }
+     ]
+    },
+    {
+     "画風": "確定ポーズ 全16種（P01〜P16・32-bit透過APNGループ）",
+     "ドライブ": "https://drive.google.com/drive/folders/1ciG-ASRfZs0HX-PyaILE1emkH8mBtyRQ",
+     "編集者ドライブ": "https://drive.google.com/drive/folders/112wA_Zbov-7Xy1ZfUwBdtIVSWL3QpxrJ",
+     "説明": "2026-11-28 本人目視OKロック済みの全16ポーズ。編集者向けDL棚（common/#ccsticker）とは分離して正本一覧として保持。",
+     "画像": [
+      {
+       "名前": "P01｜机でメモ＋スマホ通話",
+       "src": "common/media/cc-sticker/pose_01_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P02｜布団＋ナイトキャップ睡眠（zZ）",
+       "src": "common/media/cc-sticker/pose_02_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P03｜虫眼鏡＋チェック表検品",
+       "src": "common/media/cc-sticker/pose_03_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P04｜ゲームパッド両手持ち＋集中線",
+       "src": "common/media/cc-sticker/pose_04_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P05｜動画カード扇持ち（7色量産訴求）",
+       "src": "common/media/cc-sticker/pose_05_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P06｜監督（ベレー帽＋カチンコ＋メガホン）",
+       "src": "common/media/cc-sticker/pose_06_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P07｜Claude × ChatGPT白 手つなぎ連携",
+       "src": "common/media/cc-sticker/pose_07_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P08｜Claude × Codex青 共同検品",
+       "src": "common/media/cc-sticker/pose_08_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P09｜神様／天使Claude",
+       "src": "common/media/cc-sticker/pose_09_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P10｜戦国武将Claude × 西洋騎士ChatGPT白",
+       "src": "common/media/cc-sticker/pose_10_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P11｜剣＆盾ChatGPT白 単体バトル",
+       "src": "common/media/cc-sticker/pose_11_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P12｜パニック汗／上限エラーClaude",
+       "src": "common/media/cc-sticker/pose_12_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P13｜PCタイピング自動稼働Claude",
+       "src": "common/media/cc-sticker/pose_13_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P14｜解説・指し棒プレゼンClaude",
+       "src": "common/media/cc-sticker/pose_14_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P15｜お金／0円コスパ訴求Claude",
+       "src": "common/media/cc-sticker/pose_15_loop_animated.png",
+       "状態": "採用・ロック済"
+      },
+      {
+       "名前": "P16｜万歳・ガッツポーズClaude",
+       "src": "common/media/cc-sticker/pose_16_loop_animated.png",
+       "状態": "採用・ロック済"
+      }
+     ]
+    }
+   ],
+   "直し待ち": [],
+   "履歴": [
+    {
+     "日時": "2026-11-28 02:33",
+     "種類": "全16ポーズ確定・登録",
+     "中身": "P01〜P16全16ポーズ＋Master v1正本5資産を確定し、5大判断軸・APNGレシピをメタ環境へ格納、共通素材別棚（#ccsticker）へ公開",
+     "状態": "採用"
+    },
+    {
+     "日時": "2026-11-27 15:47",
+     "種類": "P07・P08確定",
+     "中身": "P07交差握り化・P07/P08の不要な黄色3本線削除を反映して確定ロック",
+     "状態": "採用"
+    }
+   ]
   }
  ],
  "保留": {
@@ -1479,6 +2492,7 @@
   "名前": "共通素材",
   "ページ": "common/",
   "ドライブ": "https://drive.google.com/drive/folders/1XGb0ErAl6te_XqjaiOipMSc_VmfTSVIY",
+  "メタドライブ": "https://drive.google.com/drive/folders/1KsVALfpWNMG8LH0IcDvZ4c5tHBN_iSMJ",
   "件数": [
    [
     "背景",
@@ -1508,6 +2522,35 @@
    "common/media/icon/codex.png",
    "common/media/icon/notion.png",
    "common/media/icon/premiere.png"
+  ],
+  "制作レシピ": [
+   {
+    "系統": "IGイメージ強化UI（全22本：U01〜U21＋U20枠のみ）",
+    "chatwork": "収録・UI録画系（自動生成対象外）",
+    "chatwork_state": "na",
+    "編集者ドライブ": "https://drive.google.com/drive/folders/1fYhS-OTfRbxciF2e0Cw3uQb9In3iFXQ4",
+    "メタドライブ": "https://drive.google.com/drive/folders/1KsVALfpWNMG8LH0IcDvZ4c5tHBN_iSMJ",
+    "要件": "参考リール .mp4 を直接確認して設計した実動スタジオHTML（common/studio/）から、Playwright omit_background=True でRGBA連番キャプチャ → 背景完全透過GIF89a（Web主表示・主DL）＋ Apple ProRes 4444 透過 .mov 出力。",
+    "判断軸": "緑バック（クロマキー）MP4のまま放置せず必ず実透過GIF/MOVで納品する。市松・暗背景・明背景の3背景で白フチ欠けや文字潰れがないか検品し、IGセーフゾーン（上14%・下21%・右17%）干渉を回避する。"
+   },
+   {
+    "系統": "Claude Codeキャラ（2Dドット絵・cc-v4 / p01・正式49点）",
+    "chatwork": "対応済",
+    "chatwork_state": "ok",
+    "編集者ドライブ": "https://drive.google.com/drive/folders/1OvBh5ZGmggK58f9v3M506rpGSPwtcgw5",
+    "メタドライブ": "https://drive.google.com/drive/folders/1ljAiln6FzNJMV0f6FgKHu9jVSlefKxDA",
+    "要件": "p01基準の原寸ピクセルアート＆役割別スーツ差分（cc-v4）。Chatwork要望素材（種類なし受付）から自動生成・比較表示に対応。",
+    "判断軸": "白フチダイカットの「Claude Code_ステッカー」系統とは完全に別物として分離管理する（混在厳禁）。"
+   },
+   {
+    "系統": "マイクラ アスレ背景動画生成パック（第1弾・7枚＋プロンプト）",
+    "chatwork": "リファレンス・プロンプト提供型",
+    "chatwork_state": "wait",
+    "編集者ドライブ": "https://drive.google.com/drive/folders/1YP9pa8zgYwzMtYMnFUaXOJX-XYE5w5iu",
+    "メタドライブ": "https://drive.google.com/drive/folders/1ljAiln6FzNJMV0f6FgKHu9jVSlefKxDA",
+    "要件": "common/#bg にキーフレームPNG 7枚と Runway / Topview 用の英語・日本語プロンプトおよび全6区間（00〜60秒）マップを格納。",
+    "判断軸": "1カットごとのリファレンスPNGを添付し、区間マップどおりのカメラ進行で生成する。"
+   }
   ]
  },
  "棚": [
@@ -1532,5 +2575,79 @@
    "ボタン": "調整ツールを開く",
    "外部": false
   }
- ]
+ ],
+ "メタ環境": {
+  "編集者ドライブ": "https://drive.google.com/drive/folders/1LzKpR0tWz4JgIxCRhKIpbGXE9pQjK11J",
+  "メタドライブ": "https://drive.google.com/drive/folders/1ljAiln6FzNJMV0f6FgKHu9jVSlefKxDA",
+  "作業ログシート": "https://docs.google.com/spreadsheets/d/1aMagbFv4_615XRbPUcYS1tsEbtsrKQbyooWNXyP_-cQ/edit",
+  "フォルダ一覧": [
+   {
+    "名前": "でぷれさん_Vtuber（26枚）",
+    "url": "https://drive.google.com/drive/folders/19aTHMQJReF19rXepjZvB_2Ujfv0d5BAi"
+   },
+   {
+    "名前": "でぷれさん_ミニキャラ（61枚）",
+    "url": "https://drive.google.com/drive/folders/19klI0cUA3EIHWHtPmGTLO4amMd9M4Uoe"
+   },
+   {
+    "名前": "でぷれさん_マイクラ（66枚）",
+    "url": "https://drive.google.com/drive/folders/1IVrYdhSgKgmSJNQBzuiFQOf7O__r4T4f"
+   },
+   {
+    "名前": "でぷれさん_YouTube収録素材",
+    "url": "https://drive.google.com/drive/folders/1vJWjn5UdwyGdzZQrzMw_s8HIdxI8KBb5"
+   },
+   {
+    "名前": "Claude Code_ステッカー（Master5＋16種）",
+    "url": "https://drive.google.com/drive/folders/1ciG-ASRfZs0HX-PyaILE1emkH8mBtyRQ"
+   },
+   {
+    "名前": "IGイメージ強化UI（透過22本）",
+    "url": "https://drive.google.com/drive/folders/1KsVALfpWNMG8LH0IcDvZ4c5tHBN_iSMJ"
+   }
+  ],
+  "着手前ゲート": [
+   {
+    "題": "① 一次実物の直接確認（文章だけで処理しない）",
+    "文": "メモや文字情報だけで作業に入らず、必ず元動画（.mp4）・確定リファレンスの単体透過PNG・既存の透過GIF/APNG実物を直接開いて目で確認する。"
+   },
+   {
+    "題": "② 過去の作り方・レシピ・判断軸の逆引き",
+    "文": "ブラッシュアップや追加制作の前に、各画風の「作り方・システム要件・判断軸」を確認し、その素材がどのスクリプト・構造・色コードで作られたかを把握してから着手する（36F補間NG・組シート丸投げNG・緑バック放置NG）。"
+   },
+   {
+    "題": "③ 3背景（市松・暗・明）原寸検品 ＆ 作業ログ更新",
+    "文": "提出前に市松・暗背景・明背景の3背景と原寸拡大で透過漏れ・白フチ欠け・小物の向き・耳や目の潰れがないか検品し、旧版は削除せず退避した上で作業ログを更新する。"
+   }
+  ],
+  "作業ログ": [
+   {
+    "日時": "2026-11-28 02:58",
+    "ID": "WK-2026-11-28-01",
+    "対象": "公開TOP復元＋Claude Code_ステッカー",
+    "種別": "全16ポーズ確定版メタ環境更新＆公開登録",
+    "担当": "Gemini Carbon",
+    "内容": "公開TOP全5棚・デザイン・studio完全復元(13bb4c5)＋ステッカーP01〜P16(103資産・5大判断軸・APNGレシピ)をメタ環境とcommon/#ccsticker別棚へ登録",
+    "状態": "完了"
+   },
+   {
+    "日時": "2026-11-28 02:40",
+    "ID": "PLAN-VTUBER-HYBRID-01",
+    "対象": "でぷれさん_Vtuber",
+    "種別": "全体計画策定・承認",
+    "担当": "Gemini (c_746806d9a7fd6ea8)",
+    "内容": "参照: v5確定正本26枚＋R&D-2検証結果 ／ A層(R&D-2表情特化・手元後乗せ撤廃)×B層(v5正本ベース厳選Vtuber GIF併用)のハイブリッド計画を確定。アスレ重畳・小窓ワイプ・メイン語りの4段階ロードマップを整備",
+    "状態": "承認済（OKです。）"
+   },
+   {
+    "日時": "2026-11-27 01:29",
+    "ID": "WK-2026-11-27-04",
+    "対象": "でぷれさん_Vtuber",
+    "種別": "正本確定（v5全26枚）",
+    "担当": "Gemini (c_746806d9a7fd6ea8) x Codex",
+    "内容": "参照: 公式一次原本8枚 → #01〜#26確定 ／ インナー実測#4C4CA6-#5357AA・眼鏡チェーン耳後ろ1ループ・片側軽イン背面アウト・背面襟足y=467..472立ち襟オーバーラップ・左右対称幅を確立し02_仕様書へ反映済",
+    "状態": "承認済（OKです。）"
+   }
+  ]
+ }
 }

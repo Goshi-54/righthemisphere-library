@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <filter id="ds" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <!-- Codex相棒：公式青ミニキャラの色味（ロイヤルブルー #3D70FF / 暗青 #254EDB / 水色 #8ED8FF）を参考にしつつ、Claudeと同規格の2Dフラット造形＆全高600pxに統一 -->
+  <g filter="url(#ds)">
+    <!-- 純白ダイカット外周 -->
+    <g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="84" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="430" cy="316" r="108"/>
+      <circle cx="598" cy="322" r="102"/>
+      <circle cx="304" cy="442" r="106"/>
+      <circle cx="720" cy="442" r="106"/>
+      <rect x="276" y="340" width="472" height="334" rx="116"/>
+      <rect x="344" y="662" width="124" height="150" rx="18"/>
+      <rect x="556" y="662" width="124" height="150" rx="18"/>
+    </g>
+    <!-- 2本脚（公式青ミニキャラ系の深いロイヤルブルー #254EDB） -->
+    <rect x="344" y="652" width="124" height="160" rx="18" fill="#254EDB"/>
+    <rect x="556" y="652" width="124" height="160" rx="18" fill="#254EDB"/>
+    <!-- 雲型2Dフラットボディ（公式青ミニキャラの色味 #3D70FF） -->
+    <g fill="#3D70FF">
+      <circle cx="430" cy="316" r="108"/>
+      <circle cx="598" cy="322" r="102"/>
+      <circle cx="304" cy="442" r="106"/>
+      <circle cx="720" cy="442" r="106"/>
+      <rect x="276" y="340" width="472" height="334" rx="116"/>
+    </g>
+    <!-- 頭頂部のわずかなフラットアクセント（公式青ミニキャラの明るめブルー #6F9CFF） -->
+    <rect x="424" y="244" width="176" height="32" rx="16" fill="#6F9CFF"/>
+    <!-- 正方形黒目（Claude・ChatGPTと完全統一した2Dステッカー顔） -->
+    <rect x="366" y="376" width="72" height="72" fill="#111111"/>
+    <rect x="586" y="376" width="72" height="72" fill="#111111"/>
+    <!-- 胸の >_ プロンプト記号（公式青ミニキャラの水色 #A6E3FF × 白） -->
+    <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="424,522 492,562 424,602"/>
+      <line x1="528" y1="596" x2="604" y2="596" stroke="#8ED8FF"/>
+    </g>
+  </g>
+</svg>

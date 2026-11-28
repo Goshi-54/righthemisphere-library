@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 420" width="1600" height="420">
+  <defs>
+    <filter id="ds" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="420" rx="20" fill="#462C1B"/>
+  <text x="40" y="48" fill="#FFF1B8" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="22" font-weight="800">正本ロック｜目の表情4パターン基準（E1〜E4｜白い丸ハイライト・口・眉の勝手追加は禁止）</text>
+
+  <!-- E1: 通常 -->
+  <g transform="translate(40, 74)">
+    <rect x="0" y="0" width="360" height="314" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)"/>
+    <g filter="url(#ds)" transform="translate(65, 32)">
+      <rect x="0" y="0" width="230" height="170" rx="4" fill="#DC6847" stroke="#FFFFFF" stroke-width="14"/>
+      <rect x="44" y="54" width="34" height="34" fill="#111111"/>
+      <rect x="152" y="54" width="34" height="34" fill="#111111"/>
+    </g>
+    <text x="180" y="258" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="16" font-weight="800">E1：通常（正方形黒目 ■ ■）</text>
+    <text x="180" y="282" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="12.5">基本標準（8割のカットで使用）</text>
+  </g>
+
+  <!-- E2: 睡眠・安心 -->
+  <g transform="translate(425, 74)">
+    <rect x="0" y="0" width="360" height="314" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)"/>
+    <g filter="url(#ds)" transform="translate(65, 32)">
+      <rect x="0" y="0" width="230" height="170" rx="4" fill="#DC6847" stroke="#FFFFFF" stroke-width="14"/>
+      <rect x="40" y="68" width="42" height="12" fill="#111111"/>
+      <rect x="148" y="68" width="42" height="12" fill="#111111"/>
+    </g>
+    <text x="180" y="258" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="16" font-weight="800">E2：睡眠・リラックス（▬ ▬）</text>
+    <text x="180" y="282" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="12.5">布団zZz・放置自動化訴求（crop_02）</text>
+  </g>
+
+  <!-- E3: 集中・対決 -->
+  <g transform="translate(810, 74)">
+    <rect x="0" y="0" width="360" height="314" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)"/>
+    <g filter="url(#ds)" transform="translate(65, 32)">
+      <rect x="0" y="0" width="230" height="170" rx="4" fill="#DC6847" stroke="#FFFFFF" stroke-width="14"/>
+      <polygon points="44,52 80,64 80,88 44,88" fill="#111111"/>
+      <polygon points="186,52 150,64 150,88 186,88" fill="#111111"/>
+    </g>
+    <text x="180" y="258" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="16" font-weight="800">E3：集中・対決（上辺斜めカット）</text>
+    <text x="180" y="282" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="12.5">眉を描かず黒目の上辺だけで表現</text>
+  </g>
+
+  <!-- E4: 焦り・エラー -->
+  <g transform="translate(1195, 74)">
+    <rect x="0" y="0" width="365" height="314" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)"/>
+    <g filter="url(#ds)" transform="translate(68, 32)">
+      <rect x="0" y="0" width="230" height="170" rx="4" fill="#DC6847" stroke="#FFFFFF" stroke-width="14"/>
+      <polyline points="44,54 74,71 44,88" fill="none" stroke="#111111" stroke-width="11" stroke-linecap="square"/>
+      <polyline points="186,54 156,71 186,88" fill="none" stroke="#111111" stroke-width="11" stroke-linecap="square"/>
+      <path d="M204,20 C216,38 216,52 204,52 C192,52 192,38 204,20 Z" fill="#38BDF8" stroke="#FFFFFF" stroke-width="4"/>
+    </g>
+    <text x="182" y="258" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="16" font-weight="800">E4：焦り・制限到達（&gt; &lt; ＋汗）</text>
+    <text x="182" y="282" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="12.5">失敗・上限エラー時のBeforeフック用</text>
+  </g>
+</svg>

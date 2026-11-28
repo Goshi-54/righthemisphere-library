@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" width="1600" height="520">
+  <defs>
+    <filter id="ds" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="520" rx="20" fill="#462C1B"/>
+  <!-- 基準水平ガイドライン（頭頂・目・胴下・接地） -->
+  <g stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="8 8">
+    <line x1="40" y1="120" x2="1560" y2="120"/>
+    <line x1="40" y1="178" x2="1560" y2="178"/>
+    <line x1="40" y1="318" x2="1560" y2="318"/>
+    <line x1="40" y1="384" x2="1560" y2="384"/>
+  </g>
+  <g fill="#E2E8F0" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="14" font-weight="700">
+    <text x="18" y="114">頭頂 10u</text>
+    <text x="18" y="172">目 7.8u</text>
+    <text x="18" y="312">胴下 2.5u</text>
+    <text x="18" y="378">接地 0u</text>
+  </g>
+
+  <!-- 1. 正面（Front） -->
+  <g transform="translate(80, 0)">
+    <g filter="url(#ds)">
+      <path d="M90,120 H354 V173 H380 V239 H354 V318 H336 V384 H288 V328 H278 V384 H230 V318 H214 V384 H166 V328 H156 V384 H108 V318 H90 V239 H64 V173 H90 Z"
+            fill="#FFFFFF" stroke="#FFFFFF" stroke-width="34" stroke-linejoin="round"/>
+      <rect x="166" y="314" width="48" height="70" fill="#B85238"/>
+      <rect x="230" y="314" width="48" height="70" fill="#B85238"/>
+      <path d="M90,120 H354 V173 H380 V239 H354 V318 H336 V384 H288 V318 H156 V384 H108 V318 H90 V239 H64 V173 H90 Z" fill="#DC6847"/>
+      <rect x="148" y="178" width="32" height="32" fill="#111111"/>
+      <rect x="264" y="178" width="32" height="32" fill="#111111"/>
+    </g>
+    <text x="222" y="446" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="20" font-weight="800">① 正面（Front）</text>
+    <text x="222" y="472" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="14">全幅12u × 全高10u（基本基準）</text>
+  </g>
+
+  <!-- 2. 斜め3/4（Three-Quarter） -->
+  <g transform="translate(460, 0)">
+    <g filter="url(#ds)">
+      <!-- 白フチ外周 -->
+      <path d="M90,120 H314 L356,136 V186 H376 V248 H356 V326 L314,318 V384 H268 V326 H254 V384 H210 V318 H196 V384 H152 V326 H140 V384 H96 V318 H90 V239 H68 V173 H90 Z"
+            fill="#FFFFFF" stroke="#FFFFFF" stroke-width="34" stroke-linejoin="round"/>
+      <!-- 奥側側面（暗いテラコッタで箱の厚みを表現） -->
+      <polygon points="314,120 356,136 356,326 314,318" fill="#B85238"/>
+      <rect x="346" y="186" width="30" height="62" fill="#A6462E"/>
+      <!-- 内側2本脚 -->
+      <rect x="152" y="314" width="44" height="70" fill="#B85238"/>
+      <rect x="210" y="314" width="44" height="70" fill="#B85238"/>
+      <!-- 前面＋左耳＋外脚 -->
+      <path d="M90,120 H314 V318 H314 V384 H268 V318 H140 V384 H96 V318 H90 V239 H68 V173 H90 Z" fill="#DC6847"/>
+      <!-- 目（斜め向きで少し右寄せ） -->
+      <rect x="134" y="178" width="30" height="32" fill="#111111"/>
+      <rect x="234" y="178" width="30" height="32" fill="#111111"/>
+    </g>
+    <text x="222" y="446" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="20" font-weight="800">② 斜め3/4（対話・対決用）</text>
+    <text x="222" y="472" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="14">厚みは幅の約25%・側面は#B85238</text>
+  </g>
+
+  <!-- 3. 真横（Side） -->
+  <g transform="translate(840, 0)">
+    <g filter="url(#ds)">
+      <path d="M148,120 H296 V318 H282 V384 H234 V318 H210 V384 H162 V318 H148 Z"
+            fill="#FFFFFF" stroke="#FFFFFF" stroke-width="34" stroke-linejoin="round"/>
+      <!-- 奥の脚（前後2本が見え、奥側が暗色） -->
+      <rect x="174" y="314" width="42" height="70" fill="#B85238"/>
+      <rect x="244" y="314" width="42" height="70" fill="#B85238"/>
+      <!-- 横面ボディ＋手前脚 -->
+      <path d="M148,120 H296 V318 H274 V384 H228 V318 H206 V384 H160 V318 H148 Z" fill="#DC6847"/>
+      <!-- 中央の耳突起（横から見ると小さな段差パネル） -->
+      <rect x="198" y="173" width="48" height="66" rx="4" fill="#C4593C"/>
+      <!-- 横向きの目（左端に1つ） -->
+      <rect x="158" y="178" width="24" height="32" fill="#111111"/>
+    </g>
+    <text x="222" y="446" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="20" font-weight="800">③ 真横（歩行・移動用）</text>
+    <text x="222" y="472" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="14">奥行き約5.5u・耳は中央パネル</text>
+  </g>
+
+  <!-- 4. 背面（Back） -->
+  <g transform="translate(1190, 0)">
+    <g filter="url(#ds)">
+      <path d="M90,120 H354 V173 H380 V239 H354 V318 H336 V384 H288 V328 H278 V384 H230 V318 H214 V384 H166 V328 H156 V384 H108 V318 H90 V239 H64 V173 H90 Z"
+            fill="#FFFFFF" stroke="#FFFFFF" stroke-width="34" stroke-linejoin="round"/>
+      <rect x="166" y="314" width="48" height="70" fill="#B85238"/>
+      <rect x="230" y="314" width="48" height="70" fill="#B85238"/>
+      <path d="M90,120 H354 V173 H380 V239 H354 V318 H336 V384 H288 V318 H156 V384 H108 V318 H90 V239 H64 V173 H90 Z" fill="#DC6847"/>
+      <!-- 背面は目なし・完全フラット -->
+    </g>
+    <text x="222" y="446" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="20" font-weight="800">④ 背面（画面越し作業用）</text>
+    <text x="222" y="472" text-anchor="middle" fill="#CBD5E1" font-family="-apple-system, Hiragino Sans, sans-serif" font-size="14">目なしフラット・外シルエット完全一致</text>
+  </g>
+</svg>
