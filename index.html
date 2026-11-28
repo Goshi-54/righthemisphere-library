@@ -6,355 +6,68 @@
 <meta name="robots" content="noindex,nofollow">
 <title>素材ライブラリ</title>
 <style>
-:root{color-scheme:light;--bg:#f5f6f8;--surface:#fff;--ink:#1c2230;--muted:#5d6676;--line:#e2e5ea;--accent:#2563c9;--accent-soft:#e8f0fc;--stage:#eef0f3;--ok:#1d7a4a;--okbg:#e3f4ea;--warn:#9a5b00;--warnbg:#fdf1dc;--na:#475569;--nabg:#e2e8f0;--chk-a:#e6e9ef;--chk-b:#f8f9fb}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17;--na:#cbd5e1;--nabg:#2b323d;--chk-a:#262b33;--chk-b:#2e343d}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#14171c;--surface:#1c2027;--ink:#e6e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#7fa8ee;--accent-soft:#1f2a3d;--stage:#232830;--ok:#7fd1a4;--okbg:#1b3327;--warn:#f0c07a;--warnbg:#3a2e17;--na:#cbd5e1;--nabg:#2b323d;--chk-a:#262b33;--chk-b:#2e343d}
-*{box-sizing:border-box}
-body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.6;overflow-wrap:anywhere}
-a{color:var(--accent)}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:6px 12px;background:var(--surface);color:var(--ink);font-weight:600}
-button:hover{border-color:var(--accent)}
-a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-h1,h2,h3,h4{margin:0;line-height:1.35}
-p{margin:0 0 10px}
-.topbar{background:var(--surface);border-bottom:1px solid var(--line)}
-.topbar-in{max-width:1100px;margin:0 auto;padding:16px clamp(16px,3vw,32px);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.topbar h1{font-size:20px}
-.topbar h1 a{color:inherit;text-decoration:none}
-.crumb{font-size:14px;color:var(--muted)}
-.shell{max-width:1100px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 48px}
-.lead{color:var(--muted);font-size:14px}
-.btn{display:inline-flex;align-items:center;padding:4px 12px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;font-weight:700;text-decoration:none}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-:root[data-theme="dark"] .btn:not(.ghost){color:#14171c}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#14171c}}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.card .stage{background:repeating-conic-gradient(var(--chk-a) 0% 25%,var(--chk-b) 0% 50%) 50% / 16px 16px;aspect-ratio:4/3;display:grid;place-items:center}
-.card .stage img{max-width:80%;max-height:90%;object-fit:contain}
-.card .stage.icons{grid-template-columns:repeat(3,1fr);gap:10px;padding:18px}
-.card .stage.icons img{width:100%;max-height:none;aspect-ratio:1;object-fit:contain}
-.card .body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card h2{font-size:18px}
-.meta{font-size:13px;color:var(--muted)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
-.shelf-h{font-size:15px;color:var(--muted);margin:26px 0 0;letter-spacing:.04em}
-.card.shelf .body{gap:6px}
-.meta.warn{color:var(--warn)}
-.sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:16px}
-.sec h3{font-size:16px;margin-bottom:10px}
-.hero{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
-.hero .stage{background:repeating-conic-gradient(var(--chk-a) 0% 25%,var(--chk-b) 0% 50%) 50% / 16px 16px;border-radius:12px;aspect-ratio:1;display:grid;place-items:center}
-.hero .stage img{max-width:85%;max-height:85%;object-fit:contain}
-.hero h2{font-size:24px;margin-bottom:6px}
-dl.kv{display:grid;grid-template-columns:7.5em 1fr;gap:4px 12px;margin:0 0 12px;font-size:14px}
-dl.kv dt{color:var(--muted)}
-dl.kv dd{margin:0}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--bg)}
-.chip:hover{border-color:var(--accent)}
-.chip b{font-weight:700}
-ul.plain{margin:0;padding-left:1.2em;font-size:14px}
-.refgroup{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-.refgroup:first-of-type{border-top:0;padding-top:0}
-.refgroup h4{font-size:14.5px;margin:0 0 4px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
-.refgroup h4 a{font-size:12px;font-weight:600}
-.refgroup .note{font-size:13px;color:var(--muted);margin-bottom:8px}
-.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.ref{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);padding:0;text-align:left;font-weight:400}
-.ref .im{background:repeating-conic-gradient(var(--chk-a) 0% 25%,var(--chk-b) 0% 50%) 50% / 14px 14px;aspect-ratio:4/3;display:grid;place-items:center;padding:4px}
-.ref img{max-width:100%;max-height:100%;object-fit:contain}
-.ref .cap{padding:6px 8px;font-size:12px;line-height:1.35}
-.badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:10px;margin-top:3px;width:fit-content}
-.badge.ok{background:var(--okbg);color:var(--ok)}
-.badge.wait{background:var(--warnbg);color:var(--warn)}
-.badge.na{background:var(--nabg);color:var(--na)}
-.quote{font-size:13px;color:var(--muted)}
-details summary{cursor:pointer;font-weight:700;font-size:14px}
-table.hist{border-collapse:collapse;font-size:13px;margin-top:8px;width:100%}
-table.hist th,table.hist td{border-top:1px solid var(--line);padding:7px 8px;vertical-align:top;text-align:left}
-table.hist th{color:var(--muted);font-size:12px;background:var(--bg);white-space:nowrap}
-table.hist td:first-child{white-space:nowrap;color:var(--muted)}
-table.hist .kind{font-size:12px;font-weight:700;white-space:nowrap}
-.gate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:10px}
-.gate-box{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.gate-box b{display:block;font-size:13.5px;margin-bottom:4px}
-.gate-box p{margin:0;font-size:12.5px;color:var(--muted)}
-.recipe-card{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
-.recipe-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-.recipe-head b{font-size:14px}
-.recipe-head .links{margin-left:auto;display:flex;gap:10px;font-size:12px;font-weight:600}
-.recipe-body{font-size:13px;display:grid;gap:4px}
-dialog{border:0;border-radius:14px;padding:0;max-width:min(92vw,1000px);background:var(--surface);color:var(--ink)}
-dialog::backdrop{background:rgba(0,0,0,.65)}
-dialog .dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
-dialog img{display:block;max-width:100%;max-height:80vh;margin:0 auto;background:repeating-conic-gradient(var(--chk-a) 0% 25%,var(--chk-b) 0% 50%) 50% / 18px 18px}
-@media (max-width:640px){.hero{grid-template-columns:1fr}.hero .stage{max-width:220px}dl.kv{grid-template-columns:1fr}dl.kv dt{margin-top:6px}.recipe-head .links{margin-left:0}}
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f6f8; --surface: #fff; --ink: #1c2230;
+    --muted: #5d6676; --line: #e2e5ea; --accent: #2563c9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171c; --surface: #1c2027; --ink: #e6e9ee;
+      --muted: #9aa3b2; --line: #2c323c; --accent: #7fa8ee;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    line-height: 1.6;
+  }
+  header { background: var(--surface); border-bottom: 1px solid var(--line); }
+  h1, main { max-width: 1100px; margin: 0 auto; padding-inline: clamp(16px, 3vw, 32px); }
+  h1 { padding-block: 16px; font-size: 20px; }
+  main { padding-block: 24px 48px; }
+  nav {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+  .card {
+    display: flex; flex-direction: column; gap: 6px;
+    min-height: 122px; padding: 20px; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--surface);
+    color: var(--ink); text-decoration: none;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .card strong { font-size: 18px; color: var(--accent); }
+  .card span { font-size: 14px; color: var(--muted); }
 </style>
 </head>
 <body>
-<header class="topbar"><div class="topbar-in">
-  <h1><a href="./">素材ライブラリ</a></h1><span class="crumb" id="crumb"></span>
-</div></header>
-<main class="shell" id="main"></main>
-<dialog id="dlg"><div class="dhead"><b id="dlg-title"></b><button id="dlg-close">閉じる</button></div><img id="dlg-img" alt=""></dialog>
-<script>
-(async () => {
-  const $ = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
-  const main = document.getElementById("main"), crumb = document.getElementById("crumb");
-  let D;
-  try { D = await (await fetch("data/characters.json")).json(); } catch (e) { main.textContent = "データを読み込めませんでした。"; return; }
-  const timers = new Set();
-  function anim(img, frames) {
-    if (!frames || !frames.length) return;
-    let i = 0; img.src = frames[0].src;
-    if (frames.length === 1) return;
-    const step = () => { i = (i + 1) % frames.length; img.src = frames[i].src; timers.add(setTimeout(step, frames[i].ms)); };
-    timers.add(setTimeout(step, frames[0].ms));
-  }
-  const dlg = document.getElementById("dlg");
-  document.getElementById("dlg-close").onclick = () => dlg.close();
-  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
-  function openImg(name, src) { document.getElementById("dlg-title").textContent = name; document.getElementById("dlg-img").src = src; document.getElementById("dlg-img").alt = name; dlg.showModal(); }
-  const link = (cls, text, href, ext) => { const a = $("a", cls, text); a.href = href; if (ext) { a.target = "_blank"; a.rel = "noopener"; } return a; };
-
-  function renderRecipeList(list) {
-    const wrap = $("div");
-    (list || []).forEach(r => {
-      const box = $("div", "recipe-card"), hd = $("div", "recipe-head");
-      hd.append($("b", "", r["系統"]), $("span", "badge " + (r.chatwork_state || "wait"), "Chatwork自動生成：" + r.chatwork));
-      const lks = $("span", "links");
-      if (r["編集者ドライブ"]) lks.append(link("", "編集者ドライブ", r["編集者ドライブ"], true));
-      if (r["メタドライブ"]) lks.append(link("", "メタ環境ドライブ", r["メタドライブ"], true));
-      hd.append(lks);
-      const bd = $("div", "recipe-body");
-      bd.append($("div", "", "【作り方・システム要件】 " + r["要件"]), $("div", "meta", "【制作判断軸・禁止事項】 " + r["判断軸"]));
-      box.append(hd, bd); wrap.append(box);
-    });
-    return wrap;
-  }
-
-  function renderGates(M) {
-    if (!M || !M["着手前ゲート"]) return null;
-    const sec = $("section", "sec");
-    sec.append($("h3", "", "作業着手前の必須リサーチ・一次実物分解 3項目ゲート（ミス防止共通ルール）"));
-    const g = $("div", "gate-grid");
-    M["着手前ゲート"].forEach(it => {
-      const b = $("div", "gate-box"); b.append($("b", "", it["題"]), $("p", "", it["文"])); g.append(b);
-    });
-    sec.append(g);
-    return sec;
-  }
-
-  function list() {
-    crumb.textContent = ""; document.title = "素材ライブラリ";
-    main.append($("p", "lead", "キャラクター・ステッカーごとの素材の置き場と、本人・AI用のメタ環境（確定リファレンス格納庫・作り方とシステム要件・Chatwork対応状況・作業ログ）です。"));
-
-    const cards = $("div", "cards");
-    D["キャラ"].forEach(c => {
-      const card = $("article", "card"), st = $("div", "stage"), im = $("img"); im.alt = c["名前"]; st.append(im); anim(im, c["見本"]);
-      const b = $("div", "body");
-      b.append($("h2", "", c["名前"]), $("div", "meta", c["出どころ"]), $("div", "meta", c["画風"]));
-      if (c["chatwork要約"]) b.append($("div", "meta", c["chatwork要約"]));
-      const total = c["件数"].reduce((s, x) => s + x[1], 0);
-      b.append($("div", "meta", `公開素材 ${total} 件`));
-      const row = $("div", "row");
-      row.append(link("btn", c["ボタン名"] || "素材ライブラリを開く", c["ライブラリ"]), link("btn ghost", "キャラ情報・メタ環境", "#" + c.id));
-      b.append(row);
-      card.append(st, b); cards.append(card);
-    });
-    main.append($("h2", "shelf-h", "キャラクター・専用ステッカー"), cards);
-
-    const hd = D["保留"];
-    if (hd) {
-      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
-      hd["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
-      const b = $("div", "body"); b.append($("h2", "", hd["名前"]), $("p", "meta", hd["説明"]), $("div", "meta", `${hd["組"]} 組・${hd["点"]} 点`));
-      const row = $("div", "row"); row.append(link("btn", "保留を開く", hd["ページ"])); if (hd["ドライブ"]) row.append(link("btn ghost", "ドライブ", hd["ドライブ"], true)); b.append(row);
-      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "保留（採否を決めていない素材）"), box);
-    }
-
-    const cm = D["共通素材"];
-    if (cm) {
-      const box = $("div", "cards"), card = $("article", "card"), st = $("div", "stage icons");
-      cm["見本"].forEach(src => { const i = $("img"); i.src = src; i.alt = ""; i.loading = "lazy"; st.append(i); });
-      const b = $("div", "body"); b.append($("h2", "", cm["名前"]));
-      const chips = $("div", "chips");
-      cm["件数"].forEach(([k, n]) => { const a = link("chip", "", cm["ページ"] + "#" + ({ "背景": "bg", "アイコン": "icon", "イメージ強化": "img", "Claude Codeキャラ": "cc", "Claude Code_ステッカー": "ccsticker" }[k] || "")); a.append($("span", "", k), $("b", "", n)); chips.append(a); });
-      b.append(chips);
-      const row = $("div", "row");
-      row.append(link("btn", "共通素材を開く", cm["ページ"]), link("btn ghost", "作り方・メタ情報", "#common_meta"), link("btn ghost", "ドライブ", cm["ドライブ"], true));
-      b.append(row);
-      card.append(st, b); box.append(card); main.append($("h2", "shelf-h", "素材（キャラ共通）"), box);
-    }
-
-    (D["棚"] || []).forEach(sh => {
-      if (!sh["リンク"]) return;
-      main.append($("h2", "shelf-h", sh["棚"]));
-      const box = $("div", "cards"), card = $("article", "card shelf"), b = $("div", "body");
-      b.append($("h2", "", sh["名前"]), $("p", "meta", sh["説明"]));
-      sh["注意"].forEach(t => b.append($("div", "meta warn", t)));
-      const row = $("div", "row"); row.append(link("btn", sh["ボタン"] || "名前帳を開く", sh["リンク"], sh["外部"] !== false)); b.append(row);
-      card.append(b); box.append(card); main.append(box);
-    });
-
-    // メタ環境（Googleドライブ2層格納庫・着手前3項目ゲート・横断作業ログ）
-    const M = D["メタ環境"];
-    if (M) {
-      main.append($("h2", "shelf-h", "メタ環境（確定正本ドライブ格納庫・着手前ルール・作業ログ）"));
-      const drvSec = $("section", "sec");
-      drvSec.append($("h3", "", "Googleドライブ2層格納庫 ＆ 作業ログスプレッドシート"));
-      drvSec.append($("p", "meta", "実データの正本はGoogleドライブ2層（①編集者共有 ／ ②本人・AI専用メタ環境）に格納しています。各キャラの作り方・リファレンス一覧は上の「キャラ情報・メタ環境」からも直接開けます。"));
-      const topRow = $("div", "row"); topRow.style.marginBottom = "10px";
-      if (M["メタドライブ"]) topRow.append(link("btn", "メタ環境ドライブ（本人・AI専用）", M["メタドライブ"], true));
-      if (M["編集者ドライブ"]) topRow.append(link("btn ghost", "素材ライブラリドライブ（編集者共有）", M["編集者ドライブ"], true));
-      if (M["作業ログシート"]) topRow.append(link("btn ghost", "作業ログ スプレッドシート台帳", M["作業ログシート"], true));
-      drvSec.append(topRow);
-      if ((M["フォルダ一覧"] || []).length) {
-        const fc = $("div", "chips");
-        M["フォルダ一覧"].forEach(f => fc.append(link("chip", f["名前"], f.url, true)));
-        drvSec.append(fc);
-      }
-      main.append(drvSec);
-
-      const gateSec = renderGates(M);
-      if (gateSec) main.append(gateSec);
-
-      if ((M["作業ログ"] || []).length) {
-        const logSec = $("section", "sec"), det = $("details"); det.open = true;
-        det.append($("summary", "", `横断作業ログ・制作改修台帳（${M["作業ログ"].length}件）`));
-        const tbl = $("table", "hist"), thead = $("thead"), trh = $("tr");
-        ["日時", "作業ID / 対象", "種別・内容・次回ブラッシュアップ種", "状態"].forEach(h => trh.append($("th", "", h)));
-        thead.append(trh); tbl.append(thead);
-        const tb = $("tbody");
-        M["作業ログ"].forEach(w => {
-          const tr = $("tr");
-          tr.append($("td", "", w["日時"]));
-          const tdTarget = $("td"); tdTarget.append($("span", "kind", w["対象"]), $("br"), $("span", "meta", w["ID"]));
-          const tdBody = $("td"); tdBody.append($("b", "", w["種別"] + "："), w["内容"]);
-          const tdSt = $("td"); tdSt.append($("span", "badge " + (/完了|承認|OK/.test(w["状態"]) ? "ok" : "wait"), w["状態"]));
-          tr.append(tdTarget, tdBody, tdSt); tb.append(tr);
-        });
-        tbl.append(tb); det.append(tbl); logSec.append(det); main.append(logSec);
-      }
-    }
-  }
-
-  function renderRefGroups(groups) {
-    const wrap = $("div");
-    (groups || []).forEach(g => {
-      const box = $("div", "refgroup"), h = $("h4", "", g["画風"]);
-      if (g["ドライブ"]) h.append(link("", "メタ環境ドライブ", g["ドライブ"], true));
-      if (g["編集者ドライブ"]) h.append(link("", "編集者ドライブ", g["編集者ドライブ"], true));
-      box.append(h, $("div", "note", g["説明"]));
-      const grid = $("div", "refs");
-      g["画像"].forEach(x => {
-        const b = $("button", "ref"), w = $("div", "im"), i = $("img"); i.src = x.src; i.alt = x["名前"]; i.loading = "lazy"; w.append(i);
-        const cap = $("div", "cap", x["名前"]);
-        if (x["状態"]) { cap.append($("br"), $("span", "badge " + (/採用|正本|ロック/.test(x["状態"]) ? "ok" : "wait"), x["状態"])); }
-        b.append(w, cap); b.onclick = () => openImg(x["名前"], x.src); grid.append(b);
-      });
-      box.append(grid); wrap.append(box);
-    });
-    return wrap;
-  }
-
-  function detail(c) {
-    crumb.textContent = "／ " + c["名前"]; document.title = c["名前"] + "｜素材ライブラリ（メタ環境）";
-    const hero = $("section", "sec hero"), st = $("div", "stage"), im = $("img"); im.alt = c["名前"]; st.append(im); anim(im, c["見本"]);
-    const info = $("div"); info.append($("h2", "", c["名前"]));
-    const kv = $("dl", "kv");
-    [["出どころ", c["出どころ"]], ["画風・構成", c["画風"]], ["公開状況", c["公開"]]].forEach(([k, v]) => kv.append($("dt", "", k), $("dd", "", v)));
-    if (c["chatwork要約"]) kv.append($("dt", "", "Chatwork生成"), $("dd", "", c["chatwork要約"]));
-    info.append(kv);
-    const row = $("div", "row");
-    row.append(link("btn", c["ボタン名"] || "素材ライブラリを開く", c["ライブラリ"]));
-    if (c["ドライブ"]) row.append(link("btn ghost", "編集者ドライブ", c["ドライブ"], true));
-    if (c["メタドライブ"]) row.append(link("btn ghost", "メタ環境ドライブ（本人・AI専用）", c["メタドライブ"], true));
-    info.append(row);
-    hero.append(st, info); main.append(hero);
-
-    const cnt = $("section", "sec"); cnt.append($("h3", "", "公開素材の件数（編集者向けページ）"));
-    const ids = { "口パク": "lip", "全身の動き": "body", "掛け合い": "duet", "Vtuber（仮置き）": "life", "マイクラ（仮置き）": "mc", "保留": "hold", "収録素材": "recordings", "台本": "script" };
-    const chips = $("div", "chips");
-    c["件数"].forEach(([k, n]) => {
-      const targetHref = c["件数リンク先"] || (c["ライブラリ"] + "#" + (ids[k] || ""));
-      const a = link("chip", "", targetHref); a.append($("span", "", k), $("b", "", n)); chips.append(a);
-    });
-    cnt.append(chips);
-    main.append(cnt);
-
-    const gateSec = renderGates(D["メタ環境"]);
-    if (gateSec) main.append(gateSec);
-
-    if ((c["制作レシピ"] || []).length) {
-      const recSec = $("section", "sec");
-      recSec.append($("h3", "", "作り方・システム要件・判断軸 ＆ Chatwork自動生成対応（メタ環境）"));
-      recSec.append($("p", "lead", "新規ポーズ制作やブラッシュアップに入る前に必ず参照する仕様・レシピ・禁止事項です。"));
-      recSec.append(renderRecipeList(c["制作レシピ"]));
-      main.append(recSec);
-    }
-
-    if (c["声"]) {
-      const v = c["声"], vs = $("section", "sec"); vs.append($("h3", "", "声（ナレーション生成仕様）"));
-      vs.append($("p", "", v["中身"]));
-      const ul = $("ul", "plain"); v["設定"].forEach(s => ul.append($("li", "", s))); vs.append(ul);
-      vs.append($("p", "meta", "作り方：" + v["作り方"])); main.append(vs);
-    }
-
-    const rs = $("section", "sec"); rs.append($("h3", "", "確定リファレンスシート（正本格納庫）"));
-    rs.append($("p", "lead", "本人最終OK確定済みの正本シートです。画像を押すと原寸（透過市松背景）で拡大確認できます。"));
-    rs.append(renderRefGroups(c["リファレンス"]));
-    if ((c["旧リファレンス"] || []).length) {
-      const oldDet = $("details"); oldDet.style.marginTop = "18px";
-      oldDet.append($("summary", "", "旧リファレンス控え（11/12〜11/13 初期仮置き分・31枚）"));
-      oldDet.append(renderRefGroups(c["旧リファレンス"]));
-      rs.append(oldDet);
-    }
-    main.append(rs);
-
-    if ((c["直し待ち"] || []).length) {
-      const ws = $("section", "sec"); ws.append($("h3", "", "進行中計画・ブラッシュアップ方針"));
-      const u = $("ul", "plain"); c["直し待ち"].forEach(x => { const li = $("li", "", x["何"]); li.append($("br"), $("span", "quote", "方針：「" + x["本人"] + "」")); u.append(li); }); ws.append(u); main.append(ws);
-    }
-
-    if ((c["履歴"] || []).length) {
-      const hs = $("section", "sec"), det = $("details"); det.append($("summary", "", `ライブラリの履歴（${c["履歴"].length}件）`));
-      const t = $("table", "hist"); c["履歴"].forEach(x => {
-        const tr = $("tr"), body = $("td", "", x["中身"]);
-        if (x["本人"]) body.append($("br"), $("span", "quote", "本人「" + x["本人"] + "」"));
-        const st = $("td"); st.append($("span", "kind", x["種類"] || "")); if (x["状態"]) st.append($("br"), $("span", "badge " + (/採用/.test(x["状態"]) ? "ok" : "wait"), x["状態"]));
-        tr.append($("td", "", x["日時"]), st, body); t.append(tr);
-      });
-      det.append(t); hs.append(det); main.append(hs);
-    }
-  }
-
-  function detailCommonMeta() {
-    const cm = D["共通素材"];
-    crumb.textContent = "／ 共通素材（作り方・メタ環境）"; document.title = "共通素材 メタ環境｜素材ライブラリ";
-    const sec = $("section", "sec");
-    sec.append($("h2", "", "共通素材 — 作り方・システム要件・Chatwork対応状況"));
-    sec.append($("p", "lead", "キャラをまたいで使う共通素材（イメージ強化UI・2Dドット絵キャラ・背景生成パック）の制作仕様と判断軸です。"));
-    const row = $("div", "row"); row.style.marginBottom = "12px";
-    row.append(link("btn", "共通素材ライブラリを開く", cm["ページ"]));
-    if (cm["ドライブ"]) row.append(link("btn ghost", "共通素材ドライブ（編集者共有）", cm["ドライブ"], true));
-    if (cm["メタドライブ"]) row.append(link("btn ghost", "イメージ強化UI メタ環境ドライブ", cm["メタドライブ"], true));
-    sec.append(row, renderRecipeList(cm["制作レシピ"]));
-    main.append(sec);
-    const gateSec = renderGates(D["メタ環境"]);
-    if (gateSec) main.append(gateSec);
-  }
-
-  function draw() {
-    timers.forEach(clearTimeout); timers.clear(); main.replaceChildren();
-    const id = decodeURIComponent(location.hash.slice(1));
-    if (id === "common_meta" && D["共通素材"]) { detailCommonMeta(); window.scrollTo(0, 0); return; }
-    const c = D["キャラ"].find(x => x.id === id);
-    c ? detail(c) : list(); window.scrollTo(0, 0);
-  }
-  addEventListener("hashchange", draw); draw();
-})();
-</script>
+<header><h1>素材ライブラリ</h1></header>
+<main>
+  <nav aria-label="素材ライブラリの入口">
+    <a class="card" href="./depure/">
+      <strong>でぷれさん</strong>
+      <span>口パク・全身の動き・収録素材</span>
+    </a>
+    <a class="card" href="./common/">
+      <strong>共通素材</strong>
+      <span>背景・アイコン・イメージ強化などの編集素材</span>
+    </a>
+    <a class="card" href="./common/#hold">
+      <strong>保留</strong>
+      <span>採否の確認を待っている素材</span>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/Gq1dGzo4nk8wjXxXChk5jM" target="_blank" rel="noopener">
+      <strong>編集の名前帳</strong>
+      <span>テロップ・動き・切り替えなどの名前一覧</span>
+    </a>
+    <a class="card" href="./adjust/">
+      <strong>生成素材の調整ツール</strong>
+      <span>画像や動画の明るさ・質感を調整</span>
+    </a>
+  </nav>
+</main>
 </body>
 </html>

@@ -1441,7 +1441,23 @@
       "静止画ファイル": "pose_01_claude_desk_phone_1024.png",
       "ベクター": "media/cc-sticker/pose_01_claude_desk_phone_1024.svg",
       "ベクターファイル": "pose_01_claude_desk_phone_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_01_loop_animated.png",
+          "1C59SCGlk-71azVZBfz7LFZmH4Jg80JnX",
+          "透過APNG"
+        ],
+        [
+          "pose_01_claude_desk_phone_1024.png",
+          "1FbkDwHcDiYCD9dTNopNWGNxuj37lGWgZ",
+          "静止画PNG"
+        ],
+        [
+          "pose_01_claude_desk_phone_1024.svg",
+          "176wCSQgwJsLzss65wjR5hO113ZMiRnXl",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p02",
@@ -1453,7 +1469,23 @@
       "静止画ファイル": "pose_02_claude_futon_sleep_1024.png",
       "ベクター": "media/cc-sticker/pose_02_claude_futon_sleep_1024.svg",
       "ベクターファイル": "pose_02_claude_futon_sleep_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_02_loop_animated.png",
+          "1jEzReJf7wawVyS9vRuvl4IkY3iRT_9nI",
+          "透過APNG"
+        ],
+        [
+          "pose_02_claude_futon_sleep_1024.png",
+          "1-Crk1HIc9WzZcjy5Kys376GexzqFmxpT",
+          "静止画PNG"
+        ],
+        [
+          "pose_02_claude_futon_sleep_1024.svg",
+          "1iEHzrF1LUQX1cvvvekr0agDt0GK1BRoR",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p03",
@@ -1465,7 +1497,23 @@
       "静止画ファイル": "pose_03_claude_inspect_1024.png",
       "ベクター": "media/cc-sticker/pose_03_claude_inspect_1024.svg",
       "ベクターファイル": "pose_03_claude_inspect_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_03_loop_animated.png",
+          "1qnG1XOywmRHLaVAjs9Wem_51rlm8Q_tq",
+          "透過APNG"
+        ],
+        [
+          "pose_03_claude_inspect_1024.png",
+          "1P_IwLyHsDv3G2Xd_7ocD40MV-zGS1HVD",
+          "静止画PNG"
+        ],
+        [
+          "pose_03_claude_inspect_1024.svg",
+          "1SxPmdfERsIzpnpI96tqLhrq4JWD8GUB0",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p04",
@@ -1477,7 +1525,23 @@
       "静止画ファイル": "pose_04_claude_gamepad_1024.png",
       "ベクター": "media/cc-sticker/pose_04_claude_gamepad_1024.svg",
       "ベクターファイル": "pose_04_claude_gamepad_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_04_loop_animated.png",
+          "1ZPtLS10HjsOxCrNSNlETVI7pgj_yP4KI",
+          "透過APNG"
+        ],
+        [
+          "pose_04_claude_gamepad_1024.png",
+          "1u08xwkPlKxJGzWXdIJ442lpNMNhXNLQN",
+          "静止画PNG"
+        ],
+        [
+          "pose_04_claude_gamepad_1024.svg",
+          "1To48X7mGVVf6jjpOAHVjdKrZxu4-0Fg6",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p05",
@@ -1489,7 +1553,23 @@
       "静止画ファイル": "pose_05_claude_video_cards_1024.png",
       "ベクター": "media/cc-sticker/pose_05_claude_video_cards_1024.svg",
       "ベクターファイル": "pose_05_claude_video_cards_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_05_loop_animated.png",
+          "1IYwb6qBAGlwetxeI-7Lh_sAAUtj6ozFv",
+          "透過APNG"
+        ],
+        [
+          "pose_05_claude_video_cards_1024.png",
+          "1iq3W74c7oV5J2d7PA0WLuVE0BqWB5Dvu",
+          "静止画PNG"
+        ],
+        [
+          "pose_05_claude_video_cards_1024.svg",
+          "1l6ip-YCBNThT92P_GQCakGGepngEM7kl",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p06",
@@ -1501,7 +1581,23 @@
       "静止画ファイル": "pose_06_claude_director_1024.png",
       "ベクター": "media/cc-sticker/pose_06_claude_director_1024.svg",
       "ベクターファイル": "pose_06_claude_director_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_06_loop_animated.png",
+          "179th6lCzPQRVrUET7MqGJkPx8cH1ZVBh",
+          "透過APNG"
+        ],
+        [
+          "pose_06_claude_director_1024.png",
+          "16hPhFjZZpru99yne9TtcDvn_TKogr_iH",
+          "静止画PNG"
+        ],
+        [
+          "pose_06_claude_director_1024.svg",
+          "1zPQSsMYeNbqBlSFpufbq7xtvogQchEsl",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p07",
@@ -1513,7 +1609,23 @@
       "静止画ファイル": "pose_07_claude_chatgpt_link_1440x960.png",
       "ベクター": "media/cc-sticker/pose_07_claude_chatgpt_link_1440x960.svg",
       "ベクターファイル": "pose_07_claude_chatgpt_link_1440x960.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_07_loop_animated.png",
+          "1ByWJLogliByeFnQzCXh836k5sTOsqa1Q",
+          "透過APNG"
+        ],
+        [
+          "pose_07_claude_chatgpt_link_1440x960.png",
+          "1GW7sYI81wZpEqNRN8HPwqq_L53DVPBE0",
+          "静止画PNG"
+        ],
+        [
+          "pose_07_claude_chatgpt_link_1440x960.svg",
+          "1yH1KR0QLRFaMC2tRoxuVDsvLxxeewtTz",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p08",
@@ -1525,7 +1637,23 @@
       "静止画ファイル": "pose_08_claude_codex_inspect_1440x960.png",
       "ベクター": "media/cc-sticker/pose_08_claude_codex_inspect_1440x960.svg",
       "ベクターファイル": "pose_08_claude_codex_inspect_1440x960.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_08_loop_animated.png",
+          "1CgyYsyp_jN3iUeQ-Mq7NQbm1hCsOs8l-",
+          "透過APNG"
+        ],
+        [
+          "pose_08_claude_codex_inspect_1440x960.png",
+          "1gVFINHAuvrM9YGNGuT6Xt0vEACCTvYj4",
+          "静止画PNG"
+        ],
+        [
+          "pose_08_claude_codex_inspect_1440x960.svg",
+          "1cdJdskuxYmaq3Wt0faGTnJwWVSMW4g9d",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p09",
@@ -1537,7 +1665,23 @@
       "静止画ファイル": "pose_09_claude_god_angel_1024.png",
       "ベクター": "media/cc-sticker/pose_09_claude_god_angel_1024.svg",
       "ベクターファイル": "pose_09_claude_god_angel_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_09_loop_animated.png",
+          "1sxbtlr71N5W7fbhr606rTSlVjJMFZAOV",
+          "透過APNG"
+        ],
+        [
+          "pose_09_claude_god_angel_1024.png",
+          "1jG7b-Iwj1_iyaxYC_16jHEEGiMkSM-k4",
+          "静止画PNG"
+        ],
+        [
+          "pose_09_claude_god_angel_1024.svg",
+          "14OH5jwLx1qgkjYj7v-bSJyUPy8eBba_D",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p10",
@@ -1549,7 +1693,23 @@
       "静止画ファイル": "pose_10_claude_samurai_vs_chatgpt_knight_1440x960.png",
       "ベクター": "media/cc-sticker/pose_10_claude_samurai_vs_chatgpt_knight_1440x960.svg",
       "ベクターファイル": "pose_10_claude_samurai_vs_chatgpt_knight_1440x960.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_10_loop_animated.png",
+          "1O8oAeIf8y8sUMzyeWQizxYk0np7SWcGd",
+          "透過APNG"
+        ],
+        [
+          "pose_10_claude_samurai_vs_chatgpt_knight_1440x960.png",
+          "1BLNOvReVf71rmMNO5VWX13MjROa-ciIW",
+          "静止画PNG"
+        ],
+        [
+          "pose_10_claude_samurai_vs_chatgpt_knight_1440x960.svg",
+          "1M5FtaKjYc7l-SGpmj5yvAuQV5dJ5JGnq",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p11",
@@ -1561,7 +1721,23 @@
       "静止画ファイル": "pose_11_chatgpt_sword_shield_1024.png",
       "ベクター": "media/cc-sticker/pose_11_chatgpt_sword_shield_1024.svg",
       "ベクターファイル": "pose_11_chatgpt_sword_shield_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_11_loop_animated.png",
+          "1Ztc61ghdlW05NZfZrIoKVRi3orZnnXuk",
+          "透過APNG"
+        ],
+        [
+          "pose_11_chatgpt_sword_shield_1024.png",
+          "117H0WlDQYXoXT96p7VQ2eAqgHiR70wCQ",
+          "静止画PNG"
+        ],
+        [
+          "pose_11_chatgpt_sword_shield_1024.svg",
+          "1ltf_53HeEklQY-hKdb-lAYsAeKeDen42",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p12",
@@ -1573,7 +1749,23 @@
       "静止画ファイル": "pose_12_claude_panic_sweat_1024.png",
       "ベクター": "media/cc-sticker/pose_12_claude_panic_sweat_1024.svg",
       "ベクターファイル": "pose_12_claude_panic_sweat_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_12_loop_animated.png",
+          "1X8bq2_V_rARjg0FENGXpGTY8NDQ14akZ",
+          "透過APNG"
+        ],
+        [
+          "pose_12_claude_panic_sweat_1024.png",
+          "1lMzE8eg0FA_KTlapu-Rl4PGsGHqeIMWs",
+          "静止画PNG"
+        ],
+        [
+          "pose_12_claude_panic_sweat_1024.svg",
+          "1rDiFTzQgaiAMKNrBndZhKTTnIZpK4uyS",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p13",
@@ -1585,7 +1777,23 @@
       "静止画ファイル": "pose_13_claude_pc_typing_1024.png",
       "ベクター": "media/cc-sticker/pose_13_claude_pc_typing_1024.svg",
       "ベクターファイル": "pose_13_claude_pc_typing_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_13_loop_animated.png",
+          "1YAZb9zzMlVtNeeKEDSPYY0g2khpLOMCK",
+          "透過APNG"
+        ],
+        [
+          "pose_13_claude_pc_typing_1024.png",
+          "1jdrLZgr97PYFW6FxMuxMJWPTOXp5HehB",
+          "静止画PNG"
+        ],
+        [
+          "pose_13_claude_pc_typing_1024.svg",
+          "1HgTDdhRUN3Chzao5O76YOprn284XCdDU",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p14",
@@ -1597,7 +1805,23 @@
       "静止画ファイル": "pose_14_claude_presenter_1024.png",
       "ベクター": "media/cc-sticker/pose_14_claude_presenter_1024.svg",
       "ベクターファイル": "pose_14_claude_presenter_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_14_loop_animated.png",
+          "1IPphrVBO_x6mD5_4RcaaTgP7smyeRS2S",
+          "透過APNG"
+        ],
+        [
+          "pose_14_claude_presenter_1024.png",
+          "1LqJ5ghdbRnHcmvtnEZ_K74rE6WBOFKiF",
+          "静止画PNG"
+        ],
+        [
+          "pose_14_claude_presenter_1024.svg",
+          "1ZeUtE4tQk7HVk91Tf1cAAmHRY3L7kOX5",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p15",
@@ -1609,7 +1833,23 @@
       "静止画ファイル": "pose_15_claude_money_coins_1024.png",
       "ベクター": "media/cc-sticker/pose_15_claude_money_coins_1024.svg",
       "ベクターファイル": "pose_15_claude_money_coins_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_15_loop_animated.png",
+          "1alXXhY22_AOwSgNbGpud1I-IeF67maGx",
+          "透過APNG"
+        ],
+        [
+          "pose_15_claude_money_coins_1024.png",
+          "1ggHFadieddQ3_7PICPR5Xpx1ssoSiFDJ",
+          "静止画PNG"
+        ],
+        [
+          "pose_15_claude_money_coins_1024.svg",
+          "1Eg5jGBwndDg2NvPYgimGYAZw6sW0mTN4",
+          "SVG"
+        ]
+      ]
     },
     {
       "id": "sticker_claude_p16",
@@ -1621,7 +1861,23 @@
       "静止画ファイル": "pose_16_claude_banzai_cheers_1024.png",
       "ベクター": "media/cc-sticker/pose_16_claude_banzai_cheers_1024.svg",
       "ベクターファイル": "pose_16_claude_banzai_cheers_1024.svg",
-      "dl": []
+      "dl": [
+        [
+          "pose_16_loop_animated.png",
+          "1wlvB16iIaEh2b385pLUDH4tK9P9u3Wkd",
+          "透過APNG"
+        ],
+        [
+          "pose_16_claude_banzai_cheers_1024.png",
+          "1xrzH5LhZIe_rGrjmE0LyD6BkY31EF4QO",
+          "静止画PNG"
+        ],
+        [
+          "pose_16_claude_banzai_cheers_1024.svg",
+          "1f_49YmsRgU4pajzd2CBzCSAZUC7qDnFS",
+          "SVG"
+        ]
+      ]
     }
   ],
   "Claude Codeキャラ": [
